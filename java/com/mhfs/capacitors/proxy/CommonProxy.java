@@ -39,10 +39,10 @@ import com.mhfs.capacitors.network.ConfigUpdateHandler;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.network.EnergyUpdateMessage;
 import com.mhfs.capacitors.network.EnergyUpdateHandler;
+import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
-import com.mhfs.capacitots.oregen.OreGen;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

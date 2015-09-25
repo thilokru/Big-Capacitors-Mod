@@ -1,4 +1,4 @@
-package com.mhfs.capacitots.oregen;
+package com.mhfs.capacitors.oregen;
 
 import java.util.Random;
 

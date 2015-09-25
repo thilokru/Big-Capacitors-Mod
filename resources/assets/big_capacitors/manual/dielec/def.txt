@@ -1,0 +1,11 @@
+A dielectric material in-
+creases the capacity of an
+capacitor when placed be-
+tween the capacitor walls.
+On the other page is a
+list of materials and a 
+factor, by which they
+increase a capacitors ca-
+pacity when it is com-
+pletly filled with that
+materal.

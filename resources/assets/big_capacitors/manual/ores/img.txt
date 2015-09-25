@@ -1,0 +1,3 @@
+big_capacitors:manual/ores/ores.png
+100
+56

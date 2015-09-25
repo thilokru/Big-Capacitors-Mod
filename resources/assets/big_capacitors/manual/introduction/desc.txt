@@ -1,0 +1,15 @@
+Thanks for playing with Big
+Capacitors! This modifica-
+tion will provide you with
+a multi block energy storage
+system based on real life
+capacitors. Have fun!
+
+Credits:
+JCodeLoader
+
+Inspiration:
+Botania -> Manual
+CoFH -> RF
+Minecraft Forge Tuts
+   -> Everything

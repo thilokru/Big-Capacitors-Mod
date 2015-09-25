@@ -1,0 +1,17 @@
+A distillery is used to
+purify solutions. It uses
+the fact, that different
+substances evaporate at
+different temperatures.
+For example, distilled
+Water is created by heat-
+ing Water 100 °C, so that
+the Water evaporates, but
+the salts stay behind.
+The Water vapor is then
+condensated.
+The distillerys input is
+on the left, the output
+on the right, and the
+energy is fed in from
+the back.

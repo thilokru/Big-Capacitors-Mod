@@ -1,0 +1,14 @@
+Two ores can be found in the
+world. These are Witherite
+Ore an Rustil Ore. Witherite
+is a crystal made out of
+barium carbonate (BaCO3).
+Rutil on the other hand is
+a crystal made out of titan
+dioxyd (TiO2). Together,
+they react under great heat
+to barium titanate (BaTiO3),
+a ceramic with awesome
+dielectric properties, and
+CO2. It has a dielectricity
+of 1000!

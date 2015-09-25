@@ -1,0 +1,11 @@
+minecraft:iron_ingot
+oredict:ingotCopper
+oredict:ingotCopper
+minecraft:redstone_block
+oredict:ingotCopper
+oredict:ingotCopper
+minecraft:iron_ingot
+big_capacitors:wire
+
+big_capacitors:multitool
+1

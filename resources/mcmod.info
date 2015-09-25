@@ -1,0 +1,16 @@
+[
+{
+  "modid": "big_capacitors",
+  "name": "Big Capacitors",
+  "description": "Adds big capacitors as RF Storage..",
+  "version": "1.0Alpha",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["JCodeLoader"],
+  "credits": "Me",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["ThermalExpansion"]
+}
+]

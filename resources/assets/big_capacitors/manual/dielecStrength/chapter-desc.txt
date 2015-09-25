@@ -1,0 +1,2 @@
+text#big_capacitors:manual/dielecStrength/def.txt
+text#big_capacitors:manual/dielecStrength/list.txt

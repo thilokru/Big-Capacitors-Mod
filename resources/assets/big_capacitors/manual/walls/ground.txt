@@ -1,0 +1,13 @@
+The RF energy system has
+two conductors. One is the
+energy conduit, the other
+is the earth. So, one side
+of the capacitor needs to
+be grounded. Your multitool
+displays whether one side is
+grounded or not. If it is,
+you can't extract energy
+from this side. You can
+change that with your mul-
+titool, but you will lose
+all energy stored.

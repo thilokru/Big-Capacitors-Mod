@@ -1,0 +1,4 @@
+text#big_capacitors:manual/items/desc.txt
+craft#big_capacitors:manual/items/multimeter.txt
+craft#big_capacitors:manual/items/wire.txt
+craft#big_capacitors:manual/items/manual.txt

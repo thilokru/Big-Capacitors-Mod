@@ -1,0 +1,11 @@
+A distillery purifies a
+solution by evaporating
+the liquid and conden-
+sating it. One example for
+that is distilled Water.
+
+The distillery is fed with
+liquids from the left, it
+outputs to the right. The
+energy input is located on
+the back side.

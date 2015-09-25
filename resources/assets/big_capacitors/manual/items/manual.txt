@@ -1,0 +1,11 @@
+minecraft:book
+minecraft:iron_ingot
+
+
+
+
+
+
+
+big_capacitors:manual
+1

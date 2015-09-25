@@ -1,0 +1,3 @@
+big_capacitors:manual/distillery/dist.png
+100
+56

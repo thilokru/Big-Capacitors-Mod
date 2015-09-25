@@ -1,0 +1,3 @@
+{
+  "pageTurn": {"category": "player","sounds": [{name: "page0", stream: false}, {name: "page1", stream: false}, {name: "page2", stream: false}]}
+}

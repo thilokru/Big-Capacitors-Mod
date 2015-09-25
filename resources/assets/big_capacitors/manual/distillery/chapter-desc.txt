@@ -1,0 +1,2 @@
+text#big_capacitors:manual/distillery/def.txt
+img#big_capacitors:manual/distillery/img.txt

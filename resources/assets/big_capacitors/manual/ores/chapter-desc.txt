@@ -1,0 +1,3 @@
+text#big_capacitors:manual/ores/desc.txt
+img#big_capacitors:manual/ores/img.txt
+text#big_capacitors:manual/ores/ceramic.txt

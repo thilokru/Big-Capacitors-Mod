@@ -1,0 +1,11 @@
+
+minecraft:stick
+
+oredict:ingotCopper
+minecraft:stick
+oredict:ingotCopper
+
+minecraft:stick
+
+big_capacitors:wire
+2

@@ -1,0 +1,11 @@
+
+
+
+
+minecraft:obsidian
+minecraft:iron_block
+
+
+
+big_capacitors:capacitorIron
+4

@@ -1,12 +1,10 @@
 A capacitor basically is
 made out of 2 things. The
-Walls, the material be-
-tween the walls and the
-material between the
-walls. The material in
-between the walls is
-covered in the chapter
-'Dielectricity'.
+walls and the material be-
+tween the walls. The
+material in between the
+walls is covered in the
+chapter 'Dielectricity'.
 Capacitor Walls are made
 as shown on the secound
 page. They need to be

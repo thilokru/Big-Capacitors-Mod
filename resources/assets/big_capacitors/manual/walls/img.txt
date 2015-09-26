@@ -1,0 +1,3 @@
+big_capacitors:manual/walls/example.png
+100
+56

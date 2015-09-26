@@ -1,2 +1,4 @@
 text#big_capacitors:manual/distillery/def.txt
 img#big_capacitors:manual/distillery/img.txt
+craft#big_capacitors:manual/distillery/dist.txt
+craft#big_capacitors:manual/distillery/heater.txt

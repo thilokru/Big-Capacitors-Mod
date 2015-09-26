@@ -1,0 +1,11 @@
+big_capacitors:wire
+minecraft:wool
+big_capacitors:wire
+big_capacitors:wire
+big_capacitors:wire
+big_capacitors:wire
+
+
+
+big_capacitors:heater
+1

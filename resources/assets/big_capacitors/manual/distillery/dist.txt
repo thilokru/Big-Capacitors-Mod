@@ -1,0 +1,11 @@
+minecraft:iron_ingot
+minecraft:iron_ingot
+
+minecraft:bucket
+
+minecraft:bucket
+big_capacitors:heater
+
+
+big_capacitors:blockDestillery
+1

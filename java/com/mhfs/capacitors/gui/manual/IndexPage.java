@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mhfs.capacitors.BigCapacitorsMod;
+
 import scala.actors.threadpool.Arrays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -66,7 +68,7 @@ public class IndexPage implements IPage, IKeyboardHandler {
 	public void actionPerformed(GuiButton button, Minecraft mc,
 			GuiManualChapter screen) {
 		String buttonText = button.displayString;
-		List<IPage> chapter = KnowledgeRegistry.INSTANCE.getChapter(buttonText);
+		List<IPage> chapter = BigCapacitorsMod.instance.knowledge.getChapter(buttonText);
 		if (chapter == null)
 			return;
 		mc.displayGuiScreen(new GuiManualChapter(screen, chapter));

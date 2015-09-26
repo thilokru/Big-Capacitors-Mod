@@ -80,6 +80,7 @@ public class CommonProxy {
 	private void setupTextureNames(BigCapacitorsMod mod) {
 		mod.itemMultitool.setTextureName("big_capacitors:multitool");
 		mod.itemWire.setTextureName("big_capacitors:wire");
+		mod.itemHeater.setTextureName("big_capacitors:heater");
 		mod.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
 		mod.blockRutilOre.setBlockTextureName("big_capacitors:oreRutil");
 		mod.blockWitheriteOre.setBlockTextureName("big_capacitors:oreWitherite");
@@ -105,6 +106,11 @@ public class CommonProxy {
 		GameRegistry.addRecipe(new ShapedOreRecipe(mod.itemWire, true, " S ", "CSC", " S ", 'S', Items.stick, 'C', "ingotCopper"));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(mod.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', mod.itemWire));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(mod.itemHeater, true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.wool), 'C', mod.itemWire));
+		
+		Item destilleryItem = Item.getItemFromBlock(mod.blockDestillery);
+		GameRegistry.addRecipe(new ShapedOreRecipe(destilleryItem, true, "II ", "B B", "H  ", 'I', "ingotIron", 'B', Items.bucket, 'H', mod.itemHeater));
 		
 		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(mod.itemRutil, 2), null, 0);
 		PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(mod.itemWitherite, 2), null, 0);
@@ -184,6 +190,9 @@ public class CommonProxy {
 		
 		mod.itemWire = new Item().setUnlocalizedName("wire").setCreativeTab(mod.creativeTab);
 		GameRegistry.registerItem(mod.itemWire, "wire");
+		
+		mod.itemHeater = new Item().setUnlocalizedName("heater").setCreativeTab(mod.creativeTab);
+		GameRegistry.registerItem(mod.itemHeater, "heater");
 		
 		mod.itemRutil = new Item().setUnlocalizedName("dustRutil").setCreativeTab(mod.creativeTab);
 		GameRegistry.registerItem(mod.itemRutil, "dustRutil");

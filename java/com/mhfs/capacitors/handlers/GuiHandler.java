@@ -2,9 +2,10 @@ package com.mhfs.capacitors.handlers;
 
 import java.util.List;
 
+import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.gui.manual.GuiManualChapter;
 import com.mhfs.capacitors.gui.manual.IPage;
-import com.mhfs.capacitors.gui.manual.KnowledgeRegistry;
+import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.misc.IChapterRelated;
 
 import net.minecraft.block.Block;
@@ -40,6 +41,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
+		IKnowledgeRegistry reg = BigCapacitorsMod.instance.knowledge;
 		SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
 		soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
 		if(ID == 1){
@@ -47,12 +49,12 @@ public class GuiHandler implements IGuiHandler {
 			if(block instanceof IChapterRelated){
 				IChapterRelated rel = (IChapterRelated)block;
 				if(rel.getChapter() == null){
-					return getDisplayChapter(KnowledgeRegistry.INSTANCE.getIndex());
+					return getDisplayChapter(reg.getIndex());
 				}
-				return getDisplayChapter(KnowledgeRegistry.INSTANCE.getChapter(rel.getChapter()));
+				return getDisplayChapter(reg.getChapter(rel.getChapter()));
 			}
 		}
-		return getDisplayChapter(KnowledgeRegistry.INSTANCE.getIndex());
+		return getDisplayChapter(reg.getIndex());
 	}
 	
 	private Object getDisplayChapter(List<IPage> chapter){

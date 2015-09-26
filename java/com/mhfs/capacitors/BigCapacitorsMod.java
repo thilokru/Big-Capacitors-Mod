@@ -15,6 +15,7 @@ import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.handlers.BucketHandler;
+import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.proxy.CommonProxy;
 import com.mhfs.capacitors.tile.EntityCapacitor;
 
@@ -57,12 +58,14 @@ public class BigCapacitorsMod {
 	public Item itemRutil;
 	public Item itemMultitool;
 	public Item itemWire;
+	public Item itemHeater;
 	public Item itemManual;
 	public Item itemBucketDestilledWater;
 	
 	public Fluid fluidDestilledWater;
 	
 	public DamageSource damageElectric;
+	public IKnowledgeRegistry knowledge;
 	
 	public static ISimpleBlockRenderingHandler capacitorRenderer;
 

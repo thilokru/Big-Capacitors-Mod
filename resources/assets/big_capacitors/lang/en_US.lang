@@ -14,3 +14,5 @@ item.bucketDestilledWater.name=Distilled Water Bucket
 itemGroup.BigCapacitors=Big Capacitors
 
 death.attack.electric=%1$s grounded a capacitor and the flowing current killed him.
+
+manual.loc=big_capacitors:manual/manual-desc.txt

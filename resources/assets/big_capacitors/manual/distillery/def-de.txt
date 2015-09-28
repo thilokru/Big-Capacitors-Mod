@@ -1,0 +1,11 @@
+Eine Destillerie reinigt
+Flüssigkeiten von ver-
+schmutzungen, indem die
+Lösung verdampft und wie-
+der kondensiert wird.
+Fremdstoffe bleiben zurück.
+
+Ein-/Ausgänge:
+Energie: hinten
+Eingang: links
+Ausgang: rechts

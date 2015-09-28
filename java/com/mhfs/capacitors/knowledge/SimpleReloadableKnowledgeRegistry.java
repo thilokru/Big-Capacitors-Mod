@@ -22,24 +22,17 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
-public class SimpleKnowledgeRegistry implements IKnowledgeRegistry, IResourceManagerReloadListener{
+public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IResourceManagerReloadListener{
 	
-	private ResourceLocation manualLocation;
+	private String name;
 	private IResourceManager resourceManager;
 	private Map<String, List<IPage>> chapters;
 	private List<IPage> index;
 	
-	public SimpleKnowledgeRegistry(ResourceLocation location, IResourceManager resourceManager){
-		this.manualLocation = location;
-		this.resourceManager = resourceManager;
-		chapters = new HashMap<String, List<IPage>>();
-		try {
-			loadManual(location);
-		} catch (Exception e) {
-			System.err.println("An error occured while reloading the Manual of Big Capacitors!");
-			e.printStackTrace();
-		}
+	public SimpleReloadableKnowledgeRegistry(String languageString){
+		this.name = languageString;
 	}
 	
 	public void registerChapter(String name, List<IPage> pages){
@@ -69,8 +62,11 @@ public class SimpleKnowledgeRegistry implements IKnowledgeRegistry, IResourceMan
 	@Override
 	public void onResourceManagerReload(IResourceManager irm) {
 		this.resourceManager = irm;
+		chapters = new HashMap<String, List<IPage>>();
+		index = null;
 		try {
-			this.loadManual(manualLocation);
+			ResourceLocation loc = new ResourceLocation(StatCollector.translateToLocal(name));
+			this.loadManual(loc);
 		} catch (Exception e) {
 			System.err.println("An error occured while reloading the Manual of Big Capacitors!");
 			e.printStackTrace();

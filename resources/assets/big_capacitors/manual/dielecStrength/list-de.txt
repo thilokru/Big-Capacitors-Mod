@@ -1,0 +1,11 @@
+Durchschlagsfestigkeit:
+in MV/m
+
+Luft:           3.3
+dest. Wasser:   70
+Wasser:         0
+BaTiO3:         100?
+
+Falls du denn Wert für
+BaTiO3 kennst, schreib
+mir ne' Mail!

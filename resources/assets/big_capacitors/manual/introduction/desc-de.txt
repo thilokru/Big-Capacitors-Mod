@@ -1,0 +1,15 @@
+Vielen Dank, dass du mit der
+Big Capacitors Mod spielst!
+Diese Mod fügt ein Multi-
+blockenergiesystem hinzu,
+welches echte Kondensatoren
+immitiert. Viel Spaß!
+
+Credits:
+JCodeLoader
+
+Inspiration:
+Botania -> Benutzerhandbuch
+CoFH -> RF
+Minecraft Forge Tuts
+   -> Alles

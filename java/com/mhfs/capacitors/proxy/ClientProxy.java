@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +14,7 @@ import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
 import com.mhfs.capacitors.handlers.ClientEventHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
-import com.mhfs.capacitors.knowledge.SimpleKnowledgeRegistry;
+import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.RendererCapacitor;
 import com.mhfs.capacitors.render.RendererDestillery;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
@@ -54,9 +53,8 @@ public class ClientProxy extends CommonProxy {
 
 	private void loadKnowledge(BigCapacitorsMod mod) {
 		try {
-			ResourceLocation manualLocation = new ResourceLocation("big_capacitors:manual/manual-desc.txt");
 			IResourceManager irm = Minecraft.getMinecraft().getResourceManager();
-			SimpleKnowledgeRegistry reg = new SimpleKnowledgeRegistry(manualLocation, irm);
+			SimpleReloadableKnowledgeRegistry reg = new SimpleReloadableKnowledgeRegistry("manual.loc");
 			mod.knowledge = reg;
 			((SimpleReloadableResourceManager)irm).registerReloadListener(reg);
 		} catch (Exception e) {

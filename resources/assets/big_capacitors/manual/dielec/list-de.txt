@@ -1,0 +1,9 @@
+Eine Liste der Dielek-
+trizitätszahlen:
+
+Luft:    1
+Wasser:  81.1
+BaTiO3: 1000
+
+Fiktional:
+molten ender:   811

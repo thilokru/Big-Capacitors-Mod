@@ -1,0 +1,13 @@
+Das RF-Energiesystem hat
+zwei Leiter: Das Energy-
+duct und die Erde. Also
+muss auch eine Seite des
+Kondensators geerdet sein.
+Das Multifunktionswerkzeug
+zeigt an welche seite ge-
+erdet ist. Die geerdete
+Seite gibt keine Energie
+ab. Man kann die Erdung
+ändern, allerdings geht
+dabei die Energie ver-
+loren.

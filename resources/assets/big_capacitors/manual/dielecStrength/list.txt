@@ -1,9 +1,10 @@
 Dielectric Strength:
 in MV/m
 
-Air:    3.3
-Water:  70
-BaTiO3: 100?
+Air:        3.3
+dest. Water:70
+Water:      0
+BaTiO3:     100?
 
 If you, as user, know
 the value of BaTiO3,

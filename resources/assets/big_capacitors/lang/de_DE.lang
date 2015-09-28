@@ -1,0 +1,18 @@
+tile.capacitorIron.name=Eisen Kondensator
+tile.blockDestillery.name=Destillerie
+tile.blockDestilledWater.name=destilliertes Wasser
+tile.oreRutil.name=Rutil
+tile.oreWitherite.name=Witherit
+tile.blockCeramic.name=Bariumtitanatkeramik
+item.multitool.name=Multifunktionswerkzeug
+item.wire.name=Kabel
+item.heater.name=Heizpilz
+item.manual.name=Benutzerhandbuch
+item.dustRutil.name=Rutilstaub
+item.dustWitherite.name=Witheritstaub
+item.bucketDestilledWater.name=destillierter Wasser Eimer
+itemGroup.BigCapacitors=Big Capacitors
+
+death.attack.electric=%1$s erdete einen Kondensator und der fließende Strom tötete ihn.
+
+manual.loc=big_capacitors:manual/manual-desc-de.txt

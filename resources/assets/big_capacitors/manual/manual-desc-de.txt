@@ -1,0 +1,7 @@
+Einführung#big_capacitors:manual/introduction/chapter-desc-de.txt
+Kondensatorwände#big_capacitors:manual/walls/chapter-desc-de.txt
+Dielektrizität#big_capacitors:manual/dielec/chapter-desc-de.txt
+Durchschlagsfestigkeit#big_capacitors:manual/dielecStrength/chapter-desc-de.txt
+Items#big_capacitors:manual/items/chapter-desc-de.txt
+Erze#big_capacitors:manual/ores/chapter-desc-de.txt
+Destillerie#big_capacitors:manual/distillery/chapter-desc-de.txt

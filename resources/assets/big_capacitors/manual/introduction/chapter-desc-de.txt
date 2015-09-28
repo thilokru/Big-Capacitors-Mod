@@ -1,0 +1,2 @@
+text#big_capacitors:manual/introduction/desc-de.txt
+text#big_capacitors:manual/introduction/license-de.txt

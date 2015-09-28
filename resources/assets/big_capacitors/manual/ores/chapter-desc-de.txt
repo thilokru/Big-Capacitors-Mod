@@ -1,0 +1,2 @@
+text#big_capacitors:manual/ores/desc-de.txt
+img#big_capacitors:manual/ores/img.txt

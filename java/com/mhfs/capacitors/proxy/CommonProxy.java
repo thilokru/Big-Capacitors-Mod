@@ -75,6 +75,13 @@ public class CommonProxy {
 		mod.fluidDestilledWater.setLuminosity(0);
 		mod.fluidDestilledWater.setViscosity(1000);
 		FluidRegistry.registerFluid(mod.fluidDestilledWater);
+		
+		mod.fluidEthanol = new Fluid("ethanol");
+		mod.fluidEthanol.setDensity(789);
+		mod.fluidEthanol.setGaseous(false);
+		mod.fluidEthanol.setLuminosity(0);
+		mod.fluidEthanol.setViscosity(1190);
+		FluidRegistry.registerFluid(mod.fluidEthanol);
 	}
 
 	private void setupTextureNames(BigCapacitorsMod mod) {
@@ -90,6 +97,7 @@ public class CommonProxy {
 		mod.itemWitherite.setTextureName("big_capacitors:dustWitherite");
 		mod.itemRutil.setTextureName("big_capacitors:dustRutil");
 		mod.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
+		mod.itemBucketEthanol.setTextureName("minecraft:bucket_water");
 	}
 
 	private void setupRecipies(BigCapacitorsMod mod) {
@@ -170,6 +178,11 @@ public class CommonProxy {
 		mod.blockDestilledWater.setBlockName("blockDestilledWater");
 		GameRegistry.registerBlock(mod.blockDestilledWater, "blockDestilledWater");
 		mod.itemBucketDestilledWater = createBucket(mod.fluidDestilledWater, mod.blockDestilledWater, "bucketDestilledWater");
+		
+		mod.blockEthanol = new BlockFluidDestilledWater(mod.fluidEthanol, Material.water);
+		mod.blockEthanol.setBlockName("blockEthanol");
+		GameRegistry.registerBlock(mod.blockEthanol, "blockEthanol");
+		mod.itemBucketEthanol = createBucket(mod.fluidEthanol, mod.blockEthanol, "bucketEthanol");
 	}
 	
 	private Item createBucket(Fluid fluid, Block fluidBlock, String unloc){
@@ -277,6 +290,8 @@ public class CommonProxy {
 			return 81.1;
 		}else if(blockName.equals("big_capacitors:blockCeramic")){
 			return 1000;
+		}else if(blockName.equals("big_capacitors:blockEthanol")){
+			return 25.8;
 		}
 		return 1;
 	}
@@ -290,6 +305,8 @@ public class CommonProxy {
 			return 100;
 		}else if(blockName.equals("minecraft:water")){
 			return 0;
+		}else if(blockName.equals("big_capacitors:blockEthanol")){
+			return 0;
 		}
 		return 1;
 	}
@@ -302,6 +319,8 @@ public class CommonProxy {
 			Block block = GameRegistry.findBlock(msg.getSender(), blockName);
 			double de = tag.getDouble("dielectricity");
 			mod.dielectricitiesFromConfig.put(block, de);
+			double volt = tag.getDouble("voltage");
+			mod.voltagesFromConfig.put(block, volt);
 		}
 	}
 

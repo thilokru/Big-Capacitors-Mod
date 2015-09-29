@@ -53,6 +53,7 @@ public class BigCapacitorsMod {
 	public BlockBase blockRutilOre; //TiO2
 	public BlockBase blockCeramic;
 	public BlockFluidClassic blockDestilledWater;
+	public BlockFluidClassic blockEthanol;
 	
 	public Item itemWitherite;
 	public Item itemRutil;
@@ -61,8 +62,10 @@ public class BigCapacitorsMod {
 	public Item itemHeater;
 	public Item itemManual;
 	public Item itemBucketDestilledWater;
+	public Item itemBucketEthanol;
 	
 	public Fluid fluidDestilledWater;
+	public Fluid fluidEthanol;
 	
 	public DamageSource damageElectric;
 	public IKnowledgeRegistry knowledge;

@@ -1,6 +1,7 @@
 tile.capacitorIron.name=Eisen Kondensator
 tile.blockDestillery.name=Destillerie
 tile.blockDestilledWater.name=destilliertes Wasser
+tile.blockEthanol.name=Alkohol
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
@@ -10,7 +11,8 @@ item.heater.name=Heizpilz
 item.manual.name=Benutzerhandbuch
 item.dustRutil.name=Rutilstaub
 item.dustWitherite.name=Witheritstaub
-item.bucketDestilledWater.name=destillierter Wasser Eimer
+item.bucketDestilledWater.name=destillierter Wassereimer
+item.bucketEthanol.name=Alkoholeimer
 itemGroup.BigCapacitors=Big Capacitors
 
 death.attack.electric=%1$s erdete einen Kondensator und der fließende Strom tötete ihn.

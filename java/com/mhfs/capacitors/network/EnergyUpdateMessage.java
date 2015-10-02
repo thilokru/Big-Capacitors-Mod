@@ -1,6 +1,5 @@
 package com.mhfs.capacitors.network;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
@@ -8,13 +7,13 @@ public class EnergyUpdateMessage implements IMessage {
 
 	private long energy, capacity;
 	private int entityID;
-	private ForgeDirection allowedExtract;
+	private boolean grounded;
 	
-	public EnergyUpdateMessage(long energy, long capacity, ForgeDirection allowedExctract, int entityID){
+	public EnergyUpdateMessage(long energy, long capacity, boolean grounded, int entityID){
 		this.energy = energy;
 		this.capacity = capacity;
 		this.entityID = entityID;
-		this.allowedExtract = allowedExctract;
+		this.grounded = grounded;
 	}
 	
 	/**
@@ -34,15 +33,15 @@ public class EnergyUpdateMessage implements IMessage {
 		return entityID;
 	}
 	
-	public ForgeDirection getAllowedExtract(){
-		return allowedExtract;
+	public boolean isGrounded(){
+		return grounded;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.energy = buf.readLong();
 		this.capacity = buf.readLong();
-		this.allowedExtract = ForgeDirection.getOrientation(buf.readInt());
+		this.grounded = buf.readBoolean();
 		this.entityID = buf.readInt();
 	}
 
@@ -50,7 +49,7 @@ public class EnergyUpdateMessage implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		buf.writeLong(energy);
 		buf.writeLong(capacity);
-		buf.writeInt(allowedExtract.ordinal());
+		buf.writeBoolean(grounded);
 		buf.writeInt(entityID);
 	}
 

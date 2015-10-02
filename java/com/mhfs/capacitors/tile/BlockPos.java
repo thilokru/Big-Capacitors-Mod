@@ -16,10 +16,11 @@ public class BlockPos {
 		this.z = z;
 	}
 	
-	public void goTowards(ForgeDirection dir, int steps){
+	public BlockPos goTowards(ForgeDirection dir, int steps){
 		this.x += dir.offsetX * steps;
 		this.y += dir.offsetY * steps;
 		this.z += dir.offsetZ * steps;
+		return this;
 	}
 	
 	public BlockPos clone(){

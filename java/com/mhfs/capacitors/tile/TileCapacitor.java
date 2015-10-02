@@ -17,7 +17,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
 public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
-	private EntityCapacitor wholeCapacitor;
+	private CapacitorWallWrapper wrapper;
 
 	public TileCapacitor() {
 		super();
@@ -25,12 +25,12 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
 	@Override
 	public void updateEntity() {
-		if (wholeCapacitor == null) {
+		if (wrapper == null) {
 			createEntity();
 		}
-		if (BigCapacitorsMod.instance.worldCapacitors.get(this.wholeCapacitor.hashCode()) != null) {
-			if (BigCapacitorsMod.instance.worldCapacitors.get(wholeCapacitor.hashCode()) != wholeCapacitor) {
-				this.wholeCapacitor = BigCapacitorsMod.instance.worldCapacitors.get(this.wholeCapacitor.hashCode());
+		if (BigCapacitorsMod.instance.worldCapacitors.get(this.wrapper.hashCode()) != null) {
+			if (BigCapacitorsMod.instance.worldCapacitors.get(wrapper.hashCode()) != wrapper) {
+				this.wrapper = BigCapacitorsMod.instance.worldCapacitors.get(this.wrapper.hashCode());
 			}
 		}
 		if (worldObj.isRemote)
@@ -38,17 +38,16 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 		TileEntity candidate = getConnectionCandidate();
 		if (candidate != null && candidate instanceof IEnergyReceiver) {
 			IEnergyReceiver con = (IEnergyReceiver) candidate;
-			CapacitorEnergyStorage storage = wholeCapacitor.getStorage();
-			int transmittable = con.receiveEnergy(getOrientation(), (int) Math.min(storage.getEnergyStored(), storage.getWholeCapacity()), true);
+			int transmittable = con.receiveEnergy(getOrientation(), (int) Math.min(wrapper.getEnergyStored(), wrapper.getWholeCapacity()), true);
 			int transmit = this.extractEnergy(getOrientation().getOpposite(), transmittable, false);
 			con.receiveEnergy(getOrientation(), transmit, false);
 		}
 	}
 
 	private void createEntity() {
-		EntityCapacitor instance = new EntityCapacitor(worldObj, new BlockPos(xCoord, yCoord, zCoord));
-		if (wholeCapacitor == null) {
-			wholeCapacitor = instance;
+		CapacitorWallWrapper instance = new CapacitorWallWrapper(worldObj, new BlockPos(xCoord, yCoord, zCoord));
+		if (wrapper == null) {
+			wrapper = instance;
 		}
 		this.markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -56,9 +55,9 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
 	private TileEntity getConnectionCandidate() {
 		ForgeDirection face = getOrientation().getOpposite();
-		if (wholeCapacitor == null)
+		if (wrapper == null)
 			return null;
-		if (wholeCapacitor.canExtractEnergy(face)) {
+		if (wrapper.canExtractEnergy(face)) {
 			BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
 			pos.goTowards(face, 1);
 			return pos.getTileEntity(worldObj);
@@ -71,39 +70,39 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	}
 
 	public void onBreak(BreakEvent event) {
-		if (wholeCapacitor != null){
+		if (wrapper != null){
 			if(event != null){
-				wholeCapacitor.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, event.getPlayer());
+			wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, event.getPlayer());
 			}else{
-				wholeCapacitor.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, null);
+				wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, null);
 			}
 		}
 	}
 
-	public void onEntityChange(EntityCapacitor cap) {
-		this.wholeCapacitor = cap;
+	public void onEntityChange(CapacitorWallWrapper cap) {
+		this.wrapper = cap;
 		this.markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public EntityCapacitor getEntityCapacitor() {
-		return wholeCapacitor;
+	public CapacitorWallWrapper getEntityCapacitor() {
+		return wrapper;
 	}
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
 		BlockCapacitor cap = BigCapacitorsMod.instance.capacitorIron;
 		ForgeDirection orientation = cap.getOrientation(worldObj, xCoord, yCoord, zCoord);
-		if (wholeCapacitor == null)
+		if (wrapper == null)
 			return false;
-		return from == orientation.getOpposite() && wholeCapacitor.canExtractEnergy(from);
+		return from == orientation.getOpposite() && wrapper.canExtractEnergy(from);
 	}
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		if (canConnectEnergy(from)) {
-			int ret = wholeCapacitor.getStorage().receiveEnergy(maxReceive, simulate);
-			wholeCapacitor.updateEnergy(worldObj);
+			int ret = wrapper.receiveEnergy(maxReceive, simulate);
+			wrapper.updateEnergy(worldObj);
 			return ret;
 		} else
 			return 0;
@@ -112,8 +111,8 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
 		if (canConnectEnergy(from)) {
-			int ret = wholeCapacitor.getStorage().extractEnergy(maxExtract, simulate);
-			wholeCapacitor.updateEnergy(worldObj);
+			int ret = wrapper.extractEnergy(maxExtract, simulate);
+			wrapper.updateEnergy(worldObj);
 			return ret;
 		} else
 			return 0;
@@ -122,7 +121,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	@Override
 	public int getEnergyStored(ForgeDirection from) {
 		if (canConnectEnergy(from)) {
-			return wholeCapacitor.getStorage().getEnergyStored();
+			return wrapper.getEnergyStored();
 		} else
 			return 0;
 	}
@@ -130,37 +129,37 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from) {
 		if (canConnectEnergy(from)) {
-			return wholeCapacitor.getStorage().getMaxEnergyStored();
+			return wrapper.getMaxEnergyStored();
 		} else
 			return 0;
 	}
 
 	public void onRotate() {
 		onBreak(null);
-		wholeCapacitor = null;
+		wrapper = null;
 		createEntity();
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		if (BigCapacitorsMod.instance.worldCapacitors == null) {
-			BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, EntityCapacitor>();
+			BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, CapacitorWallWrapper>();
 		}
 		super.readFromNBT(tag);
 		int id = tag.getInteger("multi-id");
-		EntityCapacitor cap = BigCapacitorsMod.instance.worldCapacitors.get(id);
+		CapacitorWallWrapper cap = BigCapacitorsMod.instance.worldCapacitors.get(id);
 		if (cap == null && tag.getBoolean("multi-present")) {
-			cap = EntityCapacitor.fromNBT(tag.getCompoundTag("multi"));
+			cap = CapacitorWallWrapper.fromNBT(tag.getCompoundTag("multi"));
 			BigCapacitorsMod.instance.worldCapacitors.put(id, cap);
 		}
-		wholeCapacitor = cap;
+		wrapper = cap;
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if (wholeCapacitor != null) {
+		if (wrapper != null) {
 			tag.setBoolean("multi-present", true);
-			tag.setTag("multi", wholeCapacitor.getNBTRepresentation());
-			tag.setInteger("multi-id", wholeCapacitor.hashCode());
+			tag.setTag("multi", wrapper.getNBTRepresentation());
+			tag.setInteger("multi-id", wrapper.hashCode());
 		} else {
 			tag.setBoolean("multi-present", false);
 		}

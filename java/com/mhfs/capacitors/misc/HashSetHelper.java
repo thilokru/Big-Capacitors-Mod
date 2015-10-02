@@ -3,18 +3,20 @@ package com.mhfs.capacitors.misc;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import scala.actors.threadpool.Arrays;
 
 import com.mhfs.capacitors.tile.BlockPos;
 
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class HashSetHelper {
 
-	public static NBTTagCompound blockPosSetToNBT(HashSet<BlockPos> set){
+	public static NBTTagCompound blockPosSetToNBT(Set<BlockPos> containedBlocks){
 		NBTTagCompound tag = new NBTTagCompound();
-		BlockPos[] entries = set.toArray(new BlockPos[0]);
+		BlockPos[] entries = containedBlocks.toArray(new BlockPos[0]);
 		for(int i = 0; i < entries.length; i++){
 			BlockPos pos = entries[i];
 			tag.setIntArray(i + "", new int[]{pos.x, pos.y, pos.z});
@@ -53,5 +55,26 @@ public class HashSetHelper {
 			ret.add(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
 		}
 		return ret;
+	}
+
+	public static NBTBase intSetToNBT(Set<Integer> linkedWalls) {
+		NBTTagCompound tag = new NBTTagCompound();
+		Integer[] entries = linkedWalls.toArray(new Integer[0]);
+		for(int i = 0; i < entries.length; i++){
+			tag.setInteger(i + "", entries[i].intValue());
+		}
+		tag.setInteger("size", entries.length);
+		return tag;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static HashSet<Integer> nbtToIntSet(NBTTagCompound tag){
+		Integer[] entries = new Integer[tag.getInteger("size")];
+		for(int i = 0; i < entries.length; i++){
+			entries[i] = tag.getInteger(i + "");
+		}
+		HashSet<Integer> set = new HashSet<Integer>();
+		set.addAll(Arrays.asList(entries));
+		return set;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
-import com.mhfs.capacitors.tile.EntityCapacitor;
+import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileCapacitor;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,7 +29,7 @@ public class EventHandler {
 	
 	@SubscribeEvent
 	public void handleSpawn(WorldEvent.Load event){
-		BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, EntityCapacitor>();
+		BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, CapacitorWallWrapper>();
 	}
 	
 	@SubscribeEvent
@@ -45,7 +45,8 @@ public class EventHandler {
 			BigCapacitorsMod.instance.voltages = BigCapacitorsMod.instance.voltagesFromConfig;
 		}
 		World world = MinecraftServer.getServer().getEntityWorld();
-		for(EntityCapacitor cap:BigCapacitorsMod.instance.worldCapacitors.values()){
+		for(CapacitorWallWrapper cap:BigCapacitorsMod.instance.worldCapacitors.values()){
+			cap.searchLinkedWalls(world);
 			cap.setupCapacity(world);
 			cap.updateEnergy(world);
 		}

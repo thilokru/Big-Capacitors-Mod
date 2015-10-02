@@ -3,7 +3,7 @@ package com.mhfs.capacitors.network;
 import java.util.HashMap;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.tile.EntityCapacitor;
+import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,7 +13,7 @@ public class EnergyUpdateHandler implements IMessageHandler<EnergyUpdateMessage,
 
 	@Override
 	public IMessage onMessage(EnergyUpdateMessage message, MessageContext ctx) {
-		HashMap<Integer, EntityCapacitor> worldCaps = BigCapacitorsMod.instance.worldCapacitors;
+		HashMap<Integer, CapacitorWallWrapper> worldCaps = BigCapacitorsMod.instance.worldCapacitors;
 		if(worldCaps != null){
 			if(worldCaps.get(message.getEntityID()) == null)return null;
 			worldCaps.get(message.getEntityID()).onPacket(message);

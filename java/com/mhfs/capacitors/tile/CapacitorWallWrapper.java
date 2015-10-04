@@ -11,7 +11,7 @@ import cofh.api.energy.IEnergyStorage;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.HashSetHelper;
-import com.mhfs.capacitors.network.EnergyUpdateMessage;
+import com.mhfs.capacitors.network.WallUpdateMessage;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.block.Block;
@@ -92,15 +92,33 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 
 	public void join(CapacitorWallWrapper old, World world) {
 		this.containedBlocks.addAll(old.containedBlocks);
+		this.charge = Math.min(this.charge, this.maxCharge);
 		BigCapacitorsMod.instance.worldCapacitors.remove(old.hashCode());
 
-		for (BlockPos pos : old.containedBlocks) {
-			TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
-			tile.onEntityChange(this);
-		}
+		Set<CapacitorWallWrapper> controled = new HashSet<CapacitorWallWrapper>();
+		long combinedCharge = 0;
 		BlockPos init = containedBlocks.iterator().next();
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
-		updateBlocks(world);
+
+		for (BlockPos pos : containedBlocks) {
+			TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
+			if (tile.getEntityCapacitor() != null) {
+				if (!controled.contains(tile.getEntityCapacitor())) {
+					combinedCharge += tile.getEntityCapacitor().charge;
+					controled.add(tile.getEntityCapacitor());
+				}
+			}
+			tile.onEntityChange(this);
+		}
+		for (CapacitorWallWrapper wrapper : controled) {
+			if (wrapper.id != this.id) {
+				BigCapacitorsMod.instance.worldCapacitors.remove(wrapper.hashCode());
+			}
+		}
+
+		this.setupCapacity(world);
+		this.charge = combinedCharge;
+		updateEnergy(world);
 	}
 
 	public void leave(BlockPos destroied, World world, EntityPlayer player) {
@@ -114,10 +132,11 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 			Set<BlockPos> setCopy = new HashSet<BlockPos>();
 			setCopy.addAll(containedBlocks);
 			for (BlockPos pos : setCopy) {
-				((TileCapacitor) pos.getTileEntity(world)).onEntityChange(null);
-			}
-			for (BlockPos pos : setCopy) {
-				((TileCapacitor) pos.getTileEntity(world)).updateEntity();
+				TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
+				if (tile == null) {
+					this.containedBlocks.remove(pos);
+				} else
+					tile.onEntityChange(null);
 			}
 			deleteFromOthers(world);
 		}
@@ -125,17 +144,17 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		setupCapacity(world);
 		updateEnergy(world);
 	}
-	
-	private void deleteFromOthers(World world){
+
+	private void deleteFromOthers(World world) {
 		for (int id : linkedWalls) {
 			CapacitorWallWrapper wrapper = BigCapacitorsMod.instance.worldCapacitors.get(id);
 			wrapper.linkedWalls.remove(this.hashCode());
 			wrapper.setupCapacity(world);
 		}
 	}
-	
-	private void notifyLinkedWalls(World world){
-		for(int id:linkedWalls){
+
+	private void notifyLinkedWalls(World world) {
+		for (int id : linkedWalls) {
 			CapacitorWallWrapper wrapper = BigCapacitorsMod.instance.worldCapacitors.get(id);
 			wrapper.setupCapacity(world);
 		}
@@ -144,14 +163,15 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 	public void searchLinkedWalls(World world) {
 		linkedWalls = new HashSet<Integer>();
 		for (BlockPos pos : containedBlocks) {
-			INNER:for (int i = 1; i < MAX_DISTANCE; i++) {
+			INNER: for (int i = 1; i < MAX_DISTANCE; i++) {
 				BlockPos res = pos.clone().goTowards(orientation, i);
 				TileEntity ent = res.getTileEntity(world);
 				if (ent != null && ent instanceof TileCapacitor) {
 					ForgeDirection fOrientation = ForgeDirection.getOrientation(ent.getBlockMetadata());
 					if (fOrientation.getOpposite() == orientation) {
-						CapacitorWallWrapper wrapper = ((TileCapacitor)ent).getEntityCapacitor();
-						if(wrapper == null)break INNER;
+						CapacitorWallWrapper wrapper = ((TileCapacitor) ent).getEntityCapacitor();
+						if (wrapper == null)
+							break INNER;
 						linkedWalls.add(wrapper.id);
 						break INNER;
 					}
@@ -163,7 +183,7 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 	public boolean setupCapacity(World world) {
 		if (world.isRemote)
 			return false;
-		if(this.grounded){
+		if (this.grounded) {
 			this.maxCharge = 0;
 			this.charge = 0;
 			return false;
@@ -173,8 +193,10 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		Set<BlockPos> otherWall = new HashSet<BlockPos>();
 		for (int id : linkedWalls) {
 			CapacitorWallWrapper wall = BigCapacitorsMod.instance.worldCapacitors.get(id);
-			if(wall == null)continue;
-			if(!wall.grounded)continue;
+			if (wall == null)
+				continue;
+			if (!wall.grounded)
+				continue;
 			otherWall.addAll(wall.containedBlocks);
 		}
 
@@ -328,7 +350,8 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 	}
 
 	public void onGroundSwitch(World world) {
-		if(world.isRemote)return;
+		if (world.isRemote)
+			return;
 		this.grounded = !grounded;
 		notifyLinkedWalls(world);
 		this.setupCapacity(world);
@@ -391,18 +414,22 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		return maxCharge;
 	}
 
-	private EnergyUpdateMessage getMessage() {
-		return new EnergyUpdateMessage(charge, maxCharge, grounded, hashCode());
+	private WallUpdateMessage getMessage() {
+		return new WallUpdateMessage(this);
 	}
 
 	public void updateEnergy(World world) {
-		if(world.isRemote)return;
+		if (world.isRemote)
+			return;
 		BigCapacitorsMod.instance.network.sendToAll(getMessage());
 	}
 
-	public void onPacket(EnergyUpdateMessage message) {
-		this.grounded = message.isGrounded();
-		this.charge = message.getEnergy();
-		this.maxCharge = message.getCapacity();
+	public void sync(CapacitorWallWrapper wrapper) {
+		this.charge = wrapper.charge;
+		this.grounded = wrapper.grounded;
+		this.linkedWalls = wrapper.linkedWalls;
+		this.maxCharge = wrapper.maxCharge;
+		this.orientation = wrapper.orientation;
+		this.containedBlocks = wrapper.containedBlocks;
 	}
 }

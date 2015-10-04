@@ -25,6 +25,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
 	@Override
 	public void updateEntity() {
+		if (worldObj.isRemote)return;
 		if (wrapper == null) {
 			createEntity();
 		}
@@ -33,8 +34,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 				this.wrapper = BigCapacitorsMod.instance.worldCapacitors.get(this.wrapper.hashCode());
 			}
 		}
-		if (worldObj.isRemote)
-			return;
+
 		TileEntity candidate = getConnectionCandidate();
 		if (candidate != null && candidate instanceof IEnergyReceiver) {
 			IEnergyReceiver con = (IEnergyReceiver) candidate;
@@ -70,10 +70,10 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	}
 
 	public void onBreak(BreakEvent event) {
-		if (wrapper != null){
-			if(event != null){
-			wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, event.getPlayer());
-			}else{
+		if (wrapper != null) {
+			if (event != null) {
+				wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, event.getPlayer());
+			} else {
 				wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, null);
 			}
 		}

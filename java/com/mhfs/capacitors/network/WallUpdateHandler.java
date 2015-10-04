@@ -9,14 +9,18 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class EnergyUpdateHandler implements IMessageHandler<EnergyUpdateMessage, IMessage> {
+public class WallUpdateHandler implements IMessageHandler<WallUpdateMessage, IMessage> {
 
 	@Override
-	public IMessage onMessage(EnergyUpdateMessage message, MessageContext ctx) {
+	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
 		HashMap<Integer, CapacitorWallWrapper> worldCaps = BigCapacitorsMod.instance.worldCapacitors;
-		if(worldCaps != null){
-			if(worldCaps.get(message.getEntityID()) == null)return null;
-			worldCaps.get(message.getEntityID()).onPacket(message);
+		if (worldCaps != null) {
+			CapacitorWallWrapper local = worldCaps.get(message.getWrapper().hashCode());
+			if (local == null) {
+				worldCaps.put(message.getWrapper().hashCode(), message.getWrapper());
+			} else {
+				local.sync(message.getWrapper());
+			}
 		}
 		return null;
 	}

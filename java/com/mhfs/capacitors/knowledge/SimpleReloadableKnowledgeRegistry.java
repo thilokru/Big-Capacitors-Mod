@@ -17,6 +17,7 @@ import com.mhfs.capacitors.gui.manual.ImagePage;
 import com.mhfs.capacitors.gui.manual.IndexPage;
 import com.mhfs.capacitors.gui.manual.LogoPage;
 import com.mhfs.capacitors.gui.manual.TextPage;
+import com.mhfs.capacitors.misc.Lo;
 
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -64,6 +65,7 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 		this.resourceManager = irm;
 		chapters = new HashMap<String, List<IPage>>();
 		index = null;
+		Lo.g.info("Reloading user manual...");
 		try {
 			ResourceLocation loc = new ResourceLocation(StatCollector.translateToLocal(name));
 			this.loadManual(loc);

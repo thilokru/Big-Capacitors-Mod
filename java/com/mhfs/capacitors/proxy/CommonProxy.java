@@ -35,6 +35,7 @@ import com.mhfs.capacitors.handlers.EventHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
 import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMultitool;
+import com.mhfs.capacitors.misc.Lo;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import com.mhfs.capacitors.oregen.OreGen;
@@ -56,7 +57,9 @@ public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event,
 			final BigCapacitorsMod mod) {
-		setupConfig(event, mod);		
+		Lo.g.info("Loading config...");
+		setupConfig(event, mod);	
+		Lo.g.info("Setting up packets...");
 		setupNetwork(mod);
 		mod.creativeTab = new CreativeTabs("BigCapacitors"){
 			@Override
@@ -223,6 +226,7 @@ public class CommonProxy {
 	public void init(FMLInitializationEvent event,
 			BigCapacitorsMod mod) {
 		MinecraftForge.EVENT_BUS.register(mod.bucketHandler = new BucketHandler());
+		Lo.g.info("Setting up ingame-stuff...");
 		setupFluids(mod);
 		setupBlocks(mod);
 		setupItems(mod);
@@ -241,6 +245,7 @@ public class CommonProxy {
 	public void postInit(FMLPostInitializationEvent event,
 			BigCapacitorsMod mod) {
 		mod.capacitorIron.setMetal(Blocks.iron_block);
+		Lo.g.info("Loading material properties...");
 		loadDielectricities(mod);
 		loadVoltages(mod);
 		mod.config.save();

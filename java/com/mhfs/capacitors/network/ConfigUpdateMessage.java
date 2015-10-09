@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 
 import com.google.gson.Gson;
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.misc.Lo;
 
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -92,6 +93,7 @@ public class ConfigUpdateMessage implements IMessage, IMessageHandler<ConfigUpda
 	@Override
 	public IMessage onMessage(ConfigUpdateMessage message,
 			MessageContext ctx) {
+		Lo.g.info("Receiving server configuration...");
 		BigCapacitorsMod.instance.dielectricities = message.getDielectrica();
 		BigCapacitorsMod.instance.voltages = message.getVoltages();
 		return null;

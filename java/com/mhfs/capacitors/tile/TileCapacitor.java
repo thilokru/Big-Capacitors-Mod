@@ -13,7 +13,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
 	private CapacitorWallWrapper wrapper;
-	private boolean isLoading;
+	private boolean isLoading, isFirstTick = true;
 	
 	public TileCapacitor(){
 		this(true);
@@ -31,6 +31,11 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 		}
 		
 		if (worldObj.isRemote)return;
+		
+		if(this.isFirstTick){
+			this.isFirstTick = false;
+			wrapper.checkJoin(worldObj, true);
+		}
 		
 		wrapper.setupCapacity(worldObj);
 		wrapper.updateEnergy(worldObj);

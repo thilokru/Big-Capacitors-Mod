@@ -42,7 +42,7 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 			TileCapacitor cap = (TileCapacitor) pos.getTileEntity(world);
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
 			if (ent != null && ent != this) {
-				ent.join(this, world);
+				ent.checkJoin(world, false);
 				return;
 			}
 		}
@@ -76,12 +76,11 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		return false;
 	}
 
-	public void join(CapacitorWallWrapper old, World world) {
-		this.containedBlocks.addAll(old.containedBlocks);
+	public void checkJoin(World world, boolean isFirstTick) {
 		this.charge = Math.min(this.charge, this.maxCharge);
 
 		Set<CapacitorWallWrapper> controled = new HashSet<CapacitorWallWrapper>();
-		long combinedCharge = 0;
+		long combinedCharge = isFirstTick ? this.charge : 0;
 		BlockPos init = containedBlocks.iterator().next();
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
 
@@ -89,7 +88,11 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 			TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
 			if (tile.getEntityCapacitor() != null) {
 				if (!controled.contains(tile.getEntityCapacitor())) {
-					combinedCharge += tile.getEntityCapacitor().charge;
+					if(isFirstTick){
+						combinedCharge = Math.max(combinedCharge, tile.getEntityCapacitor().charge);
+					}else{
+						combinedCharge += tile.getEntityCapacitor().charge;
+					}
 					controled.add(tile.getEntityCapacitor());
 				}
 			}

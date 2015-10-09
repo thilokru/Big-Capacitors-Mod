@@ -17,7 +17,6 @@ import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.proxy.CommonProxy;
-import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.common.Mod;
@@ -73,8 +72,6 @@ public class BigCapacitorsMod {
 	public static ISimpleBlockRenderingHandler capacitorRenderer;
 
 	public SimpleNetworkWrapper network;
-	
-	public HashMap<Integer, CapacitorWallWrapper> worldCapacitors;
 	
 	public HashMap<Block, Double> dielectricitiesFromConfig;
 	public HashMap<Block, Double> dielectricities;

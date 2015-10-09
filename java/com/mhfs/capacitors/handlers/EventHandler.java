@@ -1,16 +1,11 @@
 package com.mhfs.capacitors.handlers;
 
-import java.util.HashMap;
-
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
-import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileCapacitor;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -24,22 +19,19 @@ public class EventHandler {
 
 	@SubscribeEvent
 	public void handleDespawn(WorldEvent.Unload event) {
-		BigCapacitorsMod.instance.worldCapacitors = null;
+		
 	}
 
 	@SubscribeEvent
 	public void handleSpawn(WorldEvent.Load event) {
-		BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, CapacitorWallWrapper>();
+		
 	}
 
-	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public void handleTick(WorldTickEvent event) {
 		if (event.side != Side.SERVER)
 			return;
 		if (event.world.isRemote)
-			return;
-		if (BigCapacitorsMod.instance.worldCapacitors == null)
 			return;
 		if (event.phase == TickEvent.Phase.END)
 			return;
@@ -48,14 +40,6 @@ public class EventHandler {
 		}
 		if (BigCapacitorsMod.instance.voltages == null && event.side == Side.SERVER) {
 			BigCapacitorsMod.instance.voltages = BigCapacitorsMod.instance.voltagesFromConfig;
-		}
-		World world = MinecraftServer.getServer().getEntityWorld();
-		HashMap<Integer, CapacitorWallWrapper> search = (HashMap<Integer, CapacitorWallWrapper>) BigCapacitorsMod.instance.worldCapacitors.clone();
-
-		for (CapacitorWallWrapper cap : search.values()) {
-			cap.searchLinkedWalls(world);
-			cap.setupCapacity(world);
-			cap.updateEnergy(world);
 		}
 	}
 

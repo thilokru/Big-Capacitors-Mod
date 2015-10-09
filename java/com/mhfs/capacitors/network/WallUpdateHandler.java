@@ -1,9 +1,10 @@
 package com.mhfs.capacitors.network;
 
-import java.util.HashMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
+import com.mhfs.capacitors.tile.TileCapacitor;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,14 +14,12 @@ public class WallUpdateHandler implements IMessageHandler<WallUpdateMessage, IMe
 
 	@Override
 	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
-		HashMap<Integer, CapacitorWallWrapper> worldCaps = BigCapacitorsMod.instance.worldCapacitors;
-		if (worldCaps != null) {
-			CapacitorWallWrapper local = worldCaps.get(message.getWrapper().hashCode());
-			if (local == null) {
-				worldCaps.put(message.getWrapper().hashCode(), message.getWrapper());
-			} else {
+		World world = Minecraft.getMinecraft().theWorld;
+		TileCapacitor cap = (TileCapacitor) message.getWrapper().getRandomBlock().getTileEntity(world);
+		if(cap == null)return null;
+		CapacitorWallWrapper local = cap.getEntityCapacitor();
+		if (local != null) {
 				local.sync(message.getWrapper());
-			}
 		}
 		return null;
 	}

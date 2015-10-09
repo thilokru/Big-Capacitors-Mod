@@ -81,7 +81,7 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileCapacitor();
+		return new TileCapacitor(false);
 	}
 
 	public boolean onBlockEventReceived(World world, int x, int y, int z,

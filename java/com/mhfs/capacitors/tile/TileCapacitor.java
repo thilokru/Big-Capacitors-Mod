@@ -1,16 +1,11 @@
 package com.mhfs.capacitors.tile;
 
-import java.util.HashMap;
-
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -18,22 +13,27 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 public class TileCapacitor extends TileEntity implements IEnergyHandler {
 
 	private CapacitorWallWrapper wrapper;
+	private boolean isLoading;
+	
+	public TileCapacitor(){
+		this(true);
+	}
 
-	public TileCapacitor() {
+	public TileCapacitor(boolean isLoading) {
 		super();
+		this.isLoading = isLoading;
 	}
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote)return;
 		if (wrapper == null) {
 			createEntity();
 		}
-		if (BigCapacitorsMod.instance.worldCapacitors.get(this.wrapper.hashCode()) != null) {
-			if (BigCapacitorsMod.instance.worldCapacitors.get(wrapper.hashCode()) != wrapper) {
-				this.wrapper = BigCapacitorsMod.instance.worldCapacitors.get(this.wrapper.hashCode());
-			}
-		}
+		
+		if (worldObj.isRemote)return;
+		
+		wrapper.setupCapacity(worldObj);
+		wrapper.updateEnergy(worldObj);
 
 		TileEntity candidate = getConnectionCandidate();
 		if (candidate != null && candidate instanceof IEnergyReceiver) {
@@ -141,37 +141,16 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
-		if (BigCapacitorsMod.instance.worldCapacitors == null) {
-			BigCapacitorsMod.instance.worldCapacitors = new HashMap<Integer, CapacitorWallWrapper>();
-		}
 		super.readFromNBT(tag);
-		int id = tag.getInteger("multi-id");
-		CapacitorWallWrapper cap = BigCapacitorsMod.instance.worldCapacitors.get(id);
-		if (cap == null && tag.getBoolean("multi-present")) {
-			cap = CapacitorWallWrapper.fromNBT(tag.getCompoundTag("multi"));
-			BigCapacitorsMod.instance.worldCapacitors.put(id, cap);
+		if (this.isLoading && tag.hasKey("multi")) {
+			wrapper = CapacitorWallWrapper.fromNBT(tag.getCompoundTag("multi"));
 		}
-		wrapper = cap;
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if (wrapper != null) {
-			tag.setBoolean("multi-present", true);
+		if(wrapper != null){
 			tag.setTag("multi", wrapper.getNBTRepresentation());
-			tag.setInteger("multi-id", wrapper.hashCode());
-		} else {
-			tag.setBoolean("multi-present", false);
 		}
-	}
-
-	public Packet getDescriptionPacket() {
-		NBTTagCompound syncData = new NBTTagCompound();
-		writeToNBT(syncData);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
-	}
-
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.func_148857_g());
 	}
 }

@@ -38,6 +38,18 @@ public class ConfigUpdateMessage implements IMessage{
 			Block block = Block.getBlockFromName(name);
 			dielectrica.put(block, transmitted.get(name));
 		}
+		
+		voltages = new HashMap<Block, Double>();
+		size = buf.readInt();
+		bytes = new byte[size];
+		buf.readBytes(bytes);
+		json = new String(bytes);
+		
+		transmitted = gson.fromJson(json, new HashMap<String, Double>().getClass());
+		for(String name:transmitted.keySet()){
+			Block block = Block.getBlockFromName(name);
+			voltages.put(block, transmitted.get(name));
+		}
 	}
 
 	@Override

@@ -201,6 +201,10 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		long capacity = (long) ((BigCapacitorsMod.energyConstant * Math.pow(maxVoltage, 2) * dielectricity * surface) / (distance) * 2);
 
 		maxCharge = capacity;
+		if(charge > maxCharge){
+			charge = maxCharge;
+			this.updateEnergy(world);
+		}
 
 		return capacity != oldCapacity;
 	}

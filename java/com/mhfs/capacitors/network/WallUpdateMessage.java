@@ -1,12 +1,18 @@
 package com.mhfs.capacitors.network;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
+
 import com.google.gson.Gson;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
+import com.mhfs.capacitors.tile.TileCapacitor;
 
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class WallUpdateMessage implements IMessage {
+public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMessage, IMessage> {
 
 	private CapacitorWallWrapper wrapper;
 	
@@ -40,6 +46,18 @@ public class WallUpdateMessage implements IMessage {
 		byte[] bytes = json.getBytes();
 		buf.writeInt(bytes.length);
 		buf.writeBytes(bytes);
+	}
+	
+	@Override
+	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
+		World world = Minecraft.getMinecraft().theWorld;
+		TileCapacitor cap = (TileCapacitor) message.getWrapper().getRandomBlock().getTileEntity(world);
+		if(cap == null)return null;
+		CapacitorWallWrapper local = cap.getEntityCapacitor();
+		if (local != null) {
+				local.sync(message.getWrapper());
+		}
+		return null;
 	}
 
 }

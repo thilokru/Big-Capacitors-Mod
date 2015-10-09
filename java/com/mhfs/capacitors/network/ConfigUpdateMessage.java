@@ -5,11 +5,14 @@ import java.util.HashMap;
 import net.minecraft.block.Block;
 
 import com.google.gson.Gson;
+import com.mhfs.capacitors.BigCapacitorsMod;
 
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class ConfigUpdateMessage implements IMessage{
+public class ConfigUpdateMessage implements IMessage, IMessageHandler<ConfigUpdateMessage, IMessage>{
 	
 	private HashMap<Block, Double> dielectrica, voltages;
 	
@@ -84,6 +87,14 @@ public class ConfigUpdateMessage implements IMessage{
 	
 	public HashMap<Block, Double> getVoltages(){
 		return voltages;
+	}
+	
+	@Override
+	public IMessage onMessage(ConfigUpdateMessage message,
+			MessageContext ctx) {
+		BigCapacitorsMod.instance.dielectricities = message.getDielectrica();
+		BigCapacitorsMod.instance.voltages = message.getVoltages();
+		return null;
 	}
 
 }

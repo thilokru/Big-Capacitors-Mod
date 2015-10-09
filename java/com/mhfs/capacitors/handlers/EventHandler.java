@@ -11,36 +11,13 @@ import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-import cpw.mods.fml.relauncher.Side;
 
 public class EventHandler {
 
 	@SubscribeEvent
-	public void handleDespawn(WorldEvent.Unload event) {
-		
-	}
-
-	@SubscribeEvent
-	public void handleSpawn(WorldEvent.Load event) {
-		
-	}
-
-	@SubscribeEvent
-	public void handleTick(WorldTickEvent event) {
-		if (event.side != Side.SERVER)
-			return;
-		if (event.world.isRemote)
-			return;
-		if (event.phase == TickEvent.Phase.END)
-			return;
-		if (BigCapacitorsMod.instance.dielectricities == null && event.side == Side.SERVER) {
-			BigCapacitorsMod.instance.dielectricities = BigCapacitorsMod.instance.dielectricitiesFromConfig;
-		}
-		if (BigCapacitorsMod.instance.voltages == null && event.side == Side.SERVER) {
-			BigCapacitorsMod.instance.voltages = BigCapacitorsMod.instance.voltagesFromConfig;
-		}
+	public void handleWorldLoad(WorldEvent.Load event) {
+		BigCapacitorsMod.instance.dielectricities = BigCapacitorsMod.instance.dielectricitiesFromConfig;
+		BigCapacitorsMod.instance.voltages = BigCapacitorsMod.instance.voltagesFromConfig;
 	}
 
 	@SubscribeEvent

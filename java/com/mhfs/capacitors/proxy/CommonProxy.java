@@ -35,10 +35,8 @@ import com.mhfs.capacitors.handlers.EventHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
 import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMultitool;
-import com.mhfs.capacitors.network.ConfigUpdateHandler;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.network.WallUpdateMessage;
-import com.mhfs.capacitors.network.WallUpdateHandler;
 import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
@@ -218,8 +216,8 @@ public class CommonProxy {
 	
 	private void setupNetwork(BigCapacitorsMod mod){
 		mod.network = NetworkRegistry.INSTANCE.newSimpleChannel("energy_update");
-		mod.network.registerMessage(WallUpdateHandler.class, WallUpdateMessage.class, 1, Side.CLIENT);
-		mod.network.registerMessage(ConfigUpdateHandler.class, ConfigUpdateMessage.class, 2, Side.CLIENT);
+		mod.network.registerMessage(WallUpdateMessage.class, WallUpdateMessage.class, 1, Side.CLIENT);
+		mod.network.registerMessage(ConfigUpdateMessage.class, ConfigUpdateMessage.class, 2, Side.CLIENT);
 	}
 
 	public void init(FMLInitializationEvent event,

@@ -12,7 +12,6 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
 import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
-import com.mhfs.capacitors.handlers.ClientEventHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.RendererCapacitor;
@@ -41,7 +40,6 @@ public class ClientProxy extends CommonProxy {
 		handler.registerHandler(mod.itemMultitool, new MultitoolOverlayHandler());
 		handler.registerHandler(mod.itemManual, new ManualOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(handler);
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 		NetworkRegistry.INSTANCE.registerGuiHandler(mod, new GuiHandler());
 	}
 

@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.Fluid;
 import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockDestillery;
+import com.mhfs.capacitors.blocks.BlockFluidBase;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.proxy.CommonProxy;
@@ -53,6 +54,7 @@ public class BigCapacitorsMod {
 	public BlockBase blockCeramic;
 	public BlockFluidClassic blockDestilledWater;
 	public BlockFluidClassic blockEthanol;
+	public BlockFluidBase blockWine;
 	
 	public Item itemWitherite;
 	public Item itemRutil;
@@ -62,9 +64,11 @@ public class BigCapacitorsMod {
 	public Item itemManual;
 	public Item itemBucketDestilledWater;
 	public Item itemBucketEthanol;
+	public Item itemBucketWine;
 	
 	public Fluid fluidDestilledWater;
 	public Fluid fluidEthanol;
+	public Fluid fluidWine;
 	
 	public DamageSource damageElectric;
 	public IKnowledgeRegistry knowledge;

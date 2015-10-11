@@ -29,7 +29,7 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockDestillery;
-import com.mhfs.capacitors.blocks.BlockFluidDestilledWater;
+import com.mhfs.capacitors.blocks.BlockFluidBase;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.handlers.EventHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
@@ -83,6 +83,13 @@ public class CommonProxy {
 		mod.fluidEthanol.setLuminosity(0);
 		mod.fluidEthanol.setViscosity(1190);
 		FluidRegistry.registerFluid(mod.fluidEthanol);
+		
+		mod.fluidWine = new Fluid("wine");
+		mod.fluidWine.setDensity(900);
+		mod.fluidWine.setGaseous(false);
+		mod.fluidWine.setLuminosity(0);
+		mod.fluidWine.setViscosity(1050);
+		FluidRegistry.registerFluid(mod.fluidWine);
 	}
 
 	private void setupTextureNames(BigCapacitorsMod mod) {
@@ -98,7 +105,8 @@ public class CommonProxy {
 		mod.itemWitherite.setTextureName("big_capacitors:dustWitherite");
 		mod.itemRutil.setTextureName("big_capacitors:dustRutil");
 		mod.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
-		mod.itemBucketEthanol.setTextureName("minecraft:bucket_water");
+		mod.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
+		mod.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
 	}
 
 	private void setupRecipies(BigCapacitorsMod mod) {
@@ -175,15 +183,23 @@ public class CommonProxy {
 		GameRegistry.registerBlock(mod.blockWitheriteOre, "oreWitherite");
 		OreDictionary.registerOre("oreBariumCarbonate", mod.blockWitheriteOre);
 		
-		mod.blockDestilledWater = new BlockFluidDestilledWater(mod.fluidDestilledWater, Material.water);
+		mod.blockDestilledWater = new BlockFluidBase(mod.fluidDestilledWater, Material.water, "water_still", "water_flow");
+		mod.blockDestilledWater.setCreativeTab(mod.creativeTab);
 		mod.blockDestilledWater.setBlockName("blockDestilledWater");
 		GameRegistry.registerBlock(mod.blockDestilledWater, "blockDestilledWater");
 		mod.itemBucketDestilledWater = createBucket(mod.fluidDestilledWater, mod.blockDestilledWater, "bucketDestilledWater");
 		
-		mod.blockEthanol = new BlockFluidDestilledWater(mod.fluidEthanol, Material.water);
+		mod.blockEthanol = new BlockFluidBase(mod.fluidEthanol, Material.water, "big_capacitors:ethanol_still", "big_capacitors:ethanol_flow");
+		mod.blockEthanol.setCreativeTab(mod.creativeTab);
 		mod.blockEthanol.setBlockName("blockEthanol");
 		GameRegistry.registerBlock(mod.blockEthanol, "blockEthanol");
 		mod.itemBucketEthanol = createBucket(mod.fluidEthanol, mod.blockEthanol, "bucketEthanol");
+		
+		mod.blockWine = new BlockFluidBase(mod.fluidWine, Material.water, "big_capacitors:wine_still", "big_capacitors:wine_flow");
+		mod.blockWine.setCreativeTab(mod.creativeTab);
+		mod.blockWine.setBlockName("blockWine");
+		GameRegistry.registerBlock(mod.blockWine, "blockWine");
+		mod.itemBucketWine = createBucket(mod.fluidEthanol, mod.blockWine, "bucketWine");
 	}
 	
 	private Item createBucket(Fluid fluid, Block fluidBlock, String unloc){

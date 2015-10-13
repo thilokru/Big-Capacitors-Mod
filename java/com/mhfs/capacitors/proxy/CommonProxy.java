@@ -26,6 +26,7 @@ import cofh.thermalexpansion.util.crafting.PulverizerManager;
 import cofh.thermalexpansion.util.crafting.SmelterManager;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.blocks.BlockBarrel;
 import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockDestillery;
@@ -39,6 +40,7 @@ import com.mhfs.capacitors.misc.Lo;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import com.mhfs.capacitors.oregen.OreGen;
+import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
@@ -157,6 +159,13 @@ public class CommonProxy {
 		mod.blockDestillery.setHarvestLevel("pickaxe", 2);
 		GameRegistry.registerBlock(mod.blockDestillery, "blockDestillery");
 		
+		mod.blockBarrel = new BlockBarrel(Material.wood);
+		mod.blockBarrel.setBlockName("blockBarrel");
+		mod.blockBarrel.setCreativeTab(mod.creativeTab);
+		mod.blockBarrel.setHardness(1F);
+		mod.blockBarrel.setHarvestLevel("axe", 2);
+		GameRegistry.registerBlock(mod.blockBarrel, "blockBarrel");
+		
 		mod.blockCeramic = new BlockBase(Material.glass);
 		mod.blockCeramic.setBlockName("blockCeramic");
 		mod.blockCeramic.setCreativeTab(mod.creativeTab);
@@ -199,7 +208,7 @@ public class CommonProxy {
 		mod.blockWine.setCreativeTab(mod.creativeTab);
 		mod.blockWine.setBlockName("blockWine");
 		GameRegistry.registerBlock(mod.blockWine, "blockWine");
-		mod.itemBucketWine = createBucket(mod.fluidEthanol, mod.blockWine, "bucketWine");
+		mod.itemBucketWine = createBucket(mod.fluidWine, mod.blockWine, "bucketWine");
 	}
 	
 	private Item createBucket(Fluid fluid, Block fluidBlock, String unloc){
@@ -252,6 +261,7 @@ public class CommonProxy {
 		
 		GameRegistry.registerTileEntity(TileCapacitor.class, "tileCapacitor");
 		GameRegistry.registerTileEntity(TileDistillery.class, "tileDistillery");
+		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
 		setupRecipies(mod);
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

@@ -11,6 +11,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
+import com.mhfs.capacitors.blocks.BlockBarrel;
 import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockDestillery;
@@ -49,6 +50,7 @@ public class BigCapacitorsMod {
 	public CreativeTabs creativeTab;
 	public BlockCapacitor capacitorIron;
 	public BlockDestillery blockDestillery;
+	public BlockBarrel blockBarrel;
 	public BlockBase blockWitheriteOre; //BaCO3
 	public BlockBase blockRutilOre; //TiO2
 	public BlockBase blockCeramic;

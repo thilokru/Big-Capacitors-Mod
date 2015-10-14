@@ -31,11 +31,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = BigCapacitorsMod.modid, useMetadata = true, guiFactory = BigCapacitorsMod.guiFactory)
+@Mod(modid = BigCapacitorsMod.modid, useMetadata = true, guiFactory = BigCapacitorsMod.guiFactory, version = BigCapacitorsMod.version)
 public class BigCapacitorsMod {
 	
 	public final static String modid = "big_capacitors";
 	public final static String guiFactory = "com.mhfs.capacitors.gui.GuiFactory";
+	public final static String version = "1.0Alpha";
 	
 	@Instance("big_capacitors")
 	public static BigCapacitorsMod instance;

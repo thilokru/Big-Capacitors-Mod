@@ -1,4 +1,5 @@
 tile.capacitorIron.name=Eisen Kondensator
+tile.blockBarrel.name=Fass
 tile.blockDestillery.name=Destillerie
 tile.blockDestilledWater.name=destilliertes Wasser
 tile.blockEthanol.name=Alkohol
@@ -16,6 +17,10 @@ item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer
 itemGroup.BigCapacitors=Big Capacitors
+
+fluid.destilledWater=Destilliertes Wasser
+fluid.ethanol=Alkohol
+fluid.wine=Kartoffelwein
 
 death.attack.electric=%1$s erdete einen Kondensator und der fließende Strom tötete ihn.
 

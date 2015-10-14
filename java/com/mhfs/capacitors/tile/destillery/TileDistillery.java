@@ -4,6 +4,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 
 import com.mhfs.capacitors.blocks.IOrientedBlock;
+import com.mhfs.capacitors.misc.IRotatable;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +21,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 public class TileDistillery extends TileEntity implements IFluidHandler,
-		IEnergyReceiver {
+		IEnergyReceiver, IRotatable {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
@@ -152,7 +153,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 	}
 
 	private IFluidTank getTankFromDirection(ForgeDirection from) {
-		ForgeDirection orientation = getOrientation();
+		ForgeDirection orientation = getRotation();
 		ForgeDirection left = orientation.getRotation(ForgeDirection.DOWN);
 		ForgeDirection right = left.getOpposite();
 
@@ -165,7 +166,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		}
 	}
 
-	public ForgeDirection getOrientation() {
+	public ForgeDirection getRotation() {
 		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
 		if (block instanceof IOrientedBlock) {
 			IOrientedBlock ori = (IOrientedBlock) block;

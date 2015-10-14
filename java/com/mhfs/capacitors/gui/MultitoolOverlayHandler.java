@@ -6,12 +6,17 @@ import org.lwjgl.opengl.GL11;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
+import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -31,8 +36,22 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderCapacitorOverlay(event, entity);
 		} else if (entity instanceof TileDistillery) {
 			renderDestilleryOverlay(event, entity);
+		} else if (entity instanceof TileBarrel) {
+			renderBarrelOverlay(event, entity);
 		}
 
+	}
+
+	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {
+		TileBarrel barrel = (TileBarrel) entity;
+		
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+		
+		this.renderItemStack(barrel.getStackInSlot(0), xPos - 18, yPos + 2);
+		
+		float percentageFilled = ((float)barrel.getWineTank().getFluidAmount())/((float)barrel.getWineTank().getCapacity());
+		this.renderFluidStack(barrel.getWineTank().getFluid(), xPos + 2, yPos + 5, percentageFilled);
 	}
 
 	private void renderDestilleryOverlay(RenderGameOverlayEvent event, TileEntity entity) {
@@ -91,6 +110,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 		GL11.glPopMatrix();
 	}
+	
+	private void renderItemStack(ItemStack stack, int x, int y){
+		RenderItem ri = RenderItem.getInstance();
+		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+		TextureManager tm = Minecraft.getMinecraft().renderEngine;
+		ri.renderItemAndEffectIntoGUI(fr, tm, stack, x, y);
+		ri.renderItemOverlayIntoGUI(fr, tm, stack, x, y);
+	}
 
 	private void renderCapacitorOverlay(RenderGameOverlayEvent event, TileEntity entity) {
 		TileCapacitor tile = (TileCapacitor) entity;
@@ -103,7 +130,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		if (storage.isGrounded()) {
 			bindTexture(overlayTexture);
 			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
-		}else{
+		} else {
 			String text = "RF: " + storage.getAllEnergyStored() + "/" + storage.getWholeCapacity();
 			gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}

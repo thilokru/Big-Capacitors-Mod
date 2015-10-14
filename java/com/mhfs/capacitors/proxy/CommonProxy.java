@@ -131,12 +131,16 @@ public class CommonProxy {
 		Item destilleryItem = Item.getItemFromBlock(mod.blockDestillery);
 		GameRegistry.addRecipe(new ShapedOreRecipe(destilleryItem, true, "II ", "B B", "H  ", 'I', "ingotIron", 'B', Items.bucket, 'H', mod.itemHeater));
 		
+		Item barrelItem = Item.getItemFromBlock(mod.blockBarrel);
+		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
+		
 		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(mod.itemRutil, 2), null, 0);
 		PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(mod.itemWitherite, 2), null, 0);
 		
 		SmelterManager.addAlloyRecipe(80, "dustTitandioxid", 1, "dustBariumCarbonate", 1, new ItemStack(mod.blockCeramic, 1));
 		
 		DestilleryRecipeRegistry.registerRecipe(new FluidStack(FluidRegistry.WATER, 1), new FluidStack(mod.fluidDestilledWater, 1), 10);
+		DestilleryRecipeRegistry.registerRecipe(new FluidStack(mod.fluidWine, 10), new FluidStack(mod.fluidEthanol, 1), 8);
 	}
 
 	private void setupConfig(FMLPreInitializationEvent event, BigCapacitorsMod mod) {

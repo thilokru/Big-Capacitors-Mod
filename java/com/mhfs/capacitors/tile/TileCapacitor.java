@@ -2,6 +2,7 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
+import com.mhfs.capacitors.misc.IRotatable;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
@@ -10,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
-public class TileCapacitor extends TileEntity implements IEnergyHandler {
+public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotatable {
 
 	private CapacitorWallWrapper wrapper;
 	private boolean isLoading, isFirstTick = true;
@@ -43,9 +44,9 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 		TileEntity candidate = getConnectionCandidate();
 		if (candidate != null && candidate instanceof IEnergyReceiver) {
 			IEnergyReceiver con = (IEnergyReceiver) candidate;
-			int transmittable = con.receiveEnergy(getOrientation(), (int) Math.min(wrapper.getEnergyStored(), wrapper.getWholeCapacity()), true);
-			int transmit = this.extractEnergy(getOrientation().getOpposite(), transmittable, false);
-			con.receiveEnergy(getOrientation(), transmit, false);
+			int transmittable = con.receiveEnergy(getRotation(), (int) Math.min(wrapper.getEnergyStored(), wrapper.getWholeCapacity()), true);
+			int transmit = this.extractEnergy(getRotation().getOpposite(), transmittable, false);
+			con.receiveEnergy(getRotation(), transmit, false);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 	}
 
 	private TileEntity getConnectionCandidate() {
-		ForgeDirection face = getOrientation().getOpposite();
+		ForgeDirection face = getRotation().getOpposite();
 		if (wrapper == null)
 			return null;
 		if (wrapper.canExtractEnergy(face)) {
@@ -70,7 +71,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler {
 		return null;
 	}
 
-	public ForgeDirection getOrientation() {
+	public ForgeDirection getRotation() {
 		return BigCapacitorsMod.instance.capacitorIron.getOrientation(worldObj, xCoord, yCoord, zCoord);
 	}
 

@@ -1,4 +1,5 @@
 tile.capacitorIron.name=Iron Capacitor
+tile.blockBarrel.name=Barrel
 tile.blockDestillery.name=Distillery
 tile.blockDestilledWater.name=Distilled Water
 tile.blockEthanol.name=Alkohol
@@ -16,6 +17,10 @@ item.bucketDestilledWater.name=Distilled Water Bucket
 item.bucketEthanol.name=Alcohol Bucket
 item.bucketWine.name=Wine Bucket
 itemGroup.BigCapacitors=Big Capacitors
+
+fluid.destilledWater=Distilled Water
+fluid.ethanol=Alcohol
+fluid.wine=Potato Wine
 
 death.attack.electric=%1$s grounded a capacitor and the flowing current killed him.
 

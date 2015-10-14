@@ -29,5 +29,7 @@ public class BlockFluidBase extends BlockFluidClassic {
 	public void registerBlockIcons(IIconRegister register) {
 		stillIcon = register.registerIcon(still);
 		flowingIcon = register.registerIcon(flowing);
+		this.getFluid().setStillIcon(this.stillIcon);
+		this.getFluid().setFlowingIcon(this.flowingIcon);
 	}
 }

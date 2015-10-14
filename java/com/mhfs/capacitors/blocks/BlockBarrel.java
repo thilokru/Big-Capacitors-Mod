@@ -24,4 +24,20 @@ public class BlockBarrel extends BlockContainer {
 		return true;
 	}
 
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+	
+	public int getRenderBlockPass() {
+		return 1;
+	}
+	
+	public int getRenderType() {
+		return -1;
+	}
 }

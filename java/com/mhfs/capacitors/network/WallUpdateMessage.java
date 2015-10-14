@@ -51,6 +51,7 @@ public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMe
 	@Override
 	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
 		World world = Minecraft.getMinecraft().theWorld;
+		if(world == null)return null;
 		TileCapacitor cap = (TileCapacitor) message.getWrapper().getRandomBlock().getTileEntity(world);
 		if(cap == null)return null;
 		CapacitorWallWrapper local = cap.getEntityCapacitor();

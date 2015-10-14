@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +16,8 @@ import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.RendererCapacitor;
-import com.mhfs.capacitors.render.RendererDestillery;
+import com.mhfs.capacitors.render.RendererOBJ;
+import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -34,7 +36,13 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(BigCapacitorsMod.capacitorRenderer);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.capacitorIron), (IItemRenderer) BigCapacitorsMod.capacitorRenderer);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, new RendererDestillery());
+		ResourceLocation model = new ResourceLocation(BigCapacitorsMod.modid, "models/Destillery.obj");
+		ResourceLocation texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/destillery.png");
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, new RendererOBJ(model, texture));
+		
+		model = new ResourceLocation(BigCapacitorsMod.modid, "models/Barrel.obj");
+		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/barrel.png");
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new RendererOBJ(model, texture));
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(mod.itemMultitool, new MultitoolOverlayHandler());

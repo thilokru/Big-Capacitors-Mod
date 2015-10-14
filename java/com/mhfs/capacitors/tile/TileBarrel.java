@@ -6,6 +6,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -19,6 +23,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHandler{
 	
 	private final static int maxProgress = 1000;
+	private final static int tankCapacity = 5000;
 	
 	private ItemStack potatoStack;
 	private boolean processing;
@@ -26,27 +31,35 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	private FluidTank wineTank;
 	
 	public TileBarrel(){
-		wineTank = new FluidTank(BigCapacitorsMod.instance.fluidWine, 0, 2000);
+		wineTank = new FluidTank(BigCapacitorsMod.instance.fluidWine, 0, tankCapacity);
+		potatoStack = new ItemStack(Items.potato, 0);
 	}
 	
 	@Override
 	public void updateEntity(){
 		if(worldObj.isRemote)return;
+		if(potatoStack.stackSize == this.getInventoryStackLimit() && !processing){
+			this.processing = true;
+			this.progress = 0;
+		}
 		if(this.processing){
 			progress++;
 			if(progress == maxProgress){
 				this.progress = 0;
 				this.processing = false;
 				this.wineTank.fill(new FluidStack(BigCapacitorsMod.instance.fluidWine, 2000), true);
-				this.potatoStack = null;
+				this.potatoStack = new ItemStack(Items.potato, 0);
 			}
 		}
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
 	public void onRightClick(World world, EntityPlayer player) {
 		if(processing)return;
 		if(world.isRemote)return;
 		ItemStack stack = player.getHeldItem();
+		if(stack == null)return;
 		if(stack.getItem() == Items.potato){
 			if(potatoStack == null){
 				stack.stackSize--;
@@ -55,12 +68,10 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 				if(potatoStack.stackSize < this.getInventoryStackLimit()){
 					stack.stackSize--;
 					potatoStack.stackSize++;
-					if(potatoStack.stackSize == this.getInventoryStackLimit()){
-						this.processing = true;
-						this.progress = 0;
-					}
 				}
 			}
+			this.markDirty();
+			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -193,6 +204,48 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 			return new FluidTankInfo[]{wineTank.getInfo()};
 		}
 		return new FluidTankInfo[]{};
+	}
+	
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+
+		FluidTank wineTank = new FluidTank(tankCapacity);
+		wineTank.readFromNBT(tag.getCompoundTag("wineTank"));
+		this.wineTank = wineTank;
+
+		this.potatoStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+		
+		this.processing = tag.getBoolean("processing");
+		this.progress =  tag.getInteger("progress");
+	}
+
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+
+		NBTTagCompound wineTankTag = new NBTTagCompound();
+		wineTank.writeToNBT(wineTankTag);
+		tag.setTag("wineTank", wineTankTag);
+
+		NBTTagCompound stackTag = new NBTTagCompound();
+		potatoStack.writeToNBT(stackTag);
+		tag.setTag("stack", stackTag);
+		
+		tag.setBoolean("processing", processing);
+		tag.setInteger("progress", progress);
+	}
+
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
+	}
+
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+	}
+
+	public FluidTank getWineTank() {
+		return wineTank;
 	}
 
 }

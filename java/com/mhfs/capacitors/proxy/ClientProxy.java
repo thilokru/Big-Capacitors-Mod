@@ -1,6 +1,7 @@
 package com.mhfs.capacitors.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
@@ -38,11 +39,15 @@ public class ClientProxy extends CommonProxy {
 
 		ResourceLocation model = new ResourceLocation(BigCapacitorsMod.modid, "models/Destillery.obj");
 		ResourceLocation texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/destillery.png");
-		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, new RendererOBJ(model, texture));
+		TileEntitySpecialRenderer destilleryRenderer = new RendererOBJ(model, texture);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, destilleryRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.blockDestillery), (IItemRenderer) destilleryRenderer);
 		
 		model = new ResourceLocation(BigCapacitorsMod.modid, "models/Barrel.obj");
 		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/barrel.png");
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new RendererOBJ(model, texture));
+		TileEntitySpecialRenderer barrelRenderer = new RendererOBJ(model, texture);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, barrelRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.blockBarrel), (IItemRenderer) barrelRenderer);
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(mod.itemMultitool, new MultitoolOverlayHandler());

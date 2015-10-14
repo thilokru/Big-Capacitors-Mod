@@ -103,6 +103,7 @@ public class CommonProxy {
 		mod.blockWitheriteOre.setBlockTextureName("big_capacitors:oreWitherite");
 		mod.blockCeramic.setBlockTextureName("big_capacitors:ceramic");
 		mod.blockDestillery.setBlockTextureName("big_capacitors:destillery");
+		mod.blockBarrel.setBlockTextureName("big_capacitors:barrel");
 		mod.itemManual.setTextureName("big_capacitors:manual");
 		mod.itemWitherite.setTextureName("big_capacitors:dustWitherite");
 		mod.itemRutil.setTextureName("big_capacitors:dustRutil");

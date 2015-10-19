@@ -25,3 +25,6 @@ fluid.wine=Kartoffelwein
 death.attack.electric=%1$s erdete einen Kondensator und der fließende Strom tötete ihn.
 
 manual.loc=big_capacitors:manual/manual-desc-de.txt
+
+config.dielec.tooltip=Konfiguriere die Dielektrizitätszahlen.
+config.strength.tooltip=Konfiguriere die Durchschlagsfestigkeiten.

@@ -25,3 +25,6 @@ fluid.wine=Potato Wine
 death.attack.electric=%1$s grounded a capacitor and the flowing current killed him.
 
 manual.loc=big_capacitors:manual/manual-desc.txt
+
+config.dielec.tooltip=Configure the dielectricities.
+config.strength.tooltip=Configure the dielectric strengthes.

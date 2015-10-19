@@ -49,8 +49,8 @@ public class GuiFactory implements IModGuiFactory {
 		@SuppressWarnings("rawtypes")
 		private static List<IConfigElement> getConfigElements() {
 			List<IConfigElement> list = new ArrayList<IConfigElement>();
-			list.add(new DummyCategoryElement<Object>("Dielectricity", "config.dielec.name", DielecEntry.class));
-			list.add(new DummyCategoryElement<Object>("Dielectric Strength", "config.strength.name", StregthEntry.class));
+			list.add(new DummyCategoryElement<Object>("Dielectricity", "config.dielec", DielecEntry.class));
+			list.add(new DummyCategoryElement<Object>("Dielectric Strength", "config.strength", StregthEntry.class));
 			return list;
 		}
 

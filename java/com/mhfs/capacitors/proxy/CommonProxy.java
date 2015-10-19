@@ -290,7 +290,9 @@ public class CommonProxy {
 		if(names.size() == 0){
 			names.add("minecraft:air");
 			names.add("minecraft:water");
+			names.add("big_capacitors:blockDestilledWater");
 			names.add("big_capacitors:blockCeramic");
+			names.add("big_capacitors:blockEthanol");
 		}
 		for(String blockName:names){
 			double die = mod.config.get(cat.getName(), blockName, getDefaultDielec(blockName)).getDouble();
@@ -309,6 +311,7 @@ public class CommonProxy {
 			names.add("minecraft:water");
 			names.add("big_capacitors:blockDestilledWater");
 			names.add("big_capacitors:blockCeramic");
+			names.add("big_capacitors:blockEthanol");
 		}
 		for(String blockName:names){
 			double die = mod.config.get(cat.getName(), blockName, getDefaultVoltage(blockName)).getDouble();

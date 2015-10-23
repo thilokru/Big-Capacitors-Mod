@@ -44,13 +44,13 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {
 		TileBarrel barrel = (TileBarrel) entity;
-		
+
 		int xPos = event.resolution.getScaledWidth() / 2;
 		int yPos = event.resolution.getScaledHeight() / 2;
-		
+
 		this.renderItemStack(barrel.getStackInSlot(0), xPos - 18, yPos + 2);
-		
-		float percentageFilled = ((float)barrel.getWineTank().getFluidAmount())/((float)barrel.getWineTank().getCapacity());
+
+		float percentageFilled = ((float) barrel.getWineTank().getFluidAmount()) / ((float) barrel.getWineTank().getCapacity());
 		this.renderFluidStack(barrel.getWineTank().getFluid(), xPos + 2, yPos + 5, percentageFilled);
 	}
 
@@ -110,13 +110,20 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 		GL11.glPopMatrix();
 	}
-	
-	private void renderItemStack(ItemStack stack, int x, int y){
+
+	private void renderItemStack(ItemStack stack, int x, int y) {
 		RenderItem ri = RenderItem.getInstance();
 		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		TextureManager tm = Minecraft.getMinecraft().renderEngine;
 		ri.renderItemAndEffectIntoGUI(fr, tm, stack, x, y);
-		ri.renderItemOverlayIntoGUI(fr, tm, stack, x, y);
+		
+		String out = stack.stackSize + "";
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_BLEND);
+		fr.drawStringWithShadow(out, x + 19 - 2 - fr.getStringWidth(out), y + 6 + 3, Color.WHITE.getRGB());
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 	private void renderCapacitorOverlay(RenderGameOverlayEvent event, TileEntity entity) {

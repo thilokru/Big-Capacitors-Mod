@@ -3,12 +3,12 @@ package com.mhfs.capacitors.gui.manual;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 
-import scala.actors.threadpool.Arrays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

@@ -4,8 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import com.mhfs.capacitors.tile.BlockPos;
 
@@ -25,7 +24,6 @@ public class HashSetHelper {
 		return tag;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static HashSet<BlockPos> nbtToBlockPosSet(NBTTagCompound tag){
 		BlockPos[] entries = new BlockPos[tag.getInteger("size")];
 		for(int i = 0; i < entries.length; i++){
@@ -67,7 +65,6 @@ public class HashSetHelper {
 		return tag;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static HashSet<Integer> nbtToIntSet(NBTTagCompound tag){
 		Integer[] entries = new Integer[tag.getInteger("size")];
 		for(int i = 0; i < entries.length; i++){

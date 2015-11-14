@@ -2,7 +2,7 @@ package com.mhfs.capacitors.oregen;
 
 import java.util.Random;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -16,9 +16,9 @@ public class OreGen implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		if (world.provider.dimensionId == 0) {
-			generate(BigCapacitorsMod.instance.blockRutilOre, 20, 8, 40,
+			generate(Blocks.blockRutilOre, 20, 8, 40,
 					world, random, chunkX, chunkZ);
-			generate(BigCapacitorsMod.instance.blockWitheriteOre, 20, 8, 40,
+			generate(Blocks.blockWitheriteOre, 20, 8, 40,
 					world, random, chunkX, chunkZ);
 		}
 	}

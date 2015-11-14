@@ -11,6 +11,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Blocks;
+import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
 import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
@@ -35,23 +37,23 @@ public class ClientProxy extends CommonProxy {
 		int id = RenderingRegistry.getNextAvailableRenderId();
 		BigCapacitorsMod.capacitorRenderer = new RendererCapacitor(id);
 		RenderingRegistry.registerBlockHandler(BigCapacitorsMod.capacitorRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.capacitorIron), (IItemRenderer) BigCapacitorsMod.capacitorRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.capacitorIron), (IItemRenderer) BigCapacitorsMod.capacitorRenderer);
 
 		ResourceLocation model = new ResourceLocation(BigCapacitorsMod.modid, "models/Destillery.obj");
 		ResourceLocation texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/destillery.png");
 		TileEntitySpecialRenderer destilleryRenderer = new RendererOBJ(model, texture);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, destilleryRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.blockDestillery), (IItemRenderer) destilleryRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockDestillery), (IItemRenderer) destilleryRenderer);
 		
 		model = new ResourceLocation(BigCapacitorsMod.modid, "models/Barrel.obj");
 		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/barrel.png");
 		TileEntitySpecialRenderer barrelRenderer = new RendererOBJ(model, texture);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, barrelRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mod.blockBarrel), (IItemRenderer) barrelRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockBarrel), (IItemRenderer) barrelRenderer);
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
-		handler.registerHandler(mod.itemMultitool, new MultitoolOverlayHandler());
-		handler.registerHandler(mod.itemManual, new ManualOverlayHandler());
+		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());
+		handler.registerHandler(Items.itemManual, new ManualOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(handler);
 		NetworkRegistry.INSTANCE.registerGuiHandler(mod, new GuiHandler());
 	}

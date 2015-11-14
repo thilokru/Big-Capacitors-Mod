@@ -1,6 +1,6 @@
 package com.mhfs.capacitors.tile;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Fluids;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -31,7 +31,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	private FluidTank wineTank;
 	
 	public TileBarrel(){
-		wineTank = new FluidTank(BigCapacitorsMod.instance.fluidWine, 0, tankCapacity);
+		wineTank = new FluidTank(Fluids.fluidWine, 0, tankCapacity);
 		potatoStack = new ItemStack(Items.potato, 0);
 	}
 	
@@ -47,7 +47,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 			if(progress == maxProgress){
 				this.progress = 0;
 				this.processing = false;
-				this.wineTank.fill(new FluidStack(BigCapacitorsMod.instance.fluidWine, 2000), true);
+				this.wineTank.fill(new FluidStack(Fluids.fluidWine, 2000), true);
 				this.potatoStack = new ItemStack(Items.potato, 0);
 			}
 		}

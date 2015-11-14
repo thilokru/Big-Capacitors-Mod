@@ -1,6 +1,6 @@
 package com.mhfs.capacitors.tile;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.IRotatable;
 
@@ -72,7 +72,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 	}
 
 	public ForgeDirection getRotation() {
-		return BigCapacitorsMod.instance.capacitorIron.getOrientation(worldObj, xCoord, yCoord, zCoord);
+		return Blocks.capacitorIron.getOrientation(worldObj, xCoord, yCoord, zCoord);
 	}
 
 	public void onBreak(BreakEvent event) {
@@ -97,7 +97,7 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
-		BlockCapacitor cap = BigCapacitorsMod.instance.capacitorIron;
+		BlockCapacitor cap = Blocks.capacitorIron;
 		ForgeDirection orientation = cap.getOrientation(worldObj, xCoord, yCoord, zCoord);
 		if (wrapper == null)
 			return false;

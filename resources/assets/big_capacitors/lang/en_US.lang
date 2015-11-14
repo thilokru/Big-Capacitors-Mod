@@ -7,6 +7,9 @@ tile.blockWine.name=Wine
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherite
 tile.blockCeramic.name=Barium Titanate Ceramic
+tile.reactorShield.name=Reactor Shielding
+tile.coil.name=Superconducting Coil
+
 item.multitool.name=Multitool
 item.wire.name=Wire
 item.heater.name=Heater

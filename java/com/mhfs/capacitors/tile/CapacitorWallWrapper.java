@@ -9,13 +9,13 @@ import java.util.Set;
 import cofh.api.energy.IEnergyStorage;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.HashSetHelper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
@@ -55,7 +55,7 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 
 	private HashSet<BlockPos> searchWallFrom(HashSet<BlockPos> res, BlockPos pos, IBlockAccess world) {
 		res.add(pos);
-		BlockCapacitor block = BigCapacitorsMod.instance.capacitorIron;
+		BlockCapacitor block = Blocks.capacitorIron;
 		ArrayList<BlockPos> result = block.getConnectedCapacitors(world, pos.x, pos.y, pos.z);
 		for (BlockPos coord : result) {
 			if (!res.contains(coord)) {

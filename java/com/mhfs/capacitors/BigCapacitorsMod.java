@@ -5,17 +5,8 @@ import java.util.HashMap;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-
-import com.mhfs.capacitors.blocks.BlockBarrel;
-import com.mhfs.capacitors.blocks.BlockBase;
-import com.mhfs.capacitors.blocks.BlockCapacitor;
-import com.mhfs.capacitors.blocks.BlockDestillery;
-import com.mhfs.capacitors.blocks.BlockFluidBase;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.proxy.CommonProxy;
@@ -48,30 +39,7 @@ public class BigCapacitorsMod {
 	
 	public BucketHandler bucketHandler;
 	
-	public CreativeTabs creativeTab;
-	public BlockCapacitor capacitorIron;
-	public BlockDestillery blockDestillery;
-	public BlockBarrel blockBarrel;
-	public BlockBase blockWitheriteOre; //BaCO3
-	public BlockBase blockRutilOre; //TiO2
-	public BlockBase blockCeramic;
-	public BlockFluidClassic blockDestilledWater;
-	public BlockFluidClassic blockEthanol;
-	public BlockFluidBase blockWine;
-	
-	public Item itemWitherite;
-	public Item itemRutil;
-	public Item itemMultitool;
-	public Item itemWire;
-	public Item itemHeater;
-	public Item itemManual;
-	public Item itemBucketDestilledWater;
-	public Item itemBucketEthanol;
-	public Item itemBucketWine;
-	
-	public Fluid fluidDestilledWater;
-	public Fluid fluidEthanol;
-	public Fluid fluidWine;
+	public CreativeTabs creativeTab;	
 	
 	public DamageSource damageElectric;
 	public IKnowledgeRegistry knowledge;

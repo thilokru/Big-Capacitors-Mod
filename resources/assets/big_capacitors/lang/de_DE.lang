@@ -7,6 +7,9 @@ tile.blockWine.name=Wein
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
+tile.reactorShield.name=Reaktorenabschirmung
+tile.coil.name=Supraleitende Spule
+
 item.multitool.name=Multifunktionswerkzeug
 item.wire.name=Kabel
 item.heater.name=Heizpilz

@@ -166,8 +166,8 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		int surface = 0;
 		double dielectricity = 0.0;
 		double maxVoltage = Double.MAX_VALUE;
-		Map<Block, Double> dielectricities = BigCapacitorsMod.instance.dielectricities;
-		Map<Block, Double> voltages = BigCapacitorsMod.instance.voltages;
+		Map<String, Double> dielectricities = BigCapacitorsMod.instance.dielectricities;
+		Map<String, Double> voltages = BigCapacitorsMod.instance.voltages;
 
 		for (BlockPos chk : oneWall) {
 			double tmpVoltage = 0;
@@ -179,15 +179,17 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 				for (int i = 0; i < distance; i++) {
 					work.goTowards(orientation, 1);
 					Block block = work.getBlock(world);
-					if (dielectricities.containsKey(block)) {
-						dielectricity += dielectricities.get(block);
+					int metadata = work.getMetadata(world);
+					String name = Block.blockRegistry.getNameForObject(block) + " " + metadata;
+					if (dielectricities.containsKey(name)) {
+						dielectricity += dielectricities.get(name);
 					} else {
-						dielectricity += dielectricities.get(Blocks.air);
+						dielectricity += dielectricities.get("minecraft:air");
 					}
-					if (voltages.containsKey(block)) {
-						tmpVoltage += voltages.get(block);
+					if (voltages.containsKey(name)) {
+						tmpVoltage += voltages.get(name);
 					} else {
-						tmpVoltage += voltages.get(Blocks.air);
+						tmpVoltage += voltages.get("minecraft:air");
 					}
 				}
 				if (tmpVoltage < maxVoltage) {

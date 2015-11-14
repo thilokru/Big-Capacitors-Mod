@@ -48,14 +48,14 @@ public class BigCapacitorsMod {
 
 	public SimpleNetworkWrapper network;
 	
-	public HashMap<Block, Double> dielectricitiesFromConfig;
-	public HashMap<Block, Double> dielectricities;
+	public HashMap<String, Double> dielectricitiesFromConfig;
+	public HashMap<String, Double> dielectricities;
 	
 	/**
 	 * UNIT: MV/m
 	 */
-	public HashMap<Block, Double> voltagesFromConfig;
-	public HashMap<Block, Double> voltages;
+	public HashMap<String, Double> voltagesFromConfig;
+	public HashMap<String, Double> voltages;
 	
 	public final static double energyConstant = 8.85418781762 * Math.pow(10, -12);
 	

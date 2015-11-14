@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPos {
@@ -70,5 +71,9 @@ public class BlockPos {
 			return null;
 		}
 		return new BlockPos(raw[0], raw[1], raw[2]);
+	}
+
+	public int getMetadata(World world) {
+		return world.getBlockMetadata(x, y, z);
 	}
 }

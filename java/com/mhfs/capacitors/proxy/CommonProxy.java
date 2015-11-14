@@ -295,7 +295,7 @@ public class CommonProxy {
 	}
 	
 	public void loadDielectricities(BigCapacitorsMod mod){
-		mod.dielectricitiesFromConfig = new HashMap<Block, Double>();
+		mod.dielectricitiesFromConfig = new HashMap<String, Double>();
 		ConfigCategory cat = mod.config.getCategory("dielectricities");
 		List<String> names = new ArrayList<String>();
 		names.addAll(cat.getPropertyOrder());
@@ -303,18 +303,17 @@ public class CommonProxy {
 			names.add("minecraft:air");
 			names.add("minecraft:water");
 			names.add("big_capacitors:blockDestilledWater");
-			names.add("big_capacitors:blockCeramic");
+			names.add("big_capacitors:blockMany 1");
 			names.add("big_capacitors:blockEthanol");
 		}
 		for(String blockName:names){
 			double die = mod.config.get(cat.getName(), blockName, getDefaultDielec(blockName)).getDouble();
-			Block block = Block.getBlockFromName(blockName);
-			mod.dielectricitiesFromConfig.put(block, die);
+			mod.dielectricitiesFromConfig.put(blockName, die);
 		}
 	}
 	
 	public void loadVoltages(BigCapacitorsMod mod){
-		mod.voltagesFromConfig = new HashMap<Block, Double>();
+		mod.voltagesFromConfig = new HashMap<String, Double>();
 		ConfigCategory cat = mod.config.getCategory("voltages");
 		List<String> names = new ArrayList<String>();
 		names.addAll(cat.getPropertyOrder());
@@ -322,13 +321,12 @@ public class CommonProxy {
 			names.add("minecraft:air");
 			names.add("minecraft:water");
 			names.add("big_capacitors:blockDestilledWater");
-			names.add("big_capacitors:blockCeramic");
+			names.add("big_capacitors:blockMany 1");
 			names.add("big_capacitors:blockEthanol");
 		}
 		for(String blockName:names){
 			double die = mod.config.get(cat.getName(), blockName, getDefaultVoltage(blockName)).getDouble();
-			Block block = Block.getBlockFromName(blockName);
-			mod.voltagesFromConfig.put(block, die);
+			mod.voltagesFromConfig.put(blockName, die);
 		}
 	}
 
@@ -337,7 +335,7 @@ public class CommonProxy {
 			return 1;
 		}else if(blockName.equals("minecraft:water") || blockName.equals("big_capacitors:blockDestilledWater")){
 			return 81.1;
-		}else if(blockName.equals("big_capacitors:blockCeramic")){
+		}else if(blockName.equals("big_capacitors:blockMany 1")){
 			return 1000;
 		}else if(blockName.equals("big_capacitors:blockEthanol")){
 			return 25.8;
@@ -350,7 +348,7 @@ public class CommonProxy {
 			return 3.3;
 		}else if(blockName.equals("big_capacitors:blockDestilledWater")){
 			return 70;
-		}else if(blockName.equals("big_capacitors:blockCeramic")){
+		}else if(blockName.equals("big_capacitors:blockMany 1")){
 			return 100;
 		}else if(blockName.equals("minecraft:water")){
 			return 0;
@@ -365,11 +363,10 @@ public class CommonProxy {
 		for(IMCMessage msg:msgs){
 			NBTTagCompound tag = msg.getNBTValue();
 			String blockName = tag.getString("block");
-			Block block = GameRegistry.findBlock(msg.getSender(), blockName);
 			double de = tag.getDouble("dielectricity");
-			mod.dielectricitiesFromConfig.put(block, de);
+			mod.dielectricitiesFromConfig.put(blockName, de);
 			double volt = tag.getDouble("voltage");
-			mod.voltagesFromConfig.put(block, volt);
+			mod.voltagesFromConfig.put(blockName, volt);
 		}
 	}
 

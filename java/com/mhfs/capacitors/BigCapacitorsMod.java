@@ -9,6 +9,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
+import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.proxy.CommonProxy;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -43,6 +44,8 @@ public class BigCapacitorsMod {
 	
 	public DamageSource damageElectric;
 	public IKnowledgeRegistry knowledge;
+	
+	public Multiblock fusionReactorMulti;
 	
 	public static ISimpleBlockRenderingHandler capacitorRenderer;
 

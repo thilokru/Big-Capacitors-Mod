@@ -1,6 +1,7 @@
 package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileTomahawk;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -11,14 +12,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockTomahawk extends BlockContainer implements IOrientedBlock{
 
-	protected BlockTomahawk(Material material) {
+	public BlockTomahawk(Material material) {
 		super(material);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		// TODO Auto-generated method stub
-		return null;
+		return new TileTomahawk();
 	}
 	
 	public ForgeDirection getOrientation(IBlockAccess world, int x, int y, int z) {

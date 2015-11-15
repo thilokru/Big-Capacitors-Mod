@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.tile;
+package com.mhfs.capacitors.misc;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +15,14 @@ public class BlockPos {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	
+	public BlockPos translate(int x, int y, int z){
+		return new BlockPos(this.x + x, this.y + y, this.z + z);
+	}
+	
+	public BlockPos translate(BlockPos o){
+		return translate(o.x, o.y, o.z);
 	}
 	
 	public BlockPos goTowards(ForgeDirection dir, int steps){

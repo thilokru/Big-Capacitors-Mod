@@ -3,8 +3,8 @@ package com.mhfs.capacitors.blocks;
 import java.util.ArrayList;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.IChapterRelated;
-import com.mhfs.capacitors.tile.BlockPos;
 import com.mhfs.capacitors.tile.TileCapacitor;
 
 import net.minecraft.block.Block;

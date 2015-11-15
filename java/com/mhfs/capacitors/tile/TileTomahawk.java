@@ -1,6 +1,8 @@
 package com.mhfs.capacitors.tile;
 
+import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Fluids;
+import com.mhfs.capacitors.misc.BlockPos;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
@@ -30,9 +32,9 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 	
 	private final static double FUSION_START_TEMP = 10000000;
 	private final static double ROOM_TEMP = 20;
-	private final static int MAX_RF_DRAIN = 80;
+	private final static int MAX_RF_DRAIN = 800;
 	private final static double KELVIN_PER_RF = 10;
-	private final static double LOSS_FACTOR = 0.00001D;
+	private final static double LOSS_FACTOR = 0.00000001D;
 	
 	private final static int RF_PER_MB_HYDROGEN = 1500000;
 
@@ -44,7 +46,7 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 		temperature = ROOM_TEMP;
 	}
 
-	public void update() {
+	public void updateEntity() {
 		formed = checkFormed();
 		if(worldObj.isRemote)return;
 		if(formed){
@@ -62,7 +64,7 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 	}
 	
 	private boolean checkFormed() {
-		return false;
+		return BigCapacitorsMod.instance.fusionReactorMulti.complete(new BlockPos(xCoord, yCoord, zCoord), worldObj);
 	}
 
 	public boolean isFormed(){

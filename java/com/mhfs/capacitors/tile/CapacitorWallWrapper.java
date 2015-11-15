@@ -11,6 +11,7 @@ import cofh.api.energy.IEnergyStorage;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
+import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 

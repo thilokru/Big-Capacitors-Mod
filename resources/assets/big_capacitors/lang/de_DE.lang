@@ -9,6 +9,7 @@ tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
 tile.reactorShield.name=Reaktorenabschirmung
 tile.coil.name=Supraleitende Spule
+tile.blockTomahawk.name=Fusionsreaktorsteuerung
 
 item.multitool.name=Multifunktionswerkzeug
 item.wire.name=Kabel

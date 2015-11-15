@@ -6,11 +6,14 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -35,6 +38,7 @@ import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockFluidBase;
 import com.mhfs.capacitors.blocks.BlockMany;
+import com.mhfs.capacitors.blocks.BlockTomahawk;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.handlers.EventHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
@@ -42,11 +46,13 @@ import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMany;
 import com.mhfs.capacitors.items.ItemMultitool;
 import com.mhfs.capacitors.misc.Lo;
+import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
@@ -115,6 +121,7 @@ public class CommonProxy {
 		Blocks.blockWitheriteOre.setBlockTextureName("big_capacitors:oreWitherite");
 		Blocks.blockDestillery.setBlockTextureName("big_capacitors:destillery");
 		Blocks.blockBarrel.setBlockTextureName("big_capacitors:barrel");
+		Blocks.blockTomahawk.setBlockTextureName("big_capacitors:tomahawk");
 	}
 
 	private void setupRecipies() {
@@ -175,6 +182,13 @@ public class CommonProxy {
 		Blocks.blockBarrel.setHardness(1F);
 		Blocks.blockBarrel.setHarvestLevel("axe", 2);
 		GameRegistry.registerBlock(Blocks.blockBarrel, "blockBarrel");
+		
+		Blocks.blockTomahawk = new BlockTomahawk(Material.rock);
+		Blocks.blockTomahawk.setBlockName("blockTomahawk");
+		Blocks.blockTomahawk.setCreativeTab(mod.creativeTab);
+		Blocks.blockTomahawk.setHardness(0.5F);
+		Blocks.blockTomahawk.setHarvestLevel("pickaxe", 2);
+		GameRegistry.registerBlock(Blocks.blockTomahawk, "blockTomahawk");
 		
 		Blocks.blockRutilOre = new BlockBase(Material.rock);
 		Blocks.blockRutilOre.setBlockName("oreRutil");
@@ -276,9 +290,15 @@ public class CommonProxy {
 		
 		mod.damageElectric = new DamageSource("electric").setDamageBypassesArmor();
 		
+		Lo.g.info("Loading Tomahawk Multiblock...");
+		ResourceLocation rl = new ResourceLocation("big_capacitors:multiblock/fusion.txt");
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		mod.fusionReactorMulti = new Multiblock(rl, manager);
+		
 		GameRegistry.registerTileEntity(TileCapacitor.class, "tileCapacitor");
 		GameRegistry.registerTileEntity(TileDistillery.class, "tileDistillery");
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
+		GameRegistry.registerTileEntity(TileTomahawk.class, "tileTomahawk");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

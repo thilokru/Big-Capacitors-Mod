@@ -2,6 +2,7 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
+import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.IRotatable;
 
 import cofh.api.energy.IEnergyHandler;

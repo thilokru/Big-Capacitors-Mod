@@ -9,6 +9,7 @@ tile.oreWitherite.name=Witherite
 tile.blockCeramic.name=Barium Titanate Ceramic
 tile.reactorShield.name=Reactor Shielding
 tile.coil.name=Superconducting Coil
+tile.blockTomahawk.name=Fusion Reactor Controller
 
 item.multitool.name=Multitool
 item.wire.name=Wire

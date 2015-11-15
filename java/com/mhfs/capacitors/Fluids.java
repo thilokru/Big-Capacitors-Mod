@@ -12,12 +12,10 @@ public class Fluids {
 	public static Fluid fluidWine;
 	
 	public static Fluid gasHydrogen;
-	public static Fluid gasHelium;
 	
 	public static BlockFluidClassic blockDestilledWater;
 	public static BlockFluidClassic blockEthanol;
 	public static BlockFluidBase blockWine;
 	
 	public static BlockFluidBase blockHydrogen;
-	public static BlockFluidBase blockHelium;
 }

@@ -6,6 +6,7 @@ import com.mhfs.capacitors.misc.BlockPos;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -59,6 +60,22 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 				int extract = storage.extractEnergy(MAX_RF_DRAIN, false);
 				temperature += extract * KELVIN_PER_RF;
 				temperature -= temperature * LOSS_FACTOR;
+			}
+			
+			doEnergyOut();
+		}
+	}
+	
+	private void doEnergyOut() {
+		for(ForgeDirection way:ForgeDirection.VALID_DIRECTIONS){
+			BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
+			pos.goTowards(way, 1);
+			TileEntity ent = pos.getTileEntity(worldObj);
+			if(ent instanceof IEnergyHandler){
+				IEnergyReceiver con = (IEnergyReceiver) ent;
+				int transmittable = con.receiveEnergy(way, storage.getEnergyStored(), true);
+				int transmit = this.extractEnergy(way.getOpposite(), transmittable, false);
+				con.receiveEnergy(way, transmit, false);
 			}
 		}
 	}
@@ -121,13 +138,13 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid == Fluids.gasHelium || fluid == Fluids.gasHydrogen;
+		return fluid == Fluids.gasHydrogen;
 	}
 	
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return fluid == Fluids.gasHelium || fluid == Fluids.gasHydrogen;
+		return fluid == Fluids.gasHydrogen;
 	}
 	
 

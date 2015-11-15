@@ -86,14 +86,12 @@ public class CommonProxy {
 		Fluids.fluidDestilledWater = new Fluid("destilledWater");
 		Fluids.fluidDestilledWater.setDensity(1000);
 		Fluids.fluidDestilledWater.setGaseous(false);
-		Fluids.fluidDestilledWater.setLuminosity(0);
 		Fluids.fluidDestilledWater.setViscosity(1000);
 		FluidRegistry.registerFluid(Fluids.fluidDestilledWater);
 		
 		Fluids.fluidEthanol = new Fluid("ethanol");
 		Fluids.fluidEthanol.setDensity(789);
 		Fluids.fluidEthanol.setGaseous(false);
-		Fluids.fluidEthanol.setLuminosity(0);
 		Fluids.fluidEthanol.setViscosity(1190);
 		FluidRegistry.registerFluid(Fluids.fluidEthanol);
 		
@@ -103,6 +101,12 @@ public class CommonProxy {
 		Fluids.fluidWine.setLuminosity(0);
 		Fluids.fluidWine.setViscosity(1050);
 		FluidRegistry.registerFluid(Fluids.fluidWine);
+		
+		Fluids.gasHydrogen = new Fluid("hydrogen");
+		Fluids.gasHydrogen.setDensity(1);
+		Fluids.gasHydrogen.setGaseous(true);
+		Fluids.gasHydrogen.setViscosity(1);
+		FluidRegistry.registerFluid(Fluids.gasHydrogen);
 	}
 
 	private void setupTextureNames() {
@@ -115,6 +119,7 @@ public class CommonProxy {
 		Items.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
 		Items.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
 		Items.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
+		Items.itemBucketHydrogen.setTextureName("big_capacitors:bucket_gas");
 		
 		Blocks.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
 		Blocks.blockRutilOre.setBlockTextureName("big_capacitors:oreRutil");
@@ -240,6 +245,12 @@ public class CommonProxy {
 		Fluids.blockWine.setBlockName("blockWine");
 		GameRegistry.registerBlock(Fluids.blockWine, "blockWine");
 		Items.itemBucketWine = createBucket(Fluids.fluidWine, Fluids.blockWine, "bucketWine");
+		
+		Fluids.blockHydrogen = new BlockFluidBase(Fluids.gasHydrogen, Material.air, "big_capacitors:blank", "big_capacitors:blank");
+		Fluids.blockHydrogen.setCreativeTab(mod.creativeTab);
+		Fluids.blockHydrogen.setBlockName("blockHydrogen");
+		GameRegistry.registerBlock(Fluids.blockHydrogen, "blockHydrogen");
+		Items.itemBucketHydrogen = createBucket(Fluids.gasHydrogen, Fluids.blockHydrogen, "bucketHydrogen");
 	}
 	
 	private Item createBucket(Fluid fluid, Block fluidBlock, String unloc){

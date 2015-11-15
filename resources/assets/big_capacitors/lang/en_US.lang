@@ -4,6 +4,7 @@ tile.blockDestillery.name=Distillery
 tile.blockDestilledWater.name=Distilled Water
 tile.blockEthanol.name=Alkohol
 tile.blockWine.name=Wine
+tile.blockHydrogen.name=Hydrogen
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherite
 tile.blockCeramic.name=Barium Titanate Ceramic
@@ -20,11 +21,13 @@ item.dustWitherite.name=Witherite dust
 item.bucketDestilledWater.name=Distilled Water Bucket
 item.bucketEthanol.name=Alcohol Bucket
 item.bucketWine.name=Wine Bucket
+item.bucketHydrogen.name=Hydrogen Bucket
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Distilled Water
 fluid.ethanol=Alcohol
 fluid.wine=Potato Wine
+fluid.hydrogen=Hydrogen
 
 death.attack.electric=%1$s grounded a capacitor and the flowing current killed him.
 

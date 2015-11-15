@@ -4,6 +4,7 @@ tile.blockDestillery.name=Destillerie
 tile.blockDestilledWater.name=destilliertes Wasser
 tile.blockEthanol.name=Alkohol
 tile.blockWine.name=Wein
+tile.blockHydrogen.name=Wasserstoff
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
@@ -20,11 +21,13 @@ item.dustWitherite.name=Witheritstaub
 item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer
+item.bucketHydrogen.name=Wasserstoffeimer
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Destilliertes Wasser
 fluid.ethanol=Alkohol
 fluid.wine=Kartoffelwein
+fluid.hydrogen=Wasserstoff
 
 death.attack.electric=%1$s erdete einen Kondensator und der fließende Strom tötete ihn.
 

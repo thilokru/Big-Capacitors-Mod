@@ -16,21 +16,21 @@ public class OreGen implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		if (world.provider.dimensionId == 0) {
-			generate(Blocks.blockRutilOre, 20, 8, 40,
+			generate(Blocks.blockMany, 3, 20, 8, 40,
 					world, random, chunkX, chunkZ);
-			generate(Blocks.blockWitheriteOre, 20, 8, 40,
+			generate(Blocks.blockMany, 4, 20, 8, 40,
 					world, random, chunkX, chunkZ);
 		}
 	}
 
 	private void generate(Block block, int maxVeins, int maxOres,
-			int maxHeight, World world, Random random, int chunkX, int chunkZ) {
+			int maxHeight, int meta, World world, Random random, int chunkX, int chunkZ) {
 		for (int k = 0; k < maxVeins; k++) {
 			int x = chunkX * 16 + random.nextInt(16);
 			int y = random.nextInt(maxHeight);
 			int z = chunkZ * 16 + random.nextInt(16);
 
-			WorldGenMinable gen = new WorldGenMinable(block, maxOres);
+			WorldGenMinable gen = new WorldGenMinable(block, meta, maxOres, Blocks.stone);
 			gen.generate(world, random, x, y, z);
 		}
 	}

@@ -32,7 +32,6 @@ import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.blocks.BlockBarrel;
-import com.mhfs.capacitors.blocks.BlockBase;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillery;
@@ -42,8 +41,10 @@ import com.mhfs.capacitors.blocks.BlockTomahawk;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.handlers.EventHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
+import com.mhfs.capacitors.items.ItemData;
 import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMany;
+import com.mhfs.capacitors.items.ItemBlockMany;
 import com.mhfs.capacitors.items.ItemMultitool;
 import com.mhfs.capacitors.misc.Lo;
 import com.mhfs.capacitors.misc.Multiblock;
@@ -111,19 +112,13 @@ public class CommonProxy {
 
 	private void setupTextureNames() {
 		Items.itemMultitool.setTextureName("big_capacitors:multitool");
-		Items.itemWire.setTextureName("big_capacitors:wire");
-		Items.itemHeater.setTextureName("big_capacitors:heater");
 		Items.itemManual.setTextureName("big_capacitors:manual");
-		Items.itemWitherite.setTextureName("big_capacitors:dustWitherite");
-		Items.itemRutil.setTextureName("big_capacitors:dustRutil");
 		Items.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
 		Items.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
 		Items.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
 		Items.itemBucketHydrogen.setTextureName("big_capacitors:bucket_gas");
 		
 		Blocks.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
-		Blocks.blockRutilOre.setBlockTextureName("big_capacitors:oreRutil");
-		Blocks.blockWitheriteOre.setBlockTextureName("big_capacitors:oreWitherite");
 		Blocks.blockDestillery.setBlockTextureName("big_capacitors:destillery");
 		Blocks.blockBarrel.setBlockTextureName("big_capacitors:barrel");
 		Blocks.blockTomahawk.setBlockTextureName("big_capacitors:tomahawk");
@@ -140,20 +135,20 @@ public class CommonProxy {
 		ItemStack ironIngotStack = new ItemStack(Items.iron_ingot);
 		GameRegistry.addShapelessRecipe(manualStack, bookStack, ironIngotStack);
 			
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemWire, true, " S ", "CSC", " S ", 'S', Items.stick, 'C', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.itemMany, 1, 0), true, " S ", "CSC", " S ", 'S', Items.stick, 'C', "ingotCopper"));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', Items.itemWire));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemHeater, true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.wool), 'C', Items.itemWire));
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(Items.itemMany, 1, 1), true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.wool), 'C',  new ItemStack(Items.itemMany, 1, 0)));
 		
 		Item destilleryItem = Item.getItemFromBlock(Blocks.blockDestillery);
-		GameRegistry.addRecipe(new ShapedOreRecipe(destilleryItem, true, "II ", "B B", "H  ", 'I', "ingotIron", 'B', Items.bucket, 'H', Items.itemHeater));
+		GameRegistry.addRecipe(new ShapedOreRecipe(destilleryItem, true, "II ", "B B", "H  ", 'I', "ingotIron", 'B', Items.bucket, 'H',  new ItemStack(Items.itemMany, 1, 1)));
 		
 		Item barrelItem = Item.getItemFromBlock(Blocks.blockBarrel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
 		
-		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemRutil, 2), null, 0);
-		PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemWitherite, 2), null, 0);
+		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);
+		PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemMany, 2, 4), null, 0);
 		
 		SmelterManager.addAlloyRecipe(80, "dustTitandioxid", 1, "dustBariumCarbonate", 1, new ItemStack(Blocks.blockMany, 1, 1));
 		
@@ -195,38 +190,27 @@ public class CommonProxy {
 		Blocks.blockTomahawk.setHarvestLevel("pickaxe", 2);
 		GameRegistry.registerBlock(Blocks.blockTomahawk, "blockTomahawk");
 		
-		Blocks.blockRutilOre = new BlockBase(Material.rock);
-		Blocks.blockRutilOre.setBlockName("oreRutil");
-		Blocks.blockRutilOre.setCreativeTab(mod.creativeTab);
-		Blocks.blockRutilOre.setChapter("Ores");
-		Blocks.blockRutilOre.setHardness(1F);
-		Blocks.blockRutilOre.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockRutilOre, "oreRutil");
-		OreDictionary.registerOre("oreTitandioxid", Blocks.blockRutilOre);
-		
-		Blocks.blockWitheriteOre = new BlockBase(Material.rock);
-		Blocks.blockWitheriteOre.setBlockName("oreWitherite");
-		Blocks.blockWitheriteOre.setCreativeTab(mod.creativeTab);
-		Blocks.blockWitheriteOre.setChapter("Ores");
-		Blocks.blockWitheriteOre.setHardness(1F);
-		Blocks.blockWitheriteOre.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockWitheriteOre, "oreWitherite");
-		OreDictionary.registerOre("oreBariumCarbonate", Blocks.blockWitheriteOre);
-		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
-		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F, mod.creativeTab));
+		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F));//0
 		
-		blockData.add(new BlockData("blockCeramic", "big_capacitors:ceramic", "pickaxe", 2, 0.5F, mod.creativeTab));
+		blockData.add(new BlockData("blockCeramic", "big_capacitors:ceramic", "pickaxe", 2, 0.5F));//1
 		
-		BlockData coil = new BlockData("coil", "big_capacitors:coil", "pickaxe", 2, 3.0F, mod.creativeTab);
+		BlockData coil = new BlockData("coil", "big_capacitors:coil", "pickaxe", 2, 3.0F);//2
 		coil.setSpecialTexture(ForgeDirection.UP, "big_capacitors:coilTop");
 		coil.setSpecialTexture(ForgeDirection.DOWN, "big_capacitors:coilTop");
 		blockData.add(coil);
 		
+		blockData.add(new BlockData("oreRutil", "big_capacitors:oreRutil", "pickaxe", 2, 1F));//3
+		
+		blockData.add(new BlockData("oreWitherite", "big_capacitors:oreWitherite", "pickaxe", 2, 1F));//4
+		
 		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
 		Blocks.blockMany.setCreativeTab(mod.creativeTab);
-		GameRegistry.registerBlock(Blocks.blockMany, ItemMany.class, "blockMany");
+		GameRegistry.registerBlock(Blocks.blockMany, ItemBlockMany.class, "blockMany");
 		Blocks.blockMany.injectSubStacks();
+		
+		OreDictionary.registerOre("oreTitandioxid", new ItemStack(Blocks.blockMany, 1, 3));
+		OreDictionary.registerOre("oreBariumCarbonate", new ItemStack(Blocks.blockMany, 1, 4));
 		
 		Fluids.blockDestilledWater = new BlockFluidBase(Fluids.fluidDestilledWater, Material.water, "water_still", "water_flow");
 		Fluids.blockDestilledWater.setCreativeTab(mod.creativeTab);
@@ -269,19 +253,20 @@ public class CommonProxy {
 		Items.itemManual = new ItemManual().setUnlocalizedName("manual").setCreativeTab(mod.creativeTab).setMaxStackSize(1);
 		GameRegistry.registerItem(Items.itemManual, "manual");
 		
-		Items.itemWire = new Item().setUnlocalizedName("wire").setCreativeTab(mod.creativeTab);
-		GameRegistry.registerItem(Items.itemWire, "wire");
+		List<ItemData> data = new ArrayList<ItemData>();
 		
-		Items.itemHeater = new Item().setUnlocalizedName("heater").setCreativeTab(mod.creativeTab);
-		GameRegistry.registerItem(Items.itemHeater, "heater");
+		data.add(new ItemData("wire", "big_capacitors:wire", false));
+		data.add(new ItemData("heater", "big_capacitors:heater", false));
+		data.add(new ItemData("dustRutil", "big_capacitors:dustRutil", false));//2, TiO2
+		data.add(new ItemData("dustWitherite", "big_capacitors:dustWitherite", false));//3, BaCO3
 		
-		Items.itemRutil = new Item().setUnlocalizedName("dustRutil").setCreativeTab(mod.creativeTab);
-		GameRegistry.registerItem(Items.itemRutil, "dustRutil");
-		OreDictionary.registerOre("dustTitandioxid", Items.itemRutil);
+		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));
+		Items.itemMany.setCreativeTab(mod.creativeTab);
+		Items.itemMany.injectSubItems();
+		GameRegistry.registerItem(Items.itemMany, "itemMany");
 		
-		Items.itemWitherite = new Item().setUnlocalizedName("dustWitherite").setCreativeTab(mod.creativeTab);
-		GameRegistry.registerItem(Items.itemWitherite, "dustWitherite");
-		OreDictionary.registerOre("dustBariumCarbonate", Items.itemWitherite);
+		OreDictionary.registerOre("dustTitandioxid", new ItemStack(Items.itemMany, 1, 2));
+		OreDictionary.registerOre("dustBariumCarbonate",  new ItemStack(Items.itemMany, 1, 3));
 	}
 	
 	private void setupNetwork(BigCapacitorsMod mod){

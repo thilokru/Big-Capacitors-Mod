@@ -39,6 +39,10 @@ public class BlockMany extends Block {
 		}
 	}
 
+	public float getBlockHardness(World world, int x, int y, int z) {
+		return subBlocks[world.getBlockMetadata(x, y, z)].getHardness();
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs tab, List entries) {
@@ -50,10 +54,12 @@ public class BlockMany extends Block {
 	public String getUnlocalizedSubName(int id) {
 		return "tile." + subBlocks[id].getName();
 	}
-	
-	public void injectSubStacks(){
+
+	public void injectSubStacks() {
 		for (int i = 0; i < subBlocks.length; i++) {
-			GameRegistry.registerCustomItemStack(subBlocks[i].getName(), new ItemStack(Item.getItemFromBlock(this), 1, i));
+			BlockData sub = subBlocks[i];
+			this.setHarvestLevel(sub.getMiningTool(), sub.getHarvestLevel(), i);
+			GameRegistry.registerCustomItemStack(sub.getName(), new ItemStack(Item.getItemFromBlock(this), 1, i));
 		}
 	}
 }

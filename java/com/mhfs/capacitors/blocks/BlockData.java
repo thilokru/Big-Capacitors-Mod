@@ -3,19 +3,17 @@ package com.mhfs.capacitors.blocks;
 import java.util.HashMap;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockData {
 	
-	public BlockData(String name, String icon, String miningTool, int harvestLevel, float hardness, CreativeTabs tab){
+	public BlockData(String name, String icon, String miningTool, int harvestLevel, float hardness){
 		this.blockName = name;
 		this.baseIconName = icon;
 		this.miningTool = miningTool;
 		this.harvestLevel = harvestLevel;
 		this.hardness = hardness;
-		this.tab = tab;
 	}
 
 	private String blockName;
@@ -25,7 +23,6 @@ public class BlockData {
 	private String miningTool;
 	private int harvestLevel;
 	private float hardness;
-	private CreativeTabs tab;
 	
 	public String getName(){
 		return blockName;
@@ -73,9 +70,5 @@ public class BlockData {
 	
 	public float getHardness(){
 		return hardness;
-	}
-	
-	public CreativeTabs getTab(){
-		return tab;
 	}
 }

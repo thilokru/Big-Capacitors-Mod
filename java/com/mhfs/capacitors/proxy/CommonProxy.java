@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,12 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cofh.thermalexpansion.util.crafting.PulverizerManager;
 import cofh.thermalexpansion.util.crafting.SmelterManager;
@@ -31,21 +25,8 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.Items;
-import com.mhfs.capacitors.blocks.BlockBarrel;
-import com.mhfs.capacitors.blocks.BlockCapacitor;
-import com.mhfs.capacitors.blocks.BlockData;
-import com.mhfs.capacitors.blocks.BlockDestillery;
-import com.mhfs.capacitors.blocks.BlockFluidBase;
-import com.mhfs.capacitors.blocks.BlockMany;
-import com.mhfs.capacitors.blocks.BlockTomahawk;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.handlers.EventHandler;
-import com.mhfs.capacitors.items.ItemCustomBuckets;
-import com.mhfs.capacitors.items.ItemData;
-import com.mhfs.capacitors.items.ItemManual;
-import com.mhfs.capacitors.items.ItemMany;
-import com.mhfs.capacitors.items.ItemBlockMany;
-import com.mhfs.capacitors.items.ItemMultitool;
 import com.mhfs.capacitors.misc.Lo;
 import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
@@ -81,47 +62,6 @@ public class CommonProxy {
 				return Item.getItemFromBlock(Blocks.capacitorIron);
 			}
 		};
-	}
-	
-	private void setupFluids() {
-		Fluids.fluidDestilledWater = new Fluid("destilledWater");
-		Fluids.fluidDestilledWater.setDensity(1000);
-		Fluids.fluidDestilledWater.setGaseous(false);
-		Fluids.fluidDestilledWater.setViscosity(1000);
-		FluidRegistry.registerFluid(Fluids.fluidDestilledWater);
-		
-		Fluids.fluidEthanol = new Fluid("ethanol");
-		Fluids.fluidEthanol.setDensity(789);
-		Fluids.fluidEthanol.setGaseous(false);
-		Fluids.fluidEthanol.setViscosity(1190);
-		FluidRegistry.registerFluid(Fluids.fluidEthanol);
-		
-		Fluids.fluidWine = new Fluid("wine");
-		Fluids.fluidWine.setDensity(900);
-		Fluids.fluidWine.setGaseous(false);
-		Fluids.fluidWine.setLuminosity(0);
-		Fluids.fluidWine.setViscosity(1050);
-		FluidRegistry.registerFluid(Fluids.fluidWine);
-		
-		Fluids.gasHydrogen = new Fluid("hydrogen");
-		Fluids.gasHydrogen.setDensity(1);
-		Fluids.gasHydrogen.setGaseous(true);
-		Fluids.gasHydrogen.setViscosity(1);
-		FluidRegistry.registerFluid(Fluids.gasHydrogen);
-	}
-
-	private void setupTextureNames() {
-		Items.itemMultitool.setTextureName("big_capacitors:multitool");
-		Items.itemManual.setTextureName("big_capacitors:manual");
-		Items.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
-		Items.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
-		Items.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
-		Items.itemBucketHydrogen.setTextureName("big_capacitors:bucket_gas");
-		
-		Blocks.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
-		Blocks.blockDestillery.setBlockTextureName("big_capacitors:destillery");
-		Blocks.blockBarrel.setBlockTextureName("big_capacitors:barrel");
-		Blocks.blockTomahawk.setBlockTextureName("big_capacitors:tomahawk");
 	}
 
 	private void setupRecipies() {
@@ -159,115 +99,7 @@ public class CommonProxy {
 	private void setupConfig(FMLPreInitializationEvent event, BigCapacitorsMod mod) {
 		mod.config = new Configuration(event.getSuggestedConfigurationFile());
 		mod.config.load();
-	}
-
-	private void setupBlocks(BigCapacitorsMod mod){
-		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
-		Blocks.capacitorIron.setBlockName("capacitorIron");
-		Blocks.capacitorIron.setCreativeTab(mod.creativeTab);
-		Blocks.capacitorIron.setHardness(1.5F);
-		Blocks.capacitorIron.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.capacitorIron, "capacitorIron");
-		
-		Blocks.blockDestillery = new BlockDestillery(Material.rock);
-		Blocks.blockDestillery.setBlockName("blockDestillery");
-		Blocks.blockDestillery.setCreativeTab(mod.creativeTab);
-		Blocks.blockDestillery.setHardness(1.5F);
-		Blocks.blockDestillery.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockDestillery, "blockDestillery");
-		
-		Blocks.blockBarrel = new BlockBarrel(Material.wood);
-		Blocks.blockBarrel.setBlockName("blockBarrel");
-		Blocks.blockBarrel.setCreativeTab(mod.creativeTab);
-		Blocks.blockBarrel.setHardness(1F);
-		Blocks.blockBarrel.setHarvestLevel("axe", 2);
-		GameRegistry.registerBlock(Blocks.blockBarrel, "blockBarrel");
-		
-		Blocks.blockTomahawk = new BlockTomahawk(Material.rock);
-		Blocks.blockTomahawk.setBlockName("blockTomahawk");
-		Blocks.blockTomahawk.setCreativeTab(mod.creativeTab);
-		Blocks.blockTomahawk.setHardness(0.5F);
-		Blocks.blockTomahawk.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockTomahawk, "blockTomahawk");
-		
-		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
-		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F));//0
-		
-		blockData.add(new BlockData("blockCeramic", "big_capacitors:ceramic", "pickaxe", 2, 0.5F));//1
-		
-		BlockData coil = new BlockData("coil", "big_capacitors:coil", "pickaxe", 2, 3.0F);//2
-		coil.setSpecialTexture(ForgeDirection.UP, "big_capacitors:coilTop");
-		coil.setSpecialTexture(ForgeDirection.DOWN, "big_capacitors:coilTop");
-		blockData.add(coil);
-		
-		blockData.add(new BlockData("oreRutil", "big_capacitors:oreRutil", "pickaxe", 2, 1F));//3
-		
-		blockData.add(new BlockData("oreWitherite", "big_capacitors:oreWitherite", "pickaxe", 2, 1F));//4
-		
-		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
-		Blocks.blockMany.setCreativeTab(mod.creativeTab);
-		GameRegistry.registerBlock(Blocks.blockMany, ItemBlockMany.class, "blockMany");
-		Blocks.blockMany.injectSubStacks();
-		
-		OreDictionary.registerOre("oreTitandioxid", new ItemStack(Blocks.blockMany, 1, 3));
-		OreDictionary.registerOre("oreBariumCarbonate", new ItemStack(Blocks.blockMany, 1, 4));
-		
-		Fluids.blockDestilledWater = new BlockFluidBase(Fluids.fluidDestilledWater, Material.water, "water_still", "water_flow");
-		Fluids.blockDestilledWater.setCreativeTab(mod.creativeTab);
-		Fluids.blockDestilledWater.setBlockName("blockDestilledWater");
-		GameRegistry.registerBlock(Fluids.blockDestilledWater, "blockDestilledWater");
-		Items.itemBucketDestilledWater = createBucket(Fluids.fluidDestilledWater, Fluids.blockDestilledWater, "bucketDestilledWater");
-		
-		Fluids.blockEthanol = new BlockFluidBase(Fluids.fluidEthanol, Material.water, "big_capacitors:ethanol_still", "big_capacitors:ethanol_flow");
-		Fluids.blockEthanol.setCreativeTab(mod.creativeTab);
-		Fluids.blockEthanol.setBlockName("blockEthanol");
-		GameRegistry.registerBlock(Fluids.blockEthanol, "blockEthanol");
-		Items.itemBucketEthanol = createBucket(Fluids.fluidEthanol, Fluids.blockEthanol, "bucketEthanol");
-		
-		Fluids.blockWine = new BlockFluidBase(Fluids.fluidWine, Material.water, "big_capacitors:wine_still", "big_capacitors:wine_flow");
-		Fluids.blockWine.setCreativeTab(mod.creativeTab);
-		Fluids.blockWine.setBlockName("blockWine");
-		GameRegistry.registerBlock(Fluids.blockWine, "blockWine");
-		Items.itemBucketWine = createBucket(Fluids.fluidWine, Fluids.blockWine, "bucketWine");
-		
-		Fluids.blockHydrogen = new BlockFluidBase(Fluids.gasHydrogen, Material.air, "big_capacitors:blank", "big_capacitors:blank");
-		Fluids.blockHydrogen.setCreativeTab(mod.creativeTab);
-		Fluids.blockHydrogen.setBlockName("blockHydrogen");
-		GameRegistry.registerBlock(Fluids.blockHydrogen, "blockHydrogen");
-		Items.itemBucketHydrogen = createBucket(Fluids.gasHydrogen, Fluids.blockHydrogen, "bucketHydrogen");
-	}
-	
-	private Item createBucket(Fluid fluid, Block fluidBlock, String unloc){
-		Item bucket = new ItemCustomBuckets(fluidBlock);
-		bucket.setUnlocalizedName(unloc).setContainerItem(Items.bucket);
-		GameRegistry.registerItem(bucket, unloc);
-		FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(bucket), new ItemStack(Items.bucket));
-		BucketHandler.FLUID_BLOCK_TO_BUCKET.put(fluidBlock, bucket);
-		return bucket;
-	}
-	
-	private void setupItems(BigCapacitorsMod mod){
-		Items.itemMultitool = new ItemMultitool().setUnlocalizedName("multitool").setCreativeTab(mod.creativeTab).setMaxStackSize(1);
-		GameRegistry.registerItem(Items.itemMultitool, "multitool");
-		
-		Items.itemManual = new ItemManual().setUnlocalizedName("manual").setCreativeTab(mod.creativeTab).setMaxStackSize(1);
-		GameRegistry.registerItem(Items.itemManual, "manual");
-		
-		List<ItemData> data = new ArrayList<ItemData>();
-		
-		data.add(new ItemData("wire", "big_capacitors:wire", false));
-		data.add(new ItemData("heater", "big_capacitors:heater", false));
-		data.add(new ItemData("dustRutil", "big_capacitors:dustRutil", false));//2, TiO2
-		data.add(new ItemData("dustWitherite", "big_capacitors:dustWitherite", false));//3, BaCO3
-		
-		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));
-		Items.itemMany.setCreativeTab(mod.creativeTab);
-		Items.itemMany.injectSubItems();
-		GameRegistry.registerItem(Items.itemMany, "itemMany");
-		
-		OreDictionary.registerOre("dustTitandioxid", new ItemStack(Items.itemMany, 1, 2));
-		OreDictionary.registerOre("dustBariumCarbonate",  new ItemStack(Items.itemMany, 1, 3));
-	}
+	}	
 	
 	private void setupNetwork(BigCapacitorsMod mod){
 		mod.network = NetworkRegistry.INSTANCE.newSimpleChannel("energy_update");
@@ -279,10 +111,9 @@ public class CommonProxy {
 			BigCapacitorsMod mod) {
 		MinecraftForge.EVENT_BUS.register(mod.bucketHandler = new BucketHandler());
 		Lo.g.info("Setting up ingame-stuff...");
-		setupFluids();
-		setupBlocks(mod);
-		setupItems(mod);
-		setupTextureNames();
+		Fluids.setup();
+		Blocks.setup(mod);
+		Items.setup(mod);
 		
 		mod.damageElectric = new DamageSource("electric").setDamageBypassesArmor();
 		

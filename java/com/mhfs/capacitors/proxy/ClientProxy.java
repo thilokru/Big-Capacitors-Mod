@@ -34,6 +34,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(FMLInitializationEvent event, BigCapacitorsMod mod) {
 		super.init(event, mod);
+		
+		setupTextureNames();
+		
 		int id = RenderingRegistry.getNextAvailableRenderId();
 		BigCapacitorsMod.capacitorRenderer = new RendererCapacitor(id);
 		RenderingRegistry.registerBlockHandler(BigCapacitorsMod.capacitorRenderer);
@@ -73,5 +76,19 @@ public class ClientProxy extends CommonProxy {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setupTextureNames() {
+		Items.itemMultitool.setTextureName("big_capacitors:multitool");
+		Items.itemManual.setTextureName("big_capacitors:manual");
+		Items.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
+		Items.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
+		Items.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
+		Items.itemBucketHydrogen.setTextureName("big_capacitors:bucket_gas");
+		
+		Blocks.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
+		Blocks.blockDestillery.setBlockTextureName("big_capacitors:destillery");
+		Blocks.blockBarrel.setBlockTextureName("big_capacitors:barrel");
+		Blocks.blockTomahawk.setBlockTextureName("big_capacitors:tomahawk");
 	}
 }

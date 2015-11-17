@@ -56,13 +56,25 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 				if(drain == 1){
 					storage.receiveEnergy(RF_PER_MB_HYDROGEN, false);
 				}
+				doEnergyOut();
 			}else{
 				int extract = storage.extractEnergy(MAX_RF_DRAIN, false);
 				temperature += extract * KELVIN_PER_RF;
-				temperature -= temperature * LOSS_FACTOR;
+				temperature -= (temperature - ROOM_TEMP) * LOSS_FACTOR;
 			}
-			
-			doEnergyOut();
+			this.markDirty();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}else{
+			if(temperature > ROOM_TEMP){
+				this.temperature = ROOM_TEMP;
+				this.markDirty();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+			if(storage.getEnergyStored() > 0){
+				storage.setEnergyStored(0);
+				this.markDirty();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
 		}
 	}
 	
@@ -86,6 +98,10 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 
 	public boolean isFormed(){
 		return formed;
+	}
+	
+	public FluidTank getHydrogenTank(){
+		return hydrogenTank;
 	}
 
 	@Override
@@ -175,6 +191,10 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+	}
+
+	public double getTemperature() {
+		return temperature;
 	}
 
 }

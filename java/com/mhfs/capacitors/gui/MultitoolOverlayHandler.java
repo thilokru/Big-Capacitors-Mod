@@ -8,6 +8,7 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
 import net.minecraft.block.Block;
@@ -22,6 +23,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -38,8 +40,22 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderDestilleryOverlay(event, entity);
 		} else if (entity instanceof TileBarrel) {
 			renderBarrelOverlay(event, entity);
+		} else if (entity instanceof TileTomahawk){
+			renderFusionOverlay(event, (TileTomahawk) entity);
 		}
 
+	}
+
+	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+		Gui gui = Minecraft.getMinecraft().ingameGUI;
+		
+		String text = "RF: " + entity.getEnergyStored(ForgeDirection.NORTH) + "/" + entity.getMaxEnergyStored(ForgeDirection.NORTH);
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
+		
+		text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity() + " at " + (int)entity.getTemperature() + " °C";
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 15, Color.WHITE.getRGB());
 	}
 
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {

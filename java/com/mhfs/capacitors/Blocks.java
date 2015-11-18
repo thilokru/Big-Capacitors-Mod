@@ -93,7 +93,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Fluids.blockWine.setBlockName("blockWine");
 		GameRegistry.registerBlock(Fluids.blockWine, "blockWine");
 		
-		Fluids.blockHydrogen = new BlockFluidBase(Fluids.gasHydrogen, Material.air, "big_capacitors:blank", "big_capacitors:blank");
+		Fluids.blockHydrogen = new BlockFluidBase(Fluids.gasHydrogen, Material.water, "big_capacitors:blank", "big_capacitors:blank");
 		Fluids.blockHydrogen.setCreativeTab(mod.creativeTab);
 		Fluids.blockHydrogen.setBlockName("blockHydrogen");
 		GameRegistry.registerBlock(Fluids.blockHydrogen, "blockHydrogen");

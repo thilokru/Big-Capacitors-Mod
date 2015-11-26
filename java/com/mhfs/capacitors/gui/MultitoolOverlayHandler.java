@@ -62,8 +62,10 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		FluidTank hydrogen = entity.getHydrogenTank();
-		String text = "Hydrogen: " + hydrogen.getFluidAmount() + "/" + hydrogen.getCapacity();
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
+		String text = "Hydrogen: ";
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 5, Color.WHITE.getRGB());
+		text = hydrogen.getFluidAmount() + "/" + hydrogen.getCapacity();
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 15, Color.WHITE.getRGB());
 	}
 
 	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {
@@ -71,11 +73,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 		
-		String text = "RF: " + entity.getEnergyStored(ForgeDirection.NORTH) + "/" + entity.getMaxEnergyStored(ForgeDirection.NORTH);
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
+		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
+		renderEnergy(xPos - 3, yPos + 5, filled);
 		
-		text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity() + " at " + (int)entity.getTemperature() + " °C";
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 15, Color.WHITE.getRGB());
+		String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 5, Color.WHITE.getRGB());
+		
+		text = "at " + (int)entity.getTemperature() + " °C";
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 15, Color.WHITE.getRGB());
 	}
 
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {

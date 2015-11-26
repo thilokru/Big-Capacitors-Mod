@@ -24,7 +24,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 	private FluidTank hydrogen, oxygen, water;
 	
 	public TileFuelCell(){
-		energy = new EnergyStorage(120000, 80);
+		energy = new EnergyStorage(120000, 800);
 		hydrogen = new FluidTank(2000);
 		oxygen = new FluidTank(2000);
 		water = new FluidTank(2000);
@@ -152,6 +152,14 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		return new FluidTankInfo[]{water.getInfo(), hydrogen.getInfo(), oxygen.getInfo()};
+	}
+
+	public FluidTank getInputTank() {
+		return water;
+	}
+
+	public FluidTank getHydrogenTank() {
+		return hydrogen;
 	}
 
 }

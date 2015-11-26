@@ -8,6 +8,7 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
@@ -26,6 +27,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
@@ -42,8 +44,26 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderBarrelOverlay(event, entity);
 		} else if (entity instanceof TileTomahawk){
 			renderFusionOverlay(event, (TileTomahawk) entity);
+		} else if (entity instanceof TileFuelCell){
+			renderFuelCellOverlay(event, (TileFuelCell)entity);
 		}
 
+	}
+
+	private void renderFuelCellOverlay(RenderGameOverlayEvent event, TileFuelCell entity) {
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+		Gui gui = Minecraft.getMinecraft().ingameGUI;
+
+		FluidTank in = entity.getInputTank();
+		renderFluidStack(in.getFluid(), xPos - 20, yPos + 5, in != null ? in.getFluidAmount() / in.getCapacity() : 0);
+
+		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
+		renderEnergy(xPos - 3, yPos + 5, filled);
+		
+		FluidTank hydrogen = entity.getHydrogenTank();
+		String text = "Hydrogen: " + hydrogen.getFluidAmount() + "/" + hydrogen.getCapacity();
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 	}
 
 	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {

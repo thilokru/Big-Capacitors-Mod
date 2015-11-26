@@ -22,7 +22,7 @@ public class ManualOverlayHandler extends Gui implements IOverlayHandler {
 	public void drawOverlay(RenderGameOverlayEvent event, Block block, IBlockAccess world, int x, int y, int z) {
 		if (block instanceof IChapterRelated) {
 			IChapterRelated rel = (IChapterRelated) block;
-			if (rel.getChapter() == null)
+			if (rel.getChapter(world, x, y, z) == null)
 				return;
 			Gui gui = Minecraft.getMinecraft().ingameGUI;
 
@@ -38,7 +38,7 @@ public class ManualOverlayHandler extends Gui implements IOverlayHandler {
 			this.drawTexturedModalRect(xPos - 16, yPos, 62, 0, 16, 16);
 			GL11.glPopMatrix();
 			
-			gui.drawString(Minecraft.getMinecraft().fontRenderer, rel.getChapter(), xPos + 2, yPos + 5, Color.WHITE.getRGB());
+			gui.drawString(Minecraft.getMinecraft().fontRenderer, rel.getChapter(world, x, y, z), xPos + 2, yPos + 5, Color.WHITE.getRGB());
 		}
 	}
 

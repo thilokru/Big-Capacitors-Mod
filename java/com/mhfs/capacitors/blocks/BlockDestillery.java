@@ -79,7 +79,7 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 	}
 
 	@Override
-	public String getChapter() {
+	public String getChapter(IBlockAccess access, int x, int y, int z) {
 		return "Distillery";
 	}
 

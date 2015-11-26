@@ -114,7 +114,7 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 	}
 
 	@Override
-	public String getChapter() {
+	public String getChapter(IBlockAccess access, int x, int y, int z) {
 		return "Capacitor Walls";
 	}
 	

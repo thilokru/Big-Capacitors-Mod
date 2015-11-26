@@ -15,6 +15,11 @@ public class BlockData {
 		this.harvestLevel = harvestLevel;
 		this.hardness = hardness;
 	}
+	
+	public BlockData(String name, String icon, String miningTool, int harvestLevel, float hardness, String chapter){
+		this(name, icon, miningTool, harvestLevel, hardness);
+		this.chapter = chapter;
+	}
 
 	private String blockName;
 	private String baseIconName;
@@ -23,6 +28,7 @@ public class BlockData {
 	private String miningTool;
 	private int harvestLevel;
 	private float hardness;
+	private String chapter;
 	
 	public String getName(){
 		return blockName;
@@ -70,5 +76,9 @@ public class BlockData {
 	
 	public float getHardness(){
 		return hardness;
+	}
+
+	public String getChapter() {
+		return chapter;
 	}
 }

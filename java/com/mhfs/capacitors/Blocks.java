@@ -66,16 +66,16 @@ public class Blocks extends net.minecraft.init.Blocks{
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
 		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F));//0
 		
-		blockData.add(new BlockData("blockCeramic", "big_capacitors:ceramic", "pickaxe", 2, 0.5F));//1
+		blockData.add(new BlockData("blockCeramic", "big_capacitors:ceramic", "pickaxe", 2, 0.5F, "Ores"));//1
 		
 		BlockData coil = new BlockData("coil", "big_capacitors:coil", "pickaxe", 2, 3.0F);//2
 		coil.setSpecialTexture(ForgeDirection.UP, "big_capacitors:coilTop");
 		coil.setSpecialTexture(ForgeDirection.DOWN, "big_capacitors:coilTop");
 		blockData.add(coil);
 		
-		blockData.add(new BlockData("oreRutil", "big_capacitors:oreRutil", "pickaxe", 2, 1F));//3
+		blockData.add(new BlockData("oreRutil", "big_capacitors:oreRutil", "pickaxe", 2, 1F, "Ores"));//3
 		
-		blockData.add(new BlockData("oreWitherite", "big_capacitors:oreWitherite", "pickaxe", 2, 1F));//4
+		blockData.add(new BlockData("oreWitherite", "big_capacitors:oreWitherite", "pickaxe", 2, 1F, "Ores"));//4
 		
 		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
 		Blocks.blockMany.setCreativeTab(mod.creativeTab);

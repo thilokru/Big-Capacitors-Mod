@@ -48,10 +48,10 @@ public class GuiHandler implements IGuiHandler {
 			Block block = world.getBlock(x, y, z);
 			if(block instanceof IChapterRelated){
 				IChapterRelated rel = (IChapterRelated)block;
-				if(rel.getChapter() == null){
+				if(rel.getChapter(world, x, y, z) == null){
 					return getDisplayChapter(reg.getIndex());
 				}
-				return getDisplayChapter(reg.getChapter(rel.getChapter()));
+				return getDisplayChapter(reg.getChapter(rel.getChapter(world, x, y, z)));
 			}
 		}
 		return getDisplayChapter(reg.getIndex());

@@ -7,6 +7,7 @@ import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockFluidBase;
+import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.blocks.BlockMany;
 import com.mhfs.capacitors.blocks.BlockTomahawk;
 import com.mhfs.capacitors.items.ItemBlockMany;
@@ -24,6 +25,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockBarrel blockBarrel;
 	public static BlockMany blockMany;
 	public static BlockTomahawk blockTomahawk;
+	public static BlockFuelCell blockFuelCell;
 	
 	public static void setup(BigCapacitorsMod mod){
 		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
@@ -53,6 +55,13 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockTomahawk.setHardness(0.5F);
 		Blocks.blockTomahawk.setHarvestLevel("pickaxe", 2);
 		GameRegistry.registerBlock(Blocks.blockTomahawk, "blockTomahawk");
+		
+		Blocks.blockFuelCell = new BlockFuelCell(Material.rock);
+		Blocks.blockFuelCell.setBlockName("blockFuelCell");
+		Blocks.blockFuelCell.setCreativeTab(mod.creativeTab);
+		Blocks.blockFuelCell.setHardness(0.25F);
+		Blocks.blockFuelCell.setHarvestLevel("pickaxe", 2);
+		GameRegistry.registerBlock(Blocks.blockFuelCell, "blockFuelCell");
 		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
 		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F));//0

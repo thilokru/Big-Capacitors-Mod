@@ -21,6 +21,7 @@ import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.RendererCapacitor;
 import com.mhfs.capacitors.render.RendererOBJ;
 import com.mhfs.capacitors.tile.TileBarrel;
+import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -53,6 +54,12 @@ public class ClientProxy extends CommonProxy {
 		TileEntitySpecialRenderer barrelRenderer = new RendererOBJ(model, texture);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, barrelRenderer);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockBarrel), (IItemRenderer) barrelRenderer);
+		
+		model = new ResourceLocation(BigCapacitorsMod.modid, "models/fuel_cell.obj");
+		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/fuel_cell.png");
+		TileEntitySpecialRenderer fuelCellRenderer = new RendererOBJ(model, texture);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFuelCell.class, fuelCellRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockFuelCell), (IItemRenderer) fuelCellRenderer);
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());

@@ -48,7 +48,6 @@ public class RendererOBJ extends TileEntitySpecialRenderer implements IItemRende
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		renderer.renderAll();
-
 		glPopMatrix();
 	}
 

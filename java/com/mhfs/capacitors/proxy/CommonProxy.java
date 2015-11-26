@@ -34,6 +34,7 @@ import com.mhfs.capacitors.network.WallUpdateMessage;
 import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
@@ -126,6 +127,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileDistillery.class, "tileDistillery");
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
 		GameRegistry.registerTileEntity(TileTomahawk.class, "tileTomahawk");
+		GameRegistry.registerTileEntity(TileFuelCell.class, "tileFuelCell");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

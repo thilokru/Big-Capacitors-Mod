@@ -1,0 +1,2 @@
+text#big_capacitors:manual/fusion/def.txt
+text#big_capacitors:manual/fusion/build.txt

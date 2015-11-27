@@ -33,7 +33,7 @@ public class GuiManualChapter extends GuiManual {
 				GuiManualButton.Mode.BACKWARD);
 		this.buttonList.add(backward);
 		
-		buttonX = (this.width - this.bookImageWidth) / 2 + GuiManual.BOOK_BORDER + GuiManual.MARGIN;
+		buttonX = (this.width - GuiManualButton.SIZE) / 2;
 		exit = new GuiManualButton(-1, buttonX, buttonY,
 				GuiManualButton.Mode.UP);
 		exit.visible = true;

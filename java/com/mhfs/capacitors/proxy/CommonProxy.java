@@ -96,9 +96,9 @@ public class CommonProxy {
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
 		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.obsidian, 'G', Blocks.gravel));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTomahawk, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 5), 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTomahawk, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 4), 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
-		ItemStack coilEmptyItem = new ItemStack(Items.itemMany, 1, 4);
+		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
 		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.obsidian, 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
 		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);

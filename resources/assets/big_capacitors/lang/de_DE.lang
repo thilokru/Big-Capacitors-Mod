@@ -5,11 +5,13 @@ tile.blockDestilledWater.name=destilliertes Wasser
 tile.blockEthanol.name=Alkohol
 tile.blockWine.name=Wein
 tile.blockHydrogen.name=Wasserstoff
+tile.blockFuelCell.name=Brennstoffzelle
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
 tile.reactorShield.name=Reaktorenabschirmung
 tile.coil.name=Supraleitende Spule
+tile.coilEmpty.name=Leere Spule
 tile.blockTomahawk.name=Fusionsreaktorsteuerung
 
 item.multitool.name=Multifunktionswerkzeug
@@ -22,6 +24,7 @@ item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer
 item.bucketHydrogen.name=Wasserstoffeimer
+item.fusionProcessor.name=Fusionskontrollierender Prozessor
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Destilliertes Wasser

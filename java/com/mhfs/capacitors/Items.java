@@ -41,8 +41,7 @@ public class Items extends net.minecraft.init.Items{
 		data.add(new ItemData("heater", "big_capacitors:heater", false));
 		data.add(new ItemData("dustRutil", "big_capacitors:dustRutil", false));//2, TiO2
 		data.add(new ItemData("dustWitherite", "big_capacitors:dustWitherite", false));//3, BaCO3
-		data.add(new ItemData("coilEmpty", "big_capacitors:coilEmpty", false));//4
-		data.add(new ItemData("fusionProcessor", "big_capacitors:fusionProcessor", true));//5
+		data.add(new ItemData("fusionProcessor", "big_capacitors:fusionProcessor", true));//4
 		
 		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));
 		Items.itemMany.setCreativeTab(mod.creativeTab);

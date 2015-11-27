@@ -15,7 +15,7 @@ public class TradeHandler implements IVillageTradeHandler {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void manipulateTradesForVillager(EntityVillager villager, MerchantRecipeList recipeList, Random random) {
-		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 44 + random.nextInt(20)), new ItemStack(Items.itemMany, 1, 5)));
+		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 44 + random.nextInt(20)), new ItemStack(Items.itemMany, 1, 4)));
 	}
 
 }

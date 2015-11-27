@@ -77,6 +77,11 @@ public class Blocks extends net.minecraft.init.Blocks{
 		
 		blockData.add(new BlockData("oreWitherite", "big_capacitors:oreWitherite", "pickaxe", 2, 1F, "Ores"));//4
 		
+		BlockData coilEmpty = new BlockData("coilEmpty", "big_capacitors:coil", "pickaxe", 2, 3.0F);//5
+		coilEmpty.setSpecialTexture(ForgeDirection.UP, "big_capacitors:coilTopEmpty");
+		coilEmpty.setSpecialTexture(ForgeDirection.DOWN, "big_capacitors:coilTopEmpty");
+		blockData.add(coilEmpty);
+		
 		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
 		Blocks.blockMany.setCreativeTab(mod.creativeTab);
 		GameRegistry.registerBlock(Blocks.blockMany, ItemBlockMany.class, "blockMany");

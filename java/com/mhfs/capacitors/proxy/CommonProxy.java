@@ -18,6 +18,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import cofh.api.modhelpers.ThermalExpansionHelper;
 import cofh.thermalexpansion.util.crafting.PulverizerManager;
 import cofh.thermalexpansion.util.crafting.SmelterManager;
 
@@ -38,7 +39,7 @@ import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
-
+import com.mhfs.capacitors.village.TradeHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
@@ -47,6 +48,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy {
@@ -65,7 +67,7 @@ public class CommonProxy {
 		};
 	}
 
-	private void setupRecipies() {
+	private void setupRecipies() {		
 		ItemStack capacitorStack = new ItemStack(Blocks.capacitorIron, 4);
 		ItemStack obsidianStack = new ItemStack(Blocks.obsidian);
 		ItemStack ironBlockStack = new ItemStack(Blocks.iron_block);
@@ -88,6 +90,17 @@ public class CommonProxy {
 		Item barrelItem = Item.getItemFromBlock(Blocks.blockBarrel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
 		
+		Item fuelCellItem = Item.getItemFromBlock(Blocks.blockFuelCell);
+		GameRegistry.addRecipe(new ShapedOreRecipe(fuelCellItem, true, " I ", "IBI", " I ", 'I', "ingotIron", 'B', Items.bucket));
+
+		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
+		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.obsidian, 'G', Blocks.gravel));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTomahawk, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 5), 'W', new ItemStack(Items.itemMany, 1, 0)));
+		
+		ItemStack coilEmptyItem = new ItemStack(Items.itemMany, 1, 4);
+		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.obsidian, 'W', new ItemStack(Items.itemMany, 1, 0)));
+		
 		PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);
 		PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemMany, 2, 4), null, 0);
 		
@@ -95,6 +108,8 @@ public class CommonProxy {
 		
 		DestilleryRecipeRegistry.registerRecipe(new FluidStack(FluidRegistry.WATER, 1), new FluidStack(Fluids.fluidDestilledWater, 1), 10);
 		DestilleryRecipeRegistry.registerRecipe(new FluidStack(Fluids.fluidWine, 10), new FluidStack(Fluids.fluidEthanol, 1), 8);
+		
+		ThermalExpansionHelper.addTransposerFill(80, coilEmptyItem, new ItemStack(Blocks.blockMany, 1, 2), new FluidStack(FluidRegistry.getFluid("cryotheum"), 100), false);
 	}
 
 	private void setupConfig(FMLPreInitializationEvent event, BigCapacitorsMod mod) {
@@ -115,6 +130,9 @@ public class CommonProxy {
 		Fluids.setup();
 		Blocks.setup(mod);
 		Items.setup(mod);
+		VillagerRegistry.instance().registerVillageTradeHandler(2, new TradeHandler());
+		
+		System.out.println(FluidRegistry.getRegisteredFluids());
 		
 		mod.damageElectric = new DamageSource("electric").setDamageBypassesArmor();
 		

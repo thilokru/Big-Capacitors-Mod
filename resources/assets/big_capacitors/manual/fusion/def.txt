@@ -8,9 +8,9 @@ that an enormous amount of
 energy is set free by this.
 
 The fusion reactor you can
-build here is called a
-tokamak. A coil is producing
-a strong magnetic field
-holding a hot plasma in space.
-If the plasma is hot enough,
-fusion starts.
+build here is called tokamak.
+A coil produces a strong
+magnetic field holding a hot
+plasma in space. If the 
+plasma is hot enough, fusion
+starts.

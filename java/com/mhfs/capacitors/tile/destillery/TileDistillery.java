@@ -219,11 +219,11 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
 	}
 
-	public FluidStack getInputStack() {
-		return input.getFluid();
+	public IFluidTank getInputTank() {
+		return input;
 	}
 	
-	public FluidStack getOutputStack() {
-		return output.getFluid();
+	public IFluidTank getOutputTank() {
+		return output;
 	}
 }

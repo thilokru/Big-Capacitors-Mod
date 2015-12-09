@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
@@ -27,7 +28,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
 
 public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
@@ -55,17 +56,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 
-		FluidTank in = entity.getInputTank();
-		renderFluidStack(in.getFluid(), xPos - 20, yPos + 5, in != null ? in.getFluidAmount() / in.getCapacity() : 0);
+		renderFluidStack(entity.getInputTank(), xPos - 20, yPos + 5);
 
 		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
-		FluidTank hydrogen = entity.getHydrogenTank();
-		String text = "Hydrogen: ";
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 5, Color.WHITE.getRGB());
-		text = hydrogen.getFluidAmount() + "/" + hydrogen.getCapacity();
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 15, Color.WHITE.getRGB());
+		String text = "H";
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 10, yPos + 22, Color.WHITE.getRGB());
+		renderGas(entity.getHydrogenTank(), xPos + 5, yPos + 5);
 	}
 
 	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {
@@ -76,11 +74,11 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
-		String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 5, Color.WHITE.getRGB());
+		//String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
+		renderGas(entity.getHydrogenTank(), xPos + 8, yPos + 5);
 		
-		text = "at " + (int)entity.getTemperature() + " °C";
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 8, yPos + 15, Color.WHITE.getRGB());
+		String text = "at " + (int)entity.getTemperature() + " °C";
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos - 3, yPos + 22, Color.WHITE.getRGB());
 	}
 
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {
@@ -90,9 +88,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 
 		this.renderItemStack(barrel.getStackInSlot(0), xPos - 18, yPos + 2);
-
-		float percentageFilled = ((float) barrel.getWineTank().getFluidAmount()) / ((float) barrel.getWineTank().getCapacity());
-		this.renderFluidStack(barrel.getWineTank().getFluid(), xPos + 2, yPos + 5, percentageFilled);
+		this.renderFluidStack(barrel.getWineTank(), xPos + 2, yPos + 5);
 	}
 
 	private void renderDestilleryOverlay(RenderGameOverlayEvent event, TileEntity entity) {
@@ -102,16 +98,12 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		if (tile == null)
 			return;
 
-		float maxCap = (float) TileDistillery.TANK_CAPCITY;
-
-		FluidStack in = tile.getInputStack();
-		renderFluidStack(in, xPos - 20, yPos + 5, in != null ? in.amount / maxCap : 0);
+		renderFluidStack(tile.getInputTank(), xPos - 20, yPos + 5);
 
 		float filled = (float) tile.getEnergyStored(null) / (float) tile.getMaxEnergyStored(null);
 		renderEnergy(xPos - 3, yPos + 5, filled);
 
-		FluidStack out = tile.getOutputStack();
-		renderFluidStack(out, xPos + 5, yPos + 5, out != null ? out.amount / maxCap : 0);
+		renderFluidStack(tile.getOutputTank(), xPos + 5, yPos + 5);
 	}
 
 	private void renderEnergy(int x, int y, float filled) {
@@ -129,7 +121,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		GL11.glPopMatrix();
 	}
 
-	private void renderFluidStack(FluidStack stack, int x, int y, float percentageFilled) {
+	private void renderFluidStack(IFluidTank tank, int x, int y) {
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -137,18 +129,49 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 32, 0, 16, 16);
+		
+		float filled = tank.getFluidAmount()/tank.getCapacity();
+		FluidStack stack = tank.getFluid();
 
 		if (stack != null) {
 			Fluid fluid = stack.getFluid();
 			IIcon icon = fluid.getIcon();
 			if (icon != null) {
 				bindTexture(fluid.getSpriteNumber());
-				this.drawTexturedModelRectFromIcon(x, (int) (y + (1 - percentageFilled) * 16), icon, 16, (int) (16 * percentageFilled));
+				this.drawTexturedModelRectFromIcon(x, (int) (y + (1 - filled) * 16), icon, 16, (int) (16 * filled));
 			}
 		}
 
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
+		GL11.glPopMatrix();
+	}
+	
+	private void renderGas(IFluidTank tank, int x, int y){
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glColor4f(1, 1, 1, 1);
+
+		bindTexture(overlayTexture);
+		this.drawTexturedModalRect(x, y, 78, 0, 16, 16);
+		
+		float filled = tank.getFluidAmount()/(float)tank.getCapacity();
+		
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glLineWidth(2);
+		Tessellator tes = Tessellator.instance;
+		tes.startDrawing(GL11.GL_LINES);
+		tes.setColorOpaque_I(0x0);
+		double xEnd = x + 8 - Math.cos(filled * Math.PI)*6;
+		double yEnd = y + 8 - Math.sin(filled * Math.PI)*6;
+		tes.addVertex(xEnd, yEnd, zLevel);
+		tes.addVertex(x + 8, y + 8, zLevel);
+		tes.draw();
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}
 

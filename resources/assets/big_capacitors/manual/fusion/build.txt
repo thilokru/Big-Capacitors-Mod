@@ -1,7 +1,7 @@
-In order to build a tokamak,
-you place a three block tall
+To build a tokamak,you place
+a three block tall
 superconducting coil in the
-center and on top the fusion
+center, on top the fusion
 reactor controller. Around
 the middle coil block you
 place the reactor shielding
@@ -10,6 +10,7 @@ as shown in the pictures.
 The crafting recipies are
 displayed on the next few
 pages. In order to get the
-fusion controlling processor,
-you need to find villager(clerk),
-who is willing to trade.
+fusion controlling proces-
+sor,you need to find a
+villager(clerk), who is 
+willing to trade.

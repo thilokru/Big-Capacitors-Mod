@@ -130,7 +130,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 32, 0, 16, 16);
 		
-		float filled = tank.getFluidAmount()/tank.getCapacity();
+		float filled = tank.getFluidAmount()/(float)tank.getCapacity();
 		FluidStack stack = tank.getFluid();
 
 		if (stack != null) {
@@ -150,7 +150,6 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	private void renderGas(IFluidTank tank, int x, int y){
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(1, 1, 1, 1);
 
@@ -170,7 +169,6 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		tes.addVertex(x + 8, y + 8, zLevel);
 		tes.draw();
 		
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}

@@ -39,6 +39,7 @@ import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
+import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 import com.mhfs.capacitors.village.TradeHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -146,6 +147,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
 		GameRegistry.registerTileEntity(TileTomahawk.class, "tileTomahawk");
 		GameRegistry.registerTileEntity(TileFuelCell.class, "tileFuelCell");
+		GameRegistry.registerTileEntity(TileLuxRouter.class, "tileLuxRouter");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

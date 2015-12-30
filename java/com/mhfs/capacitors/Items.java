@@ -6,6 +6,7 @@ import java.util.List;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.items.ItemCustomBuckets;
 import com.mhfs.capacitors.items.ItemData;
+import com.mhfs.capacitors.items.ItemLuxRouter;
 import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMany;
 import com.mhfs.capacitors.items.ItemMultitool;
@@ -21,6 +22,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class Items extends net.minecraft.init.Items{
 
 	public static Item itemMultitool;
+	public static Item itemLuxRouter;
 	public static Item itemManual;
 	public static Item itemBucketDestilledWater;
 	public static Item itemBucketEthanol;
@@ -34,6 +36,9 @@ public class Items extends net.minecraft.init.Items{
 		
 		Items.itemManual = new ItemManual().setUnlocalizedName("manual").setCreativeTab(mod.creativeTab).setMaxStackSize(1);
 		GameRegistry.registerItem(Items.itemManual, "manual");
+		
+		Items.itemLuxRouter = new ItemLuxRouter().setUnlocalizedName("router").setCreativeTab(mod.creativeTab).setMaxStackSize(1);
+		GameRegistry.registerItem(Items.itemLuxRouter, "router");
 		
 		List<ItemData> data = new ArrayList<ItemData>();
 		

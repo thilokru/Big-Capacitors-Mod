@@ -19,6 +19,7 @@ import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.RendererCapacitor;
+import com.mhfs.capacitors.render.RendererLuxRouter;
 import com.mhfs.capacitors.render.RendererOBJ;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileFuelCell;
@@ -63,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockFuelCell), (IItemRenderer) fuelCellRenderer);
 		
 		model = new ResourceLocation(BigCapacitorsMod.modid, "models/LuxRouter.obj");
-		TileEntitySpecialRenderer luxRouterRenderer = new RendererOBJ(model, texture);
+		TileEntitySpecialRenderer luxRouterRenderer = new RendererLuxRouter(model, texture);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, luxRouterRenderer);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockLuxRouter), (IItemRenderer) luxRouterRenderer);
 

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 import com.mhfs.capacitors.misc.BlockPos;
+import com.mhfs.capacitors.misc.HashSetHelper;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -18,7 +19,8 @@ import net.minecraft.world.World;
 public class TileLuxRouter extends TileEntity implements LuxHandler {
 
 	private Set<BlockPos> connections;
-	private Map<BlockPos, SucctionSpec> routes; // Maps Specs (including route) to LuxDrain(BlockPos)
+	private Map<BlockPos, SucctionSpec> routes; // Maps Specs (including route)
+												// to LuxDrain(BlockPos)
 	private Set<BlockPos> toRender;
 
 	public TileLuxRouter() {
@@ -30,29 +32,27 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	public void updateEntity() {
 		toRender.clear();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 
-		String json = tag.getString("con");
+		this.connections = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("con"));
+
+		String json = tag.getString("route");
 		Gson gson = new Gson();
-		this.connections = gson.fromJson(json, connections.getClass());
-		
-		json = tag.getString("route");
 		this.routes = gson.fromJson(json, routes.getClass());
-		
-		json = tag.getString("render");
-		this.toRender = gson.fromJson(json, toRender.getClass());
+
+		this.toRender = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("render"));
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 
 		Gson gson = new Gson();
-		tag.setString("con", gson.toJson(this.connections));
+		tag.setTag("con", HashSetHelper.blockPosSetToNBT(connections));
 		tag.setString("route", gson.toJson(this.routes));
-		tag.setString("render", gson.toJson(this.toRender));
+		tag.setTag("render", HashSetHelper.blockPosSetToNBT(toRender));
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
@@ -66,10 +66,10 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	}
 
 	public Set<BlockPos> getConnectionsToRender() {
-		return toRender;
+		return this.connections;
 	}
-	
-	public BlockPos getPosition(){
+
+	public BlockPos getPosition() {
 		return new BlockPos(this.xCoord, this.yCoord, this.zCoord);
 	}
 
@@ -87,6 +87,8 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 				continue;
 			foreign.drainSetup(world, value - 1, requester, lastHop);
 		}
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -108,6 +110,8 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 			LuxHandler foreign = (LuxHandler) pos.getTileEntity(world);
 			foreign.handleDisconnect(world, handler, level - 1);
 		}
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -116,6 +120,8 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 		this.toRender.add(hopPos);
 		LuxHandler hop = (LuxHandler) hopPos.getTileEntity(world);
 		hop.energyFlow(world, dst, amount);
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void connect(int x, int y, int z) {
@@ -124,9 +130,11 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 		router.internalConnect(this);
 		this.internalConnect(router);
 	}
-	
-	private void internalConnect(TileLuxRouter foreign){
+
+	private void internalConnect(TileLuxRouter foreign) {
 		this.connections.add(foreign.getPosition());
 		foreign.handlerSetupRequest(worldObj, getPosition());
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 }

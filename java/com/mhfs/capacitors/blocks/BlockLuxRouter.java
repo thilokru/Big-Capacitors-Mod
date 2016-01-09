@@ -2,6 +2,7 @@ package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +18,13 @@ public class BlockLuxRouter extends BlockContainer {
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileLuxRouter();
 	}
-	
+
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		TileLuxRouter router = (TileLuxRouter) world.getTileEntity(x, y, z);
+		router.onDestroy();
+		super.breakBlock(world, x, y, z, block, meta);
+	}
+
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
@@ -26,11 +33,11 @@ public class BlockLuxRouter extends BlockContainer {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
 	public int getRenderBlockPass() {
 		return 1;
 	}
-	
+
 	public int getRenderType() {
 		return -1;
 	}

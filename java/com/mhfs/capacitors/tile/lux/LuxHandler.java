@@ -2,8 +2,6 @@ package com.mhfs.capacitors.tile.lux;
 
 import com.mhfs.capacitors.misc.BlockPos;
 
-import net.minecraft.world.World;
-
 public interface LuxHandler {
 	
 	/**
@@ -20,7 +18,7 @@ public interface LuxHandler {
 	 * @param requester the postion of the drain
 	 * @param lastHop the position of the last hop
 	 */
-	public void drainSetup(World world, int value, BlockPos requester, BlockPos lastHop);
+	public void drainSetup(BlockPos requester, BlockPos lastHop, int value);
 	
 	/**
 	 * If a node (a router, e.g) joins the network, it needs to retrieve its configuration.
@@ -30,7 +28,7 @@ public interface LuxHandler {
 	 * If the new node enables new connections, this allows a fast reconfiguration.
 	 * @param requester
 	 */
-	public void handlerSetupRequest(World world, BlockPos requester);
+	public void handlerSetupRequest(BlockPos requester);
 	
 	/**
 	 * WARNING! THIS IS STILL WIP!
@@ -40,7 +38,7 @@ public interface LuxHandler {
 	 * @param handler
 	 * @param level
 	 */
-	public void handleDisconnect(World world, BlockPos handler, int level);
+	public void handleDisconnect(BlockPos handler, int level);
 	
 	/**
 	 * This method is called when energy should be sent to its destination. This is used e.g to
@@ -48,5 +46,5 @@ public interface LuxHandler {
 	 * @param dst
 	 * @param amount amount of energy transfered. {@link LuxDrain.getNeed()} etc.
 	 */
-	public void energyFlow(World world, BlockPos dst, long amount);
+	public void energyFlow(BlockPos dst, long amount);
 }

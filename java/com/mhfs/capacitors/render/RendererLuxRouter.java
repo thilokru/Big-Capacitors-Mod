@@ -44,9 +44,15 @@ public class RendererLuxRouter extends RendererOBJ {
 		if(tan < 0){
 			tan += Math.PI;
 		}
-		double angel = 90 - (tan / Math.PI)*180;
-
-		GL11.glRotated(angel, vektor.z, 0, -vektor.x);
+		double beta = (tan / Math.PI)*180;		
+		
+		if(vektor.y < 0){
+			double angel = 90 + beta;
+			GL11.glRotated(angel, -vektor.z, 0, vektor.x);
+		}else{
+			double angel = 90 - beta;
+			GL11.glRotated(angel, vektor.z, 0, -vektor.x);
+		}
 
 		Tessellator tes = Tessellator.instance;
 		tes.startDrawingQuads();

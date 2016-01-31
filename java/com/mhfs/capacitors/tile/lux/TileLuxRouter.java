@@ -34,9 +34,8 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	}
 
 	public void updateEntity() {
-		toRender.clear();
 		disconnecting.clear();
-		if (worldObj.isRemote) {
+		if (!worldObj.isRemote) {
 			for (BlockPos pos : connections) {
 				LuxHandler foreign = (LuxHandler) pos.getTileEntity(this.worldObj);
 				if(foreign == null){
@@ -60,7 +59,6 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 		Gson gson = new Gson();
 		Type routeType = new TypeToken<HashMap<BlockPos, SucctionSpec>>(){}.getType();
 		this.routes = gson.fromJson(json, routeType);
-
 		this.toRender = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("render"));
 	}
 
@@ -73,6 +71,7 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 		String json = gson.toJson(this.routes, routeType);
 		tag.setString("route", json);
 		tag.setTag("render", HashSetHelper.blockPosSetToNBT(toRender));
+		toRender.clear();
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
@@ -86,7 +85,7 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	}
 
 	public Set<BlockPos> getConnectionsToRender() {
-		return this.connections;
+		return this.toRender;
 	}
 
 	public BlockPos getPosition() {
@@ -124,6 +123,7 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 		connections.remove(handler);
 		for (BlockPos pos : connections) {
 			LuxHandler foreign = (LuxHandler) pos.getTileEntity(this.worldObj);
+			if(foreign == null)continue;
 			if (level > 1)
 				foreign.handleDisconnect(handler, level - 1);
 		}
@@ -132,18 +132,21 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	}
 
 	@Override
-	public void energyFlow(BlockPos dst, long amount) {
+	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
+		this.toRender.add(lastHop);
 		BlockPos hopPos = routes.get(dst).lastHop;
 		this.toRender.add(hopPos);
 		LuxHandler hop = (LuxHandler) hopPos.getTileEntity(this.worldObj);
-		hop.energyFlow(dst, amount);
+		hop.energyFlow(this.getPosition(), dst, amount);
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void connect(int x, int y, int z) {
+		if(worldObj.isRemote)return;
 		BlockPos foreign = new BlockPos(x, y, z);
 		LuxHandler router = (LuxHandler) foreign.getTileEntity(worldObj);
+		if(router == null)return;
 		router.internalConnect(this);
 		this.internalConnect(router);
 	}
@@ -158,6 +161,7 @@ public class TileLuxRouter extends TileEntity implements LuxHandler {
 	public void onDestroy() {
 		for (BlockPos pos : connections) {
 			LuxHandler foreign = (LuxHandler) pos.getTileEntity(this.worldObj);
+			if(foreign == null)continue;
 			foreign.handleDisconnect(this.getPosition(), 64);
 		}
 	}

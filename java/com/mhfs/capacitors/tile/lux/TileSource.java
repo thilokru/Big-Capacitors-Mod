@@ -1,67 +1,57 @@
 package com.mhfs.capacitors.tile.lux;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.mhfs.capacitors.misc.BlockPos;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileDrain extends TileEntity implements LuxDrain{
+public class TileSource extends TileEntity implements LuxHandler{
 	
-	private BlockPos connection;
-	private long energy = 0;
+	public BlockPos connection;
+	public Set<BlockPos> drains;
+	
+	public TileSource(){
+		drains = new HashSet<BlockPos>();
+	}
 	
 	public void updateEntity(){
 		if(worldObj.isRemote)return;
+		this.drains.clear();
 		if(connection == null)return;
-		LuxHandler tile = (LuxHandler)connection.getTileEntity(worldObj);
-		if(tile == null){
-			connection = null;
-			return;
+		LuxHandler link = (LuxHandler)connection.getTileEntity(worldObj);
+		if(link == null)return;
+		link.handlerSetupRequest(getPosition());
+		for(BlockPos pos:drains){
+			LuxDrain drain = (LuxDrain)pos.getTileEntity(worldObj);
+			if(drain == null)continue;
+			link.energyFlow(this.getPosition(), pos, drain.getNeed());
 		}
-		tile.drainSetup(this.getPosition(), this.getPosition(), 64);
 	}
 
 	@Override
 	public void drainSetup(BlockPos requester, BlockPos lastHop, int value) {
-		return;
+		drains.add(requester);
 	}
 
 	@Override
 	public void handlerSetupRequest(BlockPos requester) {
-		LuxHandler handler = (LuxHandler)requester.getTileEntity(worldObj);
-		BlockPos position = getPosition();
-		handler.drainSetup(position, position, 64);
+		return;
 	}
 
 	@Override
 	public void handleDisconnect(BlockPos handler, int level) {
-		if(handler == connection){
-			connection = null;
-			return;
-		}
+		drains.remove(handler);
 	}
 
 	@Override
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
-		this.energy = amount;
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public long getNeed() {
-		return System.currentTimeMillis();
-	}
-
-	@Override
-	public long getMaxInput() {
-		return System.currentTimeMillis();
-	}
-	
-	public long getEnergy(){
-		return energy;
+		return;
 	}
 
 	@Override
@@ -92,10 +82,16 @@ public class TileDrain extends TileEntity implements LuxDrain{
 	public BlockPos getPosition() {
 		return new BlockPos(this.xCoord, this.yCoord, this.zCoord);
 	}
+
+	public void onDestroy() {
+		if(connection == null)return;
+		LuxHandler router = (LuxHandler) connection.getTileEntity(worldObj);
+		if(router == null)return;
+		router.handleDisconnect(getPosition(), 64);
+	}
 	
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.energy = tag.getLong("energy");
 		if(tag.hasKey("connection")){
 			connection = BlockPos.fromNBT(tag, "connection");
 		}
@@ -103,8 +99,6 @@ public class TileDrain extends TileEntity implements LuxDrain{
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		
-		tag.setLong("energy", energy);
 		if(connection == null)return;
 		connection.writeToNBT(tag, "connection");
 	}
@@ -117,13 +111,6 @@ public class TileDrain extends TileEntity implements LuxDrain{
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
-	}
-
-	public void onDestroy() {
-		if(connection == null)return;
-		LuxHandler router = (LuxHandler) connection.getTileEntity(worldObj);
-		if(router == null)return;
-		router.handleDisconnect(getPosition(), 64);
 	}
 
 }

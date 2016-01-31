@@ -51,10 +51,13 @@ public interface LuxHandler{
 	/**
 	 * This method is called when energy should be sent to its destination. This is used e.g to
 	 * setup parameters for rendering the "rays" between nodes.
+	 * If this Method is called on the destination, it must return. It may accept the power, or,
+	 * but it's not recommended, discard it.
+	 * @param lastHop
 	 * @param dst
 	 * @param amount amount of energy transfered. {@link LuxDrain.getNeed()} etc.
 	 */
-	public void energyFlow(BlockPos dst, long amount);
+	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount);
 	
 	public void connect(int x, int y, int z);
 

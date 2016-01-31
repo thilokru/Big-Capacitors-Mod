@@ -16,6 +16,11 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 		super();
 		toRender = new HashSet<BlockPos>();
 	}
+	
+	public void updateEntity(){
+		super.updateEntity();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);

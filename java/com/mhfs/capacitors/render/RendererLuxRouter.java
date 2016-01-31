@@ -22,17 +22,19 @@ public class RendererLuxRouter extends RendererOBJ {
 		super.renderTileEntityAt(entity, x, y, z, partialTick);
 		TileLuxRouter router = (TileLuxRouter) entity;
 		BlockPos local = router.getPosition();
-		Set<BlockPos> destinations = router.getConnectionsToRender();
+		Set<BlockPos> destinations = router.getConnections();
+		Set<BlockPos> poweredConnections = router.getPoweredConnections();
 		Iterator<BlockPos> it = destinations.iterator();
 		while (it.hasNext()) {
-			renderConnection(local.getVektor(it.next()), x, y, z);
+			BlockPos foreign = it.next();
+			renderConnection(local.getVektor(foreign), x, y, z, poweredConnections.contains(foreign));
 		}
 	}
 
-	private void renderConnection(BlockPos vektor, double x, double y, double z) {
+	private void renderConnection(BlockPos vektor, double x, double y, double z, boolean powered) {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor3f(1, 1, 1);
+		GL11.glEnable(GL11.GL_BLEND);
 
 		GL11.glPushMatrix();
 
@@ -53,32 +55,37 @@ public class RendererLuxRouter extends RendererOBJ {
 			double angel = 90 - beta;
 			GL11.glRotated(angel, vektor.z, 0, -vektor.x);
 		}
-
+		
+		float thickness = powered?0.1F:0.05F;
+		
+		GL11.glColor4d(1, 1, 1, 0.5);
+		
 		Tessellator tes = Tessellator.instance;
 		tes.startDrawingQuads();
-		tes.addVertex(-0.1, 0, 0);
-		tes.addVertex(0.1, 0, 0);
-		tes.addVertex(0.1, length, 0);
-		tes.addVertex(-0.1, length, 0);
+		tes.addVertex(-thickness, 0, 0);
+		tes.addVertex(thickness, 0, 0);
+		tes.addVertex(thickness, length, 0);
+		tes.addVertex(-thickness, length, 0);
 
-		tes.addVertex(-0.1, 0, 0);
-		tes.addVertex(-0.1, length, 0);
-		tes.addVertex(0.1, length, 0);
-		tes.addVertex(0.1, 0, 0);
+		tes.addVertex(-thickness, 0, 0);
+		tes.addVertex(-thickness, length, 0);
+		tes.addVertex(thickness, length, 0);
+		tes.addVertex(thickness, 0, 0);
 
-		tes.addVertex(0, 0, -0.1);
-		tes.addVertex(0, 0, 0.1);
-		tes.addVertex(0, length, 0.1);
-		tes.addVertex(0, length, -0.1);
+		tes.addVertex(0, 0, -thickness);
+		tes.addVertex(0, 0, thickness);
+		tes.addVertex(0, length, thickness);
+		tes.addVertex(0, length, -thickness);
 
-		tes.addVertex(0, 0, -0.1);
-		tes.addVertex(0, length, -0.1);
-		tes.addVertex(0, length, 0.1);
-		tes.addVertex(0, 0, 0.1);
+		tes.addVertex(0, 0, -thickness);
+		tes.addVertex(0, length, -thickness);
+		tes.addVertex(0, length, thickness);
+		tes.addVertex(0, 0, thickness);
 		tes.draw();
 
 		GL11.glPopMatrix();
 
+		GL11.glColor3f(1, 1, 1);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}

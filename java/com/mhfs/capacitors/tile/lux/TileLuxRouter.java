@@ -30,7 +30,11 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 		toRender.clear();
 	}
 
-	public Set<BlockPos> getConnectionsToRender() {
+	public Set<BlockPos> getPoweredConnections() {
+		return this.toRender;
+	}
+	
+	public Set<BlockPos> getConnections(){
 		return this.connections;
 	}
 

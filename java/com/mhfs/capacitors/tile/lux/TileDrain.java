@@ -67,13 +67,14 @@ public class TileDrain extends TileEntity implements LuxDrain, IRouting{
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
 		AbstractRoutingTile router = (AbstractRoutingTile) pos.getTileEntity(worldObj);
-		if(router == null || connection.equals(pos))return;
+		if(router == null)return;
 		if(connection != null && !pos.equals(connection)){
 			IRouting handler = (IRouting)connection.getTileEntity(worldObj);
 			if(handler != null){
 				handler.handleDisconnect(this.getPosition(), 64);
 			}
 		}
+		connection = pos;
 		router.handlerSetupRequest(this.getPosition());
 		router.connect(this.getPosition());
 		this.markDirty();

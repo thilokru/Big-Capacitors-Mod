@@ -57,16 +57,17 @@ public class TileSource extends TileEntity implements LuxHandler{
 	@Override
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
-		AbstractRoutingTile router = (AbstractRoutingTile) pos.getTileEntity(worldObj);
-		if(router == null || connection.equals(pos))return;
+		IRouting router = (IRouting) pos.getTileEntity(worldObj);
+		if(router == null)return;
 		if(connection != null && !pos.equals(connection)){
 			IRouting handler = (IRouting)connection.getTileEntity(worldObj);
 			if(handler != null){
 				handler.handleDisconnect(this.getPosition(), 64);
 			}
 		}
-		router.handlerSetupRequest(this.getPosition());
+		connection = pos;
 		router.connect(this.getPosition());
+		router.handlerSetupRequest(this.getPosition());
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}

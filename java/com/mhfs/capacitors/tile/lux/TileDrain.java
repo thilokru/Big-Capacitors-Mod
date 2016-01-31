@@ -7,7 +7,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileDrain extends TileEntity implements LuxDrain{
+public class TileDrain extends TileEntity implements LuxDrain, IRouting{
 	
 	private BlockPos connection;
 	private long energy = 0;
@@ -15,7 +15,7 @@ public class TileDrain extends TileEntity implements LuxDrain{
 	public void updateEntity(){
 		if(worldObj.isRemote)return;
 		if(connection == null)return;
-		LuxHandler tile = (LuxHandler)connection.getTileEntity(worldObj);
+		IRouting tile = (IRouting)connection.getTileEntity(worldObj);
 		if(tile == null){
 			connection = null;
 			return;
@@ -30,7 +30,7 @@ public class TileDrain extends TileEntity implements LuxDrain{
 
 	@Override
 	public void handlerSetupRequest(BlockPos requester) {
-		LuxHandler handler = (LuxHandler)requester.getTileEntity(worldObj);
+		IRouting handler = (IRouting)requester.getTileEntity(worldObj);
 		BlockPos position = getPosition();
 		handler.drainSetup(position, position, 64);
 	}
@@ -64,26 +64,18 @@ public class TileDrain extends TileEntity implements LuxDrain{
 		return energy;
 	}
 
-	@Override
-	public void connect(int x, int y, int z) {
-		BlockPos foreign = new BlockPos(x, y, z);
-		LuxHandler router = (LuxHandler) foreign.getTileEntity(worldObj);
-		if(router == null)return;
-		router.internalConnect(this);
-		this.internalConnect(router);
-	}
-
-	@Override
-	public void internalConnect(LuxHandler foreign) {
-		BlockPos newPos = foreign.getPosition();
-		if(connection != null && !newPos.equals(connection)){
-			LuxHandler handler = (LuxHandler)connection.getTileEntity(worldObj);
+	public void connect(BlockPos pos) {
+		if(worldObj.isRemote)return;
+		AbstractRoutingTile router = (AbstractRoutingTile) pos.getTileEntity(worldObj);
+		if(router == null || connection.equals(pos))return;
+		if(connection != null && !pos.equals(connection)){
+			IRouting handler = (IRouting)connection.getTileEntity(worldObj);
 			if(handler != null){
 				handler.handleDisconnect(this.getPosition(), 64);
 			}
 		}
-		connection = newPos;
-		foreign.handlerSetupRequest(getPosition());
+		router.handlerSetupRequest(this.getPosition());
+		router.connect(this.getPosition());
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
@@ -121,7 +113,7 @@ public class TileDrain extends TileEntity implements LuxDrain{
 
 	public void onDestroy() {
 		if(connection == null)return;
-		LuxHandler router = (LuxHandler) connection.getTileEntity(worldObj);
+		IRouting router = (IRouting) connection.getTileEntity(worldObj);
 		if(router == null)return;
 		router.handleDisconnect(getPosition(), 64);
 	}

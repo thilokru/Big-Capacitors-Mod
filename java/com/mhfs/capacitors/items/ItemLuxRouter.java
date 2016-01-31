@@ -2,6 +2,7 @@ package com.mhfs.capacitors.items;
 
 import java.util.List;
 
+import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.tile.lux.LuxHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -37,7 +38,7 @@ public class ItemLuxRouter extends Item {
 			}
 			if (hasLocation(stack)) {
 				int[] loc = getSavedLocation(stack);
-				router.connect(loc[0], loc[1], loc[2]);
+				router.connect(new BlockPos(loc[0], loc[1], loc[2]));
 				removeLocation(stack);
 			} else {
 				saveLocation(stack, x, y, z);

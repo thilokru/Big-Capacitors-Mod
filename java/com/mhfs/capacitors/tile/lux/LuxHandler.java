@@ -2,7 +2,13 @@ package com.mhfs.capacitors.tile.lux;
 
 import com.mhfs.capacitors.misc.BlockPos;
 
-public interface LuxHandler {
+/**
+ * This Interface should be implemented on TileEntities. Therefore no method provides an instance
+ * of the world.
+ * @author Thilo
+ *
+ */
+public interface LuxHandler{
 	
 	/**
 	 * When a new drain joins the network, it calls this method. It creates a sucction based
@@ -10,9 +16,12 @@ public interface LuxHandler {
 	 * - each connection is equal
 	 * - the shortest route must be prefered.
 	 * 
-	 * Each hop has to call this method on all connected LuxHandlers with the value (the sucction)
+	 * Each hop has to call this method the next tick on all connected LuxHandlers with the value (the sucction)
 	 * being reduced by one.
 	 * If a route exists, which is better (higher sucction), this method call returns.
+	 * 
+	 * The {@link LuxHandler.handlerDisconnect()} method will clear the routing table. This requires
+	 * the drains to call this method regularly (e.g. every 20 ticks)
 	 * @param world the world this happens in
 	 * @param value
 	 * @param requester the postion of the drain
@@ -31,7 +40,6 @@ public interface LuxHandler {
 	public void handlerSetupRequest(BlockPos requester);
 	
 	/**
-	 * WARNING! THIS IS STILL WIP!
 	 * If a node is destroied (a LuxHandler, e.g), this method must be called. It spreads
 	 * the news like the {@link LuxHandler.drainSetup()}. Effectively the whole network should
 	 * reconfigure, but this is not working yet. Need more ideas.
@@ -47,4 +55,10 @@ public interface LuxHandler {
 	 * @param amount amount of energy transfered. {@link LuxDrain.getNeed()} etc.
 	 */
 	public void energyFlow(BlockPos dst, long amount);
+	
+	public void connect(int x, int y, int z);
+
+	public void internalConnect(LuxHandler foreign);
+	
+	public BlockPos getPosition();
 }

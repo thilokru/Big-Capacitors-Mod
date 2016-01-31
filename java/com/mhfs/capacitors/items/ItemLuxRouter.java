@@ -2,8 +2,7 @@ package com.mhfs.capacitors.items;
 
 import java.util.List;
 
-import com.mhfs.capacitors.tile.lux.TileLuxRouter;
-
+import com.mhfs.capacitors.tile.lux.LuxHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,8 +30,8 @@ public class ItemLuxRouter extends Item {
 			return false;
 		}
 		TileEntity entity = world.getTileEntity(x, y, z);
-		if (entity instanceof TileLuxRouter) {
-			TileLuxRouter router = (TileLuxRouter) entity;
+		if (entity instanceof LuxHandler) {
+			LuxHandler router = (LuxHandler) entity;
 			if (stack.getTagCompound() == null) {
 				stack.setTagCompound(new NBTTagCompound());
 			}

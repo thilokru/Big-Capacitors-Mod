@@ -1,5 +1,8 @@
 package com.mhfs.capacitors.blocks;
 
+import java.util.Random;
+
+import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
 import net.minecraft.block.Block;
@@ -23,6 +26,22 @@ public class BlockLuxRouter extends BlockContainer {
 		TileLuxRouter router = (TileLuxRouter) world.getTileEntity(x, y, z);
 		router.onDestroy();
 		super.breakBlock(world, x, y, z, block, meta);
+	}
+
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		TileLuxRouter tile = (TileLuxRouter) world.getTileEntity(x, y, z);
+		BlockPos local = new BlockPos(x,y,z);
+		if(tile == null)return;
+		
+		for(BlockPos towards:tile.getPoweredConnections()){
+			BlockPos vektor = local.getVektor(towards);
+			double length = vektor.getLength() * 20;
+			double xMotion = vektor.x / length;
+			double yMotion = vektor.y / length;
+			double zMotion = vektor.z / length;
+			world.spawnParticle("cloud", x + 0.5, y + 0.5, z + 0.5, xMotion, yMotion, zMotion);
+		}
+		tile.resetPoweredState();
 	}
 
 	@Override

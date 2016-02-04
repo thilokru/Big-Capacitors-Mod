@@ -23,15 +23,14 @@ public class RendererLuxRouter extends RendererOBJ {
 		TileLuxRouter router = (TileLuxRouter) entity;
 		BlockPos local = router.getPosition();
 		Set<BlockPos> destinations = router.getConnections();
-		Set<BlockPos> poweredConnections = router.getPoweredConnections();
 		Iterator<BlockPos> it = destinations.iterator();
 		while (it.hasNext()) {
 			BlockPos foreign = it.next();
-			renderConnection(local.getVektor(foreign), x, y, z, poweredConnections.contains(foreign));
+			renderConnection(local.getVektor(foreign), x, y, z);
 		}
 	}
 
-	private void renderConnection(BlockPos vektor, double x, double y, double z, boolean powered) {
+	private void renderConnection(BlockPos vektor, double x, double y, double z) {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -56,7 +55,7 @@ public class RendererLuxRouter extends RendererOBJ {
 			GL11.glRotated(angel, vektor.z, 0, -vektor.x);
 		}
 		
-		float thickness = powered?0.1F:0.05F;
+		float thickness = 0.05F;
 		
 		GL11.glColor4d(1, 1, 1, 0.5);
 		

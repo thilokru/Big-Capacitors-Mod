@@ -16,11 +16,6 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 		super();
 		toRender = new HashSet<BlockPos>();
 	}
-	
-	public void updateEntity(){
-		super.updateEntity();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -42,16 +37,19 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 	public Set<BlockPos> getConnections(){
 		return this.connections;
 	}
+	
+	public void resetPoweredState(){
+		this.toRender.clear();
+	}
 
 	@Override
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
-		this.toRender.add(lastHop);
 		BlockPos hopPos = routes.get(dst).lastHop;
 		this.toRender.add(hopPos);
 		LuxHandler hop = (LuxHandler) hopPos.getTileEntity(this.worldObj);
 		hop.energyFlow(this.getPosition(), dst, amount);
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public int getRouteSucction() {

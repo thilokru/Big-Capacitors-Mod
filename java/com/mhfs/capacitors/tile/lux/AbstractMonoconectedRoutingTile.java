@@ -38,15 +38,17 @@ public abstract class AbstractMonoconectedRoutingTile extends TileEntity impleme
 	@Override
 	public void drainSetup(BlockPos requester, BlockPos lastHop, int value) {
 		drains.add(requester);
+		markForUpdate();
 	}
 
 	@Override
 	public void handleDisconnect(BlockPos handler, int level) {
 		drains.remove(handler);
-		if(handler == connection){
+		if(handler.equals(connection)){
 			connection = null;
 			return;
 		}
+		markForUpdate();
 	}
 
 	public void connect(BlockPos pos) {
@@ -62,8 +64,7 @@ public abstract class AbstractMonoconectedRoutingTile extends TileEntity impleme
 		connection = pos;
 		router.handlerSetupRequest(this.getPosition());
 		router.connect(this.getPosition());
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		markForUpdate();
 	}
 
 	@Override
@@ -93,6 +94,11 @@ public abstract class AbstractMonoconectedRoutingTile extends TileEntity impleme
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void onDestroy() {

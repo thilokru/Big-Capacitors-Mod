@@ -6,6 +6,7 @@ public class TileSource extends AbstractMonoconectedRoutingTile implements LuxHa
 	
 	public void updateEntity(){
 		super.updateEntity();
+		if(connection == null)return;
 		LuxHandler link = (LuxHandler)connection.getTileEntity(worldObj);
 		for(BlockPos pos:drains){
 			LuxDrain drain = (LuxDrain)pos.getTileEntity(worldObj);

@@ -2,9 +2,6 @@ package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileTomahawk;
-import com.mhfs.capacitors.tile.lux.AbstractTileSource;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;

@@ -1,21 +1,15 @@
 package com.mhfs.capacitors.blocks;
 
-import java.util.ArrayList;
-
-import cofh.api.block.IDismantleable;
-
 import com.mhfs.capacitors.misc.IChapterRelated;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockDestillery extends BlockContainer implements IChapterRelated, IOrientedBlock, IDismantleable{
+public class BlockDestillery extends BlockContainer implements IChapterRelated, IOrientedBlock{
 
 	public BlockDestillery(Material mat) {
 		super(mat);
@@ -80,19 +74,6 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 	@Override
 	public String getChapter(IBlockAccess access, int x, int y, int z) {
 		return "Distillery";
-	}
-
-	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player,
-			World world, int x, int y, int z, boolean returnDrops) {
-		return null;
-	}
-
-	@Override
-	public boolean canDismantle(EntityPlayer player, World world, int x, int y,
-			int z) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	@Override

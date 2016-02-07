@@ -37,11 +37,4 @@ public class BlockTomahawk extends BlockContainer implements IOrientedBlock{
 		((TileCapacitor) world.getTileEntity(x, y, z)).onRotate();
 		return true;
 	}
-	
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		AbstractTileSource source = (AbstractTileSource) world.getTileEntity(x, y, z);
-		source.onDestroy();
-		super.breakBlock(world, x, y, z, block, meta);
-	}
-
 }

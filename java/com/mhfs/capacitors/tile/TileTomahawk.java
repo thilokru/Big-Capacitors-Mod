@@ -28,9 +28,11 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 
 	private final static int MAX_ENERGY = 5000000;
 	private final static int MAX_GAS_VOLUME = 3000;
+	private final static int MAX_RF_DRAIN = 800;
 	
 	private final static double FUSION_START_TEMP = 10000000;
 	private final static double ROOM_TEMP = 20;
+	private final static double KELVIN_PER_RF = 10;
 	private final static double LOSS_FACTOR = 0.00000001D;
 	
 	private final static int RF_PER_MB_HYDROGEN = 1500000;
@@ -45,7 +47,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 		formed = checkFormed();
 		if(worldObj.isRemote)return;
 		if(formed){
-			if(/*temperature >= FUSION_START_TEMP*/true && hydrogenTank.getFluidAmount() > 0){
+			if(temperature >= FUSION_START_TEMP && hydrogenTank.getFluidAmount() > 0){
 				int drain = hydrogenTank.drain(1, true).amount;
 				if(drain == 1){
 					energy += RF_PER_MB_HYDROGEN;
@@ -54,6 +56,9 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 					}
 				}
 			}else{
+				long extract = Math.min(MAX_RF_DRAIN, energy);
+				energy -= extract;
+				temperature += extract * KELVIN_PER_RF;
 				temperature -= (temperature - ROOM_TEMP)*LOSS_FACTOR;
 			}
 			this.markDirty();
@@ -162,7 +167,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 
 	@Override
 	public long getNeed() {
-		return 0;
+		return MAX_ENERGY - energy;
 	}
 
 	@Override
@@ -177,7 +182,11 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 
 	@Override
 	public long fill(long amount) {
-		return 0;
+		energy += amount;
+		if(energy > MAX_ENERGY){
+			energy = MAX_ENERGY;
+		}
+		return amount;
 	}
 
 }

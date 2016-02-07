@@ -70,7 +70,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 		
-		float filled = (float) entity.getEnergyStored() / (float) entity.getMaxEnergyStored();
+		float filled = (float) ((double) entity.getEnergyStored() / (double) entity.getMaxEnergyStored());
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		//String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
@@ -199,7 +199,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			bindTexture(overlayTexture);
 			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
 		} else {
-			String text = "RF: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
+			String text = "Energy: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}
 	}

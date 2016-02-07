@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import cofh.api.energy.IEnergyStorage;
-
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
+import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import static net.minecraftforge.common.util.ForgeDirection.*;
 
-public class CapacitorWallWrapper implements IEnergyStorage {
+public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 
 	private static final int MAX_DISTANCE = 10;
 	private Set<BlockPos> containedBlocks;
@@ -315,58 +314,12 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 	}
 
 	@Override
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		long pot = Math.min(maxCharge - charge, maxReceive);
-		int receive;
-		if (pot > Integer.MAX_VALUE) {
-			receive = Integer.MAX_VALUE;
-		} else {
-			receive = (int) pot;
-		}
-
-		if (!simulate) {
-			charge += receive;
-		}
-		return receive;
-	}
-
-	@Override
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		long pot = Math.min(charge, maxExtract);
-		int extract;
-		if (pot > Integer.MAX_VALUE) {
-			extract = Integer.MAX_VALUE;
-		} else {
-			extract = (int) pot;
-		}
-
-		if (!simulate) {
-			charge -= extract;
-		}
-		return extract;
-	}
-
-	@Override
-	public int getEnergyStored() {
-		if (charge > Integer.MAX_VALUE) {
-			return Integer.MAX_VALUE;
-		}
-		return (int) charge;
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		if (maxCharge > Integer.MAX_VALUE) {
-			return Integer.MAX_VALUE;
-		}
-		return (int) maxCharge;
-	}
-
-	public long getAllEnergyStored() {
+	public long getEnergyStored() {
 		return charge;
 	}
 
-	public long getWholeCapacity() {
+	@Override
+	public long getMaxEnergyStored() {
 		return maxCharge;
 	}
 
@@ -390,5 +343,41 @@ public class CapacitorWallWrapper implements IEnergyStorage {
 		this.maxCharge = wrapper.maxCharge;
 		this.orientation = wrapper.orientation;
 		this.containedBlocks = wrapper.containedBlocks;
+	}
+
+	@Override
+	public long getNeed() {
+		return maxCharge - charge;
+	}
+
+	@Override
+	public long getMaxTransfer() {
+		return Long.MAX_VALUE;
+	}
+
+	@Override
+	public long drain(long amount) {
+		long pot = Math.min(charge, amount);
+		int extract;
+		if (pot > Integer.MAX_VALUE) {
+			extract = Integer.MAX_VALUE;
+		} else {
+			extract = (int) pot;
+		}
+		charge -= extract;
+		return extract;
+	}
+
+	@Override
+	public long fill(long amount) {
+		long pot = Math.min(maxCharge - charge, amount);
+		int receive;
+		if (pot > Integer.MAX_VALUE) {
+			receive = Integer.MAX_VALUE;
+		} else {
+			receive = (int) pot;
+		}
+		charge += receive;
+		return receive;
 	}
 }

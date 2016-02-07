@@ -6,11 +6,12 @@ import com.mhfs.api.lux.LuxDrain;
 import com.mhfs.api.lux.LuxHandler;
 import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.BlockPos;
+import com.mhfs.capacitors.misc.IRotatable;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements LuxDrain{
+public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements LuxDrain, IRotatable{
 	
 	private boolean isDrain = true;
 	
@@ -91,6 +92,11 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		INeighbourEnergyHandler handler = getConnectedTile();
 		if(handler == null)return 0;
 		return handler.getMaxTransfer();
+	}
+
+	@Override
+	public ForgeDirection getRotation() {
+		return ((IOrientedBlock)this.blockType).getOrientation(worldObj, xCoord, yCoord, zCoord);
 	}
 
 }

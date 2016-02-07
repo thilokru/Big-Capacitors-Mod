@@ -3,9 +3,8 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -18,13 +17,14 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyReceiver, IRotatable {
+public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbourEnergyHandler, IRotatable {
 	
-	private EnergyStorage energy;
+	private long energy;
 	private FluidTank hydrogen, oxygen, water;
 	
+	public final static long MAX_ENERGY = 120000, MAX_TRANSFER = 800;
+	
 	public TileFuelCell(){
-		energy = new EnergyStorage(120000, 800);
 		hydrogen = new FluidTank(2000);
 		oxygen = new FluidTank(2000);
 		water = new FluidTank(2000);
@@ -32,10 +32,10 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 	
 	public void updateEntity(){
 		if(worldObj.isRemote)return;
-		int en = energy.extractEnergy(80, true);
+		long en = Math.min(80, energy);
 		FluidStack wa = water.drain(1, false);
 		if(en == 80 && wa != null && wa.amount == 1){
-			energy.extractEnergy(80, false);
+			energy -= 80;
 			water.drain(1, true);
 			hydrogen.fill(new FluidStack(Fluids.gasHydrogen, 10), true);
 		}
@@ -48,7 +48,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 
 		this.water.readFromNBT(tag.getCompoundTag("water"));
 		this.hydrogen.readFromNBT(tag.getCompoundTag("hydrogen"));
-		this.energy.readFromNBT(tag);
+		this.energy = tag.getLong("energy");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -62,7 +62,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		hydrogen.writeToNBT(hydrogenNBT);
 		tag.setTag("hydrogen", hydrogenNBT);
 		
-		energy.writeToNBT(tag);
+		tag.setLong("energy", energy);
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
@@ -78,29 +78,6 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 	@Override
 	public ForgeDirection getRotation() {
 		return ((BlockFuelCell) worldObj.getBlock(xCoord, yCoord, zCoord)).getOrientation(worldObj, xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return from == ForgeDirection.DOWN;
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		if(!canConnectEnergy(from))return 0;
-		return energy.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		if(!canConnectEnergy(from))return 0;
-		return energy.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		if(!canConnectEnergy(from))return 0;
-		return energy.getMaxEnergyStored();
 	}
 
 	@Override
@@ -160,6 +137,41 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 
 	public FluidTank getHydrogenTank() {
 		return hydrogen;
+	}
+
+	@Override
+	public long getNeed() {
+		return Math.min(MAX_TRANSFER, MAX_ENERGY - energy);
+	}
+
+	@Override
+	public long getMaxTransfer() {
+		return MAX_TRANSFER;
+	}
+
+	@Override
+	public long getEnergyStored() {
+		return energy;
+	}
+
+	@Override
+	public long getMaxEnergyStored() {
+		return MAX_ENERGY;
+	}
+
+	@Override
+	public long drain(long amount) {
+		return 0;
+	}
+
+	@Override
+	public long fill(long amount) {
+		long accepted = Math.min(getNeed(), amount);
+		energy += accepted;
+		if(energy > MAX_ENERGY){
+			energy = MAX_ENERGY;
+		}
+		return accepted;
 	}
 
 }

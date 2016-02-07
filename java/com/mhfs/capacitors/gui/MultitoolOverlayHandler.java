@@ -25,7 +25,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -58,7 +57,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		renderFluidStack(entity.getInputTank(), xPos - 20, yPos + 5);
 
-		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
+		float filled = (float) entity.getEnergyStored() / (float) entity.getMaxEnergyStored();
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		String text = "H";
@@ -200,7 +199,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			bindTexture(overlayTexture);
 			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
 		} else {
-			String text = "RF: " + storage.getAllEnergyStored() + "/" + storage.getWholeCapacity();
+			String text = "RF: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}
 	}

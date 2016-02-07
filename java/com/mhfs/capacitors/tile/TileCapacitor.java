@@ -1,18 +1,16 @@
 package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
-import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
-public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotatable {
+public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler, IRotatable {
 
 	private CapacitorWallWrapper wrapper;
 	private boolean isLoading, isFirstTick = true;
@@ -41,14 +39,6 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 		
 		wrapper.setupCapacity(worldObj);
 		wrapper.updateEnergy(worldObj);
-
-		TileEntity candidate = getConnectionCandidate();
-		if (candidate != null && candidate instanceof IEnergyReceiver) {
-			IEnergyReceiver con = (IEnergyReceiver) candidate;
-			int transmittable = con.receiveEnergy(getRotation(), (int) Math.min(wrapper.getEnergyStored(), wrapper.getWholeCapacity()), true);
-			int transmit = this.extractEnergy(getRotation().getOpposite(), transmittable, false);
-			con.receiveEnergy(getRotation(), transmit, false);
-		}
 	}
 
 	private void createEntity() {
@@ -58,18 +48,6 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 		}
 		this.markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-
-	private TileEntity getConnectionCandidate() {
-		ForgeDirection face = getRotation().getOpposite();
-		if (wrapper == null)
-			return null;
-		if (wrapper.canExtractEnergy(face)) {
-			BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
-			pos.goTowards(face, 1);
-			return pos.getTileEntity(worldObj);
-		}
-		return null;
 	}
 
 	public ForgeDirection getRotation() {
@@ -96,51 +74,6 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 		return wrapper;
 	}
 
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		BlockCapacitor cap = Blocks.capacitorIron;
-		ForgeDirection orientation = cap.getOrientation(worldObj, xCoord, yCoord, zCoord);
-		if (wrapper == null)
-			return false;
-		return from == orientation.getOpposite() && wrapper.canExtractEnergy(from);
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		if (canConnectEnergy(from)) {
-			int ret = wrapper.receiveEnergy(maxReceive, simulate);
-			wrapper.updateEnergy(worldObj);
-			return ret;
-		} else
-			return 0;
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		if (canConnectEnergy(from)) {
-			int ret = wrapper.extractEnergy(maxExtract, simulate);
-			wrapper.updateEnergy(worldObj);
-			return ret;
-		} else
-			return 0;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		if (canConnectEnergy(from)) {
-			return wrapper.getEnergyStored();
-		} else
-			return 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		if (canConnectEnergy(from)) {
-			return wrapper.getMaxEnergyStored();
-		} else
-			return 0;
-	}
-
 	public void onRotate() {
 		onBreak(null);
 		wrapper = null;
@@ -159,5 +92,39 @@ public class TileCapacitor extends TileEntity implements IEnergyHandler, IRotata
 		if(wrapper != null){
 			tag.setTag("multi", wrapper.getNBTRepresentation());
 		}
+	}
+
+	@Override
+	public long getNeed() {
+		return wrapper.getNeed();
+	}
+
+	@Override
+	public long getMaxTransfer() {
+		return wrapper.getMaxTransfer();
+	}
+
+	@Override
+	public long getEnergyStored() {
+		return wrapper.getEnergyStored();
+	}
+
+	@Override
+	public long getMaxEnergyStored() {
+		return wrapper.getMaxEnergyStored();
+	}
+
+	@Override
+	public long drain(long amount) {
+		long ret = wrapper.drain(amount);
+		wrapper.updateEnergy(worldObj);
+		return ret;
+	}
+
+	@Override
+	public long fill(long amount) {
+		long ret = wrapper.fill(amount);
+		wrapper.updateEnergy(worldObj);
+		return ret;
 	}
 }

@@ -2,8 +2,9 @@ package com.mhfs.capacitors.items;
 
 import java.util.List;
 
+import com.mhfs.api.lux.LuxHandler;
 import com.mhfs.capacitors.misc.BlockPos;
-import com.mhfs.capacitors.tile.lux.LuxHandler;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

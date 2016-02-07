@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.tile.lux;
+package com.mhfs.api.lux;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -35,10 +35,9 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		disconnecting.clear();
 		if (!worldObj.isRemote) {
 			for (BlockPos pos : connections) {
-				IRouting foreign = (IRouting) pos.getTileEntity(this.worldObj);
-				if(foreign == null){
-					continue;
-				}
+				TileEntity tile = pos.getTileEntity(this.worldObj);
+				if(!(tile instanceof IRouting))continue;
+				IRouting foreign = (IRouting) tile;
 				for (BlockPos requester : routes.keySet()) {
 					int sucction = routes.get(requester).sucction;
 					if(sucction <= 1)continue;

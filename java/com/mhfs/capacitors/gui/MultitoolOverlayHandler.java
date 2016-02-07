@@ -71,7 +71,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 		
-		float filled = (float) entity.getEnergyStored(ForgeDirection.DOWN) / (float) entity.getMaxEnergyStored(ForgeDirection.DOWN);
+		float filled = (float) entity.getEnergyStored() / (float) entity.getMaxEnergyStored();
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		//String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
@@ -100,7 +100,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		renderFluidStack(tile.getInputTank(), xPos - 20, yPos + 5);
 
-		float filled = (float) tile.getEnergyStored(null) / (float) tile.getMaxEnergyStored(null);
+		float filled = (float) tile.getEnergyStored() / (float) tile.getMaxEnergyStored();
 		renderEnergy(xPos - 3, yPos + 5, filled);
 
 		renderFluidStack(tile.getOutputTank(), xPos + 5, yPos + 5);

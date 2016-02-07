@@ -3,6 +3,9 @@ package com.mhfs.capacitors.tile.lux;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.mhfs.api.lux.AbstractRoutingTile;
+import com.mhfs.api.lux.IRouting;
+import com.mhfs.api.lux.LuxHandler;
 import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 

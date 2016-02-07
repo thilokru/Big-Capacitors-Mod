@@ -6,7 +6,6 @@ import cofh.api.block.IDismantleable;
 
 import com.mhfs.capacitors.misc.IChapterRelated;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

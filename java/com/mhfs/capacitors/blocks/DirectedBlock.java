@@ -6,7 +6,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class DirectedBlock extends Block{
+public abstract class DirectedBlock extends Block implements IOrientedBlock{
 
 	protected DirectedBlock(Material mat) {
 		super(mat);

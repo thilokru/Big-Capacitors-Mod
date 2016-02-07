@@ -7,7 +7,6 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.mhfs.capacitors.tile.lux.TileDrain;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -31,11 +30,6 @@ public class DebugOverlayHandler implements IOverlayHandler {
 			List<String> debugText = new ArrayList<String>();
 			TileLuxRouter router = (TileLuxRouter)entity;
 			debugText.add("" + router.getRouteSucction());
-			drawHoveringText(debugText, width/2 + 5, height/2 + 5, Minecraft.getMinecraft().fontRenderer);
-		}else if(entity instanceof TileDrain){
-			List<String> debugText = new ArrayList<String>();
-			TileDrain drain = (TileDrain)entity;
-			debugText.add("" + drain.getEnergy());
 			drawHoveringText(debugText, width/2 + 5, height/2 + 5, Minecraft.getMinecraft().fontRenderer);
 		}
 	}

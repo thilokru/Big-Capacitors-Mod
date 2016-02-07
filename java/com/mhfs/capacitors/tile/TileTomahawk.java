@@ -3,15 +3,12 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.misc.BlockPos;
+import com.mhfs.capacitors.tile.lux.AbstractTileSource;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,9 +16,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHandler {
+public class TileTomahawk extends AbstractTileSource implements IFluidHandler {
 
-	private EnergyStorage storage;
+	private long energy;
 	private FluidTank hydrogenTank;
 	
 	private double temperature; //UNIT: °C
@@ -33,34 +30,30 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 	
 	private final static double FUSION_START_TEMP = 10000000;
 	private final static double ROOM_TEMP = 20;
-	private final static int MAX_RF_DRAIN = 800;
-	private final static double KELVIN_PER_RF = 10;
 	private final static double LOSS_FACTOR = 0.00000001D;
 	
 	private final static int RF_PER_MB_HYDROGEN = 1500000;
 
 	public TileTomahawk() {
-		storage = new EnergyStorage(MAX_ENERGY, Integer.MAX_VALUE);
-
 		hydrogenTank = new FluidTank(MAX_GAS_VOLUME);
-		
 		temperature = ROOM_TEMP;
 	}
 
 	public void updateEntity() {
+		super.updateEntity();
 		formed = checkFormed();
 		if(worldObj.isRemote)return;
 		if(formed){
-			if(temperature >= FUSION_START_TEMP && hydrogenTank.getFluidAmount() > 0){
+			if(/*temperature >= FUSION_START_TEMP*/true && hydrogenTank.getFluidAmount() > 0){
 				int drain = hydrogenTank.drain(1, true).amount;
 				if(drain == 1){
-					storage.receiveEnergy(RF_PER_MB_HYDROGEN, false);
+					energy += RF_PER_MB_HYDROGEN;
+					if(energy > MAX_ENERGY){
+						energy = MAX_ENERGY;
+					}
 				}
-				doEnergyOut();
 			}else{
-				int extract = storage.extractEnergy(MAX_RF_DRAIN, false);
-				temperature += extract * KELVIN_PER_RF;
-				temperature -= (temperature - ROOM_TEMP) * LOSS_FACTOR;
+				temperature -= (temperature - ROOM_TEMP)*LOSS_FACTOR;
 			}
 			this.markDirty();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -70,24 +63,10 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 				this.markDirty();
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
-			if(storage.getEnergyStored() > 0){
-				storage.setEnergyStored(0);
+			if(energy > 0){
+				energy = 0;
 				this.markDirty();
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			}
-		}
-	}
-	
-	private void doEnergyOut() {
-		for(ForgeDirection way:ForgeDirection.VALID_DIRECTIONS){
-			BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
-			pos.goTowards(way, 1);
-			TileEntity ent = pos.getTileEntity(worldObj);
-			if(ent instanceof IEnergyHandler){
-				IEnergyReceiver con = (IEnergyReceiver) ent;
-				int transmittable = con.receiveEnergy(way, storage.getEnergyStored(), true);
-				int transmit = this.extractEnergy(way.getOpposite(), transmittable, false);
-				con.receiveEnergy(way, transmit, false);
 			}
 		}
 	}
@@ -102,31 +81,6 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 	
 	public FluidTank getHydrogenTank(){
 		return hydrogenTank;
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return true;
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		return storage.extractEnergy(maxExtract, simulate);
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return storage.getMaxEnergyStored();
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		return storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
@@ -172,14 +126,14 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.hydrogenTank.readFromNBT(tag);
-		this.storage.readFromNBT(tag);
+		this.energy = tag.getLong("energy");
 		this.temperature = tag.getDouble("temperature");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		this.hydrogenTank.writeToNBT(tag);
-		this.storage.writeToNBT(tag);
+		tag.setLong("energy", this.energy);
 		tag.setDouble("temperature", this.temperature);
 	}
 	
@@ -195,6 +149,21 @@ public class TileTomahawk extends TileEntity implements IEnergyHandler, IFluidHa
 
 	public double getTemperature() {
 		return temperature;
+	}
+
+	@Override
+	protected long getEnergyForTarget(long maxInput, long need, int drainCount) {
+		long amount = Math.min(maxInput, Math.min(need, energy/drainCount));
+		this.energy -= amount;
+		return amount;
+	}
+	
+	public long getEnergyStored(){
+		return energy;
+	}
+	
+	public long getMaxEnergyStored(){
+		return MAX_ENERGY;
 	}
 
 }

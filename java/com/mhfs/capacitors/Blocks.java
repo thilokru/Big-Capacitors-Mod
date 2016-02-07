@@ -6,11 +6,10 @@ import com.mhfs.capacitors.blocks.BlockBarrel;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillery;
+import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFluidBase;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
-import com.mhfs.capacitors.blocks.BlockLuxDrain;
 import com.mhfs.capacitors.blocks.BlockLuxRouter;
-import com.mhfs.capacitors.blocks.BlockLuxSource;
 import com.mhfs.capacitors.blocks.BlockMany;
 import com.mhfs.capacitors.blocks.BlockTomahawk;
 import com.mhfs.capacitors.items.ItemBlockMany;
@@ -30,8 +29,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockTomahawk blockTomahawk;
 	public static BlockFuelCell blockFuelCell;
 	public static BlockLuxRouter blockLuxRouter;
-	public static BlockLuxDrain blockLuxDrain;
-	public static BlockLuxSource blockLuxSource;
+	public static BlockEnergyTransfer blockEnergyTransfer;
 	
 	public static void setup(BigCapacitorsMod mod){
 		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
@@ -76,19 +74,12 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockLuxRouter.setHarvestLevel("pickaxe", 2);
 		GameRegistry.registerBlock(Blocks.blockLuxRouter, "blockLuxRouter");
 		
-		Blocks.blockLuxDrain = new BlockLuxDrain(Material.rock);
-		Blocks.blockLuxDrain.setBlockName("blockLuxDrain");
-		Blocks.blockLuxDrain.setCreativeTab(mod.creativeTab);
-		Blocks.blockLuxDrain.setHardness(0.25F);
-		Blocks.blockLuxDrain.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockLuxDrain, "blockLuxDrain");
-		
-		Blocks.blockLuxSource = new BlockLuxSource(Material.rock);
-		Blocks.blockLuxSource.setBlockName("blockLuxSource");
-		Blocks.blockLuxSource.setCreativeTab(mod.creativeTab);
-		Blocks.blockLuxSource.setHardness(0.25F);
-		Blocks.blockLuxSource.setHarvestLevel("pickaxe", 2);
-		GameRegistry.registerBlock(Blocks.blockLuxSource, "blockLuxSource");
+		Blocks.blockEnergyTransfer = new BlockEnergyTransfer(Material.rock);
+		Blocks.blockEnergyTransfer.setBlockName("blockEnergyTransfer");
+		Blocks.blockEnergyTransfer.setCreativeTab(mod.creativeTab);
+		Blocks.blockEnergyTransfer.setHardness(0.25F);
+		Blocks.blockEnergyTransfer.setHarvestLevel("pickaxe", 2);
+		GameRegistry.registerBlock(Blocks.blockEnergyTransfer, "blockEnergyTransfer");
 		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
 		blockData.add(new BlockData("reactorShield", "big_capacitors:reactorShield", "pickaxe", 2, 3.0F));//0

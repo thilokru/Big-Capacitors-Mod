@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.tile.lux;
+package com.mhfs.api.lux;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +11,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public abstract class AbstractMonoconectedRoutingTile extends TileEntity implements IRouting{
+public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implements IRouting{
 
 	protected BlockPos connection;
 	protected Set<BlockPos> drains;
 	
-	public AbstractMonoconectedRoutingTile(){
+	public AbstractMonoconnectedRoutingTile(){
 		drains = new HashSet<BlockPos>();
 	}
 	
@@ -53,8 +53,9 @@ public abstract class AbstractMonoconectedRoutingTile extends TileEntity impleme
 
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
-		AbstractRoutingTile router = (AbstractRoutingTile) pos.getTileEntity(worldObj);
+		IRouting router = (IRouting) pos.getTileEntity(worldObj);
 		if(router == null)return;
+		if(router.equals(this))return;
 		if(connection != null && !pos.equals(connection)){
 			IRouting handler = (IRouting)connection.getTileEntity(worldObj);
 			if(handler != null){

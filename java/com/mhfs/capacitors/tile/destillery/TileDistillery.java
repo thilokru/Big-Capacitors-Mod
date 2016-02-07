@@ -1,10 +1,8 @@
 package com.mhfs.capacitors.tile.destillery;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
-
 import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,20 +18,19 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-public class TileDistillery extends TileEntity implements IFluidHandler,
-		IEnergyReceiver, IRotatable {
+public class TileDistillery extends TileEntity implements IFluidHandler, IRotatable, INeighbourEnergyHandler {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
 	public final static int TANK_CAPCITY = 2000;
 
 	private FluidTank input, output;
-	private EnergyStorage storage;
+	private long energy;
 
 	public TileDistillery() {
+		super();
 		input = new FluidTank(TANK_CAPCITY);
 		output = new FluidTank(TANK_CAPCITY);
-		storage = new EnergyStorage(RF_CAPACITY, MAX_RF_PER_TICK);
 	}
 
 	@Override
@@ -51,8 +48,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		if (output.getFluid() != null
 				&& output.getFluid().getFluid() != recipe.getOutput().getFluid())
 			return;
-		int stepsWithRF = Math.min(MAX_RF_PER_TICK, storage.getEnergyStored())
-				/ recipe.getRFCost();
+		int stepsWithRF = (int) (Math.min(MAX_RF_PER_TICK, this.energy) / recipe.getRFCost());
 
 		int stepsWithFluidIn = inputStack.amount / recipe.getInput().amount;
 		int stepsWithFluidOut = (output.getCapacity() - output.getFluidAmount())
@@ -64,7 +60,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 
 		output.fill(
 				new FluidStack(recipe.getOutput(), todo * recipe.getOutput().amount), true);
-		storage.extractEnergy(todo * recipe.getRFCost(), false);
+		this.energy -= todo * recipe.getRFCost();
 	}
 	
 	private void forceTransmit(){
@@ -131,27 +127,6 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		return new FluidTankInfo[] { input.getInfo(), output.getInfo() };
 	}
 
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return getTankFromDirection(from) == null;
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
-		return storage.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return storage.getMaxEnergyStored();
-	}
-
 	private IFluidTank getTankFromDirection(ForgeDirection from) {
 		ForgeDirection orientation = getRotation();
 		ForgeDirection left = orientation.getRotation(ForgeDirection.DOWN);
@@ -187,10 +162,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		outputTank.readFromNBT(tag.getCompoundTag("output"));
 		this.output = outputTank;
 
-		EnergyStorage energyStorage = new EnergyStorage(RF_CAPACITY,
-				MAX_RF_PER_TICK);
-		energyStorage.readFromNBT(tag.getCompoundTag("energy"));
-		this.storage = energyStorage;
+		this.energy = tag.getLong("energy");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -204,9 +176,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 		output.writeToNBT(outputTag);
 		tag.setTag("output", outputTag);
 
-		NBTTagCompound energyTag = new NBTTagCompound();
-		storage.writeToNBT(energyTag);
-		tag.setTag("energy", energyTag);
+		tag.setLong("energy", energy);
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
@@ -225,5 +195,35 @@ public class TileDistillery extends TileEntity implements IFluidHandler,
 	
 	public IFluidTank getOutputTank() {
 		return output;
+	}
+
+	@Override
+	public long getNeed() {
+		return Math.min(MAX_RF_PER_TICK, RF_CAPACITY - this.energy);
+	}
+	
+	public long getEnergyStored(){
+		return this.energy;
+	}
+	
+	public long getMaxEnergyStored(){
+		return RF_CAPACITY;
+	}
+
+	@Override
+	public long getMaxTransfer() {
+		return MAX_RF_PER_TICK;
+	}
+
+	@Override
+	public long drain(long amount) {
+		return 0;
+	}
+
+	@Override
+	public long fill(long amount) {
+		this.energy += amount;
+		if(this.energy > RF_CAPACITY)this.energy = RF_CAPACITY;
+		return amount;
 	}
 }

@@ -3,12 +3,13 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.misc.BlockPos;
-import com.mhfs.capacitors.tile.lux.AbstractTileSource;
+import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -16,7 +17,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileTomahawk extends AbstractTileSource implements IFluidHandler {
+public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbourEnergyHandler {
 
 	private long energy;
 	private FluidTank hydrogenTank;
@@ -150,13 +151,6 @@ public class TileTomahawk extends AbstractTileSource implements IFluidHandler {
 	public double getTemperature() {
 		return temperature;
 	}
-
-	@Override
-	protected long getEnergyForTarget(long maxInput, long need, int drainCount) {
-		long amount = Math.min(maxInput, Math.min(need, energy/drainCount));
-		this.energy -= amount;
-		return amount;
-	}
 	
 	public long getEnergyStored(){
 		return energy;
@@ -164,6 +158,26 @@ public class TileTomahawk extends AbstractTileSource implements IFluidHandler {
 	
 	public long getMaxEnergyStored(){
 		return MAX_ENERGY;
+	}
+
+	@Override
+	public long getNeed() {
+		return 0;
+	}
+
+	@Override
+	public long getMaxTransfer() {
+		return MAX_ENERGY;
+	}
+
+	@Override
+	public long drain(long amount) {
+		return Math.min(amount, energy);
+	}
+
+	@Override
+	public long fill(long amount) {
+		return 0;
 	}
 
 }

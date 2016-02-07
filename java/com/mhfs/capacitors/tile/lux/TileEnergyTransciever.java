@@ -55,6 +55,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		IRouting handler = (IRouting)this.connection.getTileEntity(worldObj);
 		if(handler == null)return;
 		handler.handleDisconnect(this.getPosition(), 64);
+		handler.connect(this.getPosition());
 	}
 	
 	public INeighbourEnergyHandler getConnectedTile(){

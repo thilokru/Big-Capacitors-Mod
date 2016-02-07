@@ -5,6 +5,7 @@ import java.util.List;
 import com.mhfs.api.lux.LuxHandler;
 import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,44 +17,51 @@ import net.minecraft.world.World;
 
 public class ItemMultitool extends Item {
 
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-			int x, int y, int z, int side, float aimX, float aimY, float aimZ) {
-		if(world.isRemote)return false;
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float aimX, float aimY, float aimZ) {
+		if (world.isRemote)
+			return false;
 		TileEntity entity = world.getTileEntity(x, y, z);
-		if(entity instanceof TileCapacitor){
-			TileCapacitor cap = (TileCapacitor)entity;
-			if(cap.getEntityCapacitor() == null)return false;
-			cap.getEntityCapacitor().onGroundSwitch(world);
-			return true;
-		}else if (entity instanceof LuxHandler) {
-			LuxHandler router = (LuxHandler) entity;
-			if (stack.getTagCompound() == null) {
-				stack.setTagCompound(new NBTTagCompound());
+		if (!player.isSneaking()) {
+			if (entity instanceof TileCapacitor) {
+				TileCapacitor cap = (TileCapacitor) entity;
+				if (cap.getEntityCapacitor() == null)
+					return false;
+				cap.getEntityCapacitor().onGroundSwitch(world);
+				return true;
+			} else if (entity instanceof LuxHandler) {
+				LuxHandler router = (LuxHandler) entity;
+				if (stack.getTagCompound() == null) {
+					stack.setTagCompound(new NBTTagCompound());
+				}
+				if (hasLocation(stack)) {
+					int[] loc = getSavedLocation(stack);
+					router.connect(new BlockPos(loc[0], loc[1], loc[2]));
+					removeLocation(stack);
+				} else {
+					saveLocation(stack, x, y, z);
+				}
+				return true;
 			}
-			if (hasLocation(stack)) {
-				int[] loc = getSavedLocation(stack);
-				router.connect(new BlockPos(loc[0], loc[1], loc[2]));
-				removeLocation(stack);
-			} else {
-				saveLocation(stack, x, y, z);
+		} else {
+			if(entity instanceof TileEnergyTransciever){
+				((TileEnergyTransciever)entity).switchMode();
 			}
-			return true;
 		}
 		return false;
 	}
-	
+
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
 		itemStack.stackTagCompound = new NBTTagCompound();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean par4) {
-		if(hasLocation(stack)){
+		if (hasLocation(stack)) {
 			String text = String.format("%s%s+LOC%s", EnumChatFormatting.ITALIC, EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.RESET);
 			info.add(text);
 		}
 	}
-	
+
 	private int[] getSavedLocation(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
 		int x = tag.getInteger("x");
@@ -71,7 +79,8 @@ public class ItemMultitool extends Item {
 
 	private void removeLocation(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
-		if(tag == null)return;
+		if (tag == null)
+			return;
 		tag.removeTag("x");
 		tag.removeTag("y");
 		tag.removeTag("z");
@@ -79,7 +88,8 @@ public class ItemMultitool extends Item {
 
 	private boolean hasLocation(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
-		if(tag == null)return false;
+		if (tag == null)
+			return false;
 		return tag.hasKey("x");
 	}
 

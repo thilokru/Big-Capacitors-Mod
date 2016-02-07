@@ -145,7 +145,9 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 	 * You need to call this when the block is destroyed in order to get the routing working.
 	 */
 	public void onDestroy() {
-		for (BlockPos pos : connections) {
+		Set<BlockPos> clone = new HashSet<BlockPos>();
+		clone.addAll(connections);
+		for (BlockPos pos : clone) {
 			IRouting foreign = (IRouting) pos.getTileEntity(this.worldObj);
 			if(foreign == null)continue;
 			foreign.handleDisconnect(this.getPosition(), 64);

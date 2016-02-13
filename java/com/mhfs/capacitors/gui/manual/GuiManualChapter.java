@@ -1,5 +1,6 @@
 package com.mhfs.capacitors.gui.manual;
 
+import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
@@ -19,7 +20,6 @@ public class GuiManualChapter extends GuiManual {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 		int buttonY = yOffset + bookImageHeight - GuiManual.MARGIN * 3;
@@ -132,7 +132,6 @@ public class GuiManualChapter extends GuiManual {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addButton(GuiButton button){
 		this.buttonList.add(button);
 	}
@@ -141,12 +140,11 @@ public class GuiManualChapter extends GuiManual {
 		this.buttonList.remove(button);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public void drawHoverText(List text, int x, int y){
+	public void drawHoverText(List<String> text, int x, int y){
 		this.drawHoveringText(text, x, y, this.fontRendererObj);
 	}
 	
-	protected void keyTyped(char key, int keyCode){
+	protected void keyTyped(char key, int keyCode) throws IOException{
 		super.keyTyped(key, keyCode);
 		IPage toTest = chapter.get(page);
 		if(toTest instanceof IKeyboardHandler){

@@ -1,86 +1,128 @@
 package com.mhfs.capacitors.proxy;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidClassic;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
+import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.Items;
-import com.mhfs.capacitors.gui.DebugOverlayHandler;
+import com.mhfs.capacitors.blocks.BlockBarrel;
+import com.mhfs.capacitors.blocks.BlockCapacitor;
+import com.mhfs.capacitors.blocks.BlockDestillery;
+import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
+import com.mhfs.capacitors.blocks.BlockFuelCell;
+import com.mhfs.capacitors.blocks.BlockLuxRouter;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
 import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
+import com.mhfs.capacitors.items.ItemData;
+import com.mhfs.capacitors.items.ItemManual;
+import com.mhfs.capacitors.items.ItemMultitool;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
-import com.mhfs.capacitors.render.RendererCapacitor;
 import com.mhfs.capacitors.render.RendererLuxRouter;
-import com.mhfs.capacitors.render.RendererOBJ;
-import com.mhfs.capacitors.tile.TileBarrel;
-import com.mhfs.capacitors.tile.TileFuelCell;
-import com.mhfs.capacitors.tile.destillery.TileDistillery;
-import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class ClientProxy extends CommonProxy {
+
+	private final static String fluidStateModel = "fluidState";
+
+	@Override
+	public void preInit(FMLPreInitializationEvent event, BigCapacitorsMod mod) {
+		super.preInit(event, mod);
+		// FluidHandling
+		OBJLoader.instance.addDomain(BigCapacitorsMod.modid);
+		registerFluidBlock(Fluids.blockDestilledWater, "destilledWater");
+		registerFluidBlock(Fluids.blockEthanol, "ethanol");
+		registerFluidBlock(Fluids.blockHydrogen, "hydrogen");
+		registerFluidBlock(Fluids.blockWine, "wine");
+	}
 
 	@Override
 	public void init(FMLInitializationEvent event, BigCapacitorsMod mod) {
 		super.init(event, mod);
-		
-		setupTextureNames();
-		
-		int id = RenderingRegistry.getNextAvailableRenderId();
-		BigCapacitorsMod.capacitorRenderer = new RendererCapacitor(id);
-		RenderingRegistry.registerBlockHandler(BigCapacitorsMod.capacitorRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.capacitorIron), (IItemRenderer) BigCapacitorsMod.capacitorRenderer);
 
-		ResourceLocation model = new ResourceLocation(BigCapacitorsMod.modid, "models/Destillery.obj");
-		ResourceLocation texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/destillery.png");
-		TileEntitySpecialRenderer destilleryRenderer = new RendererOBJ(model, texture);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileDistillery.class, destilleryRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockDestillery), (IItemRenderer) destilleryRenderer);
-		
-		model = new ResourceLocation(BigCapacitorsMod.modid, "models/Barrel.obj");
-		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/barrel.png");
-		TileEntitySpecialRenderer barrelRenderer = new RendererOBJ(model, texture);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, barrelRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockBarrel), (IItemRenderer) barrelRenderer);
-		
-		model = new ResourceLocation(BigCapacitorsMod.modid, "models/fuel_cell.obj");
-		texture = new ResourceLocation(BigCapacitorsMod.modid, "textures/models/fuel_cell.png");
-		TileEntitySpecialRenderer fuelCellRenderer = new RendererOBJ(model, texture);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFuelCell.class, fuelCellRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockFuelCell), (IItemRenderer) fuelCellRenderer);
-		
-		model = new ResourceLocation(BigCapacitorsMod.modid, "models/LuxRouter.obj");
-		TileEntitySpecialRenderer luxRouterRenderer = new RendererLuxRouter(model, texture);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, luxRouterRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockLuxRouter), (IItemRenderer) luxRouterRenderer);
-		
-		model = new ResourceLocation(BigCapacitorsMod.modid, "models/LuxTransformer.obj");
-		TileEntitySpecialRenderer luxTransformerRenderer = new RendererOBJ(model, texture);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyTransciever.class, luxTransformerRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.blockEnergyTransfer), (IItemRenderer) luxTransformerRenderer);
+		setupModels(event, mod);
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());
 		handler.registerHandler(Items.itemManual, new ManualOverlayHandler());
-		handler.registerHandler(Items.itemLuxRouter, new DebugOverlayHandler());
 		MinecraftForge.EVENT_BUS.register(handler);
 		NetworkRegistry.INSTANCE.registerGuiHandler(mod, new GuiHandler());
+	}
+
+	private void setupModels(FMLInitializationEvent event, BigCapacitorsMod mod) {
+		registerMesher(Blocks.capacitorIron, BlockCapacitor.name);
+		registerMesher(Blocks.blockDestillery, BlockDestillery.name);
+		registerMesher(Blocks.blockBarrel, BlockBarrel.name);
+		registerMesher(Blocks.blockFuelCell, BlockFuelCell.name);
+		registerMesher(Blocks.blockLuxRouter, BlockLuxRouter.name);
+		registerMesher(Blocks.blockEnergyTransfer, BlockEnergyTransfer.name);
+
+		registerMesher(Items.itemBucketDestilledWater, "bucketDestilledWater");
+		registerMesher(Items.itemBucketEthanol, "bucketEthanol");
+		registerMesher(Items.itemBucketHydrogen, "bucketHydrogen");
+		registerMesher(Items.itemBucketWine, "bucketWine");
+		registerMesher(Items.itemManual, ItemManual.name);
+		registerMesher(Items.itemMultitool, ItemMultitool.name);
+
+		ItemData[] data = Items.itemMany.getData();
+		for (int i = 0; i < data.length; i++) {
+			registerMesher(Items.itemMany, i, data[i].getName());
+		}
+
+		RendererLuxRouter<TileLuxRouter> renderer = new RendererLuxRouter<TileLuxRouter>();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, renderer);
+	}
+
+	private void registerFluidBlock(BlockFluidClassic block, String identifier) {
+		Item item = Item.getItemFromBlock(block);
+		final ModelResourceLocation mrl = new ModelResourceLocation(BigCapacitorsMod.modid + ":" + fluidStateModel, identifier);
+		ModelBakery.registerItemVariants(item);
+		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+				return mrl;
+			}
+		});
+		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return mrl;
+			}
+		});
+	}
+
+	private void registerMesher(Block block, String name) {
+		registerMesher(Item.getItemFromBlock(block), name);
+	}
+
+	private void registerMesher(Item item, String name) {
+		registerMesher(item, 0, name);
+	}
+
+	private void registerMesher(Item item, int meta, String name) {
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		mesher.register(item, meta, new ModelResourceLocation(BigCapacitorsMod.modid + ":" + name, "inventory"));
 	}
 
 	@Override
@@ -94,23 +136,9 @@ public class ClientProxy extends CommonProxy {
 			IResourceManager irm = Minecraft.getMinecraft().getResourceManager();
 			SimpleReloadableKnowledgeRegistry reg = new SimpleReloadableKnowledgeRegistry("manual.loc");
 			mod.knowledge = reg;
-			((SimpleReloadableResourceManager)irm).registerReloadListener(reg);
+			((SimpleReloadableResourceManager) irm).registerReloadListener(reg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void setupTextureNames() {
-		Items.itemMultitool.setTextureName("big_capacitors:multitool");
-		Items.itemManual.setTextureName("big_capacitors:manual");
-		Items.itemBucketDestilledWater.setTextureName("minecraft:bucket_water");
-		Items.itemBucketEthanol.setTextureName("big_capacitors:bucket_ethanol");
-		Items.itemBucketWine.setTextureName("big_capacitors:bucket_wine");
-		Items.itemBucketHydrogen.setTextureName("big_capacitors:bucket_gas");
-		
-		Blocks.capacitorIron.setBlockTextureName("big_capacitors:capacitorIron");
-		Blocks.blockDestillery.setBlockTextureName("big_capacitors:destillery");
-		Blocks.blockBarrel.setBlockTextureName("big_capacitors:barrel");
-		Blocks.blockTomahawk.setBlockTextureName("big_capacitors:tomahawk");
 	}
 }

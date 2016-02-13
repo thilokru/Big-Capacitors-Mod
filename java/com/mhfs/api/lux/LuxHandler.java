@@ -1,6 +1,6 @@
 package com.mhfs.api.lux;
 
-import com.mhfs.capacitors.misc.BlockPos;
+import net.minecraft.util.BlockPos;
 
 /**
  * This Interface should be implemented on TileEntities. Therefore no method provides an instance

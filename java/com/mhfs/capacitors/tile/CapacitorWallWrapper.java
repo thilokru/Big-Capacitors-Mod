@@ -9,37 +9,38 @@ import java.util.Set;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import static net.minecraftforge.common.util.ForgeDirection.*;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import static net.minecraft.util.EnumFacing.*;
 
 public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 
 	private static final int MAX_DISTANCE = 10;
 	private Set<BlockPos> containedBlocks;
-	private ForgeDirection orientation;
+	private EnumFacing orientation;
 	private boolean grounded;
 
 	private long charge;
 	private long maxCharge;
 
 	public CapacitorWallWrapper(World world, BlockPos init) {
-		this.orientation = ForgeDirection.getOrientation(init.getTileEntity(world).getBlockMetadata());
+		this.orientation = EnumFacing.getFront(world.getTileEntity(init).getBlockMetadata());
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
 		for (BlockPos pos : containedBlocks) {
 			if (pos.equals(init))
 				continue;
-			TileCapacitor cap = (TileCapacitor) pos.getTileEntity(world);
+			TileCapacitor cap = (TileCapacitor) world.getTileEntity(init);
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
 			if (ent != null && ent != this) {
 				ent.checkJoin(world, false);
@@ -56,7 +57,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 	private HashSet<BlockPos> searchWallFrom(HashSet<BlockPos> res, BlockPos pos, IBlockAccess world) {
 		res.add(pos);
 		BlockCapacitor block = Blocks.capacitorIron;
-		ArrayList<BlockPos> result = block.getConnectedCapacitors(world, pos.x, pos.y, pos.z);
+		ArrayList<BlockPos> result = block.getConnectedCapacitors(world, pos);
 		for (BlockPos coord : result) {
 			if (!res.contains(coord)) {
 				searchWallFrom(res, coord, world);
@@ -69,7 +70,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		return containedBlocks.size();
 	}
 
-	public boolean canExtractEnergy(ForgeDirection direction) {
+	public boolean canExtractEnergy(EnumFacing direction) {
 		if (direction.getOpposite() == orientation && !grounded) {
 			return true;
 		}
@@ -85,7 +86,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
 
 		for (BlockPos pos : containedBlocks) {
-			TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
+			TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
 			if (tile.getEntityCapacitor() != null) {
 				if (!controled.contains(tile.getEntityCapacitor())) {
 					if(isFirstTick){
@@ -113,7 +114,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 			Set<BlockPos> setCopy = new HashSet<BlockPos>();
 			setCopy.addAll(containedBlocks);
 			for (BlockPos pos : setCopy) {
-				TileCapacitor tile = (TileCapacitor) pos.getTileEntity(world);
+				TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
 				if (tile == null) {
 					this.containedBlocks.remove(pos);
 				} else
@@ -138,10 +139,10 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 
 		for (BlockPos pos : oneWall) {
 			for (int i = 1; i < MAX_DISTANCE; i++) {
-				BlockPos res = pos.clone().goTowards(orientation, i);
-				TileEntity ent = res.getTileEntity(world);
+				BlockPos res = pos.offset(orientation, i);
+				TileEntity ent = world.getTileEntity(res);
 				if (ent != null && ent instanceof TileCapacitor) {
-					ForgeDirection fOrientation = ForgeDirection.getOrientation(ent.getBlockMetadata());
+					EnumFacing fOrientation = EnumFacing.getFront(ent.getBlockMetadata());
 					if (fOrientation.getOpposite() == orientation) {
 						distance = Math.min(distance, i - 1);
 						break;
@@ -151,10 +152,10 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		}
 		
 		for(BlockPos orig : oneWall){
-			BlockPos dest = orig.clone().goTowards(orientation, distance + 1);
-			TileEntity ent = dest.getTileEntity(world);
+			BlockPos dest = orig.offset(orientation, distance + 1);
+			TileEntity ent = world.getTileEntity(dest);
 			if(ent != null && ent instanceof TileCapacitor){
-				ForgeDirection fOrientation = ForgeDirection.getOrientation(ent.getBlockMetadata());
+				EnumFacing fOrientation = EnumFacing.getFront(ent.getBlockMetadata());
 				TileCapacitor cap = (TileCapacitor) ent;
 				if(cap == null || cap.getEntityCapacitor() == null)return false;
 				if (fOrientation.getOpposite() == orientation && cap.getEntityCapacitor().isGrounded()) {
@@ -171,15 +172,14 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 
 		for (BlockPos chk : oneWall) {
 			double tmpVoltage = 0;
-			BlockPos work = chk.clone();
-			work.goTowards(orientation, distance + 1);
+			BlockPos work = chk.offset(orientation, distance + 1);
 			if (otherWall.contains(work)) {
 				surface++;
-				work = chk.clone();
 				for (int i = 0; i < distance; i++) {
-					work.goTowards(orientation, 1);
-					Block block = work.getBlock(world);
-					int metadata = work.getMetadata(world);
+					work.offset(orientation);
+					IBlockState state = world.getBlockState(work);
+					Block block = state.getBlock();
+					int metadata = block.getMetaFromState(state);
 					String name = Block.blockRegistry.getNameForObject(block) + " " + metadata;
 					if (dielectricities.containsKey(name)) {
 						dielectricity += dielectricities.get(name);
@@ -222,7 +222,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 	 * @return whether the Entity was destroied.
 	 */
 	private boolean checkSplit(BlockPos destroied, World world, EntityPlayer player) {
-		List<ForgeDirection> toCheck = new ArrayList<ForgeDirection>();
+		List<EnumFacing> toCheck = new ArrayList<EnumFacing>();
 		if (orientation == UP || orientation == DOWN) {
 			toCheck.add(NORTH);
 			toCheck.add(SOUTH);
@@ -231,14 +231,14 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		} else {
 			toCheck.add(UP);
 			toCheck.add(DOWN);
-			toCheck.add(DOWN.getRotation(orientation));
-			toCheck.add(UP.getRotation(orientation));
+			toCheck.add(DOWN.rotateAround(orientation.getAxis()));
+			toCheck.add(UP.rotateAround(orientation.getAxis()));
 		}
 
-		List<ForgeDirection> remove = new ArrayList<ForgeDirection>();
+		List<EnumFacing> remove = new ArrayList<EnumFacing>();
 
-		for (ForgeDirection dir : toCheck) {
-			TileEntity ent = destroied.clone().goTowards(dir, 1).getTileEntity(world);
+		for (EnumFacing dir : toCheck) {
+			TileEntity ent = world.getTileEntity(destroied.offset(dir));
 			if (ent == null || !(ent instanceof TileCapacitor)) {
 				remove.add(dir);
 			}
@@ -247,7 +247,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		if (toCheck.size() <= 1)
 			return false;
 
-		BlockPos test = destroied.clone().goTowards(toCheck.get(1), 1);
+		BlockPos test = destroied.offset(toCheck.get(1));
 		if (containedBlocks.containsAll(searchWallFrom(new HashSet<BlockPos>(), test, world)))
 			return false;
 
@@ -275,7 +275,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		cap.charge = tag.getLong("charge");
 		cap.grounded = tag.getBoolean("grounded");
 		if (tag.hasKey("orientation")) {
-			cap.orientation = ForgeDirection.getOrientation(tag.getInteger("orientation"));
+			cap.orientation = EnumFacing.getFront(tag.getInteger("orientation"));
 		}
 		cap.containedBlocks = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("blocks"));
 		
@@ -291,15 +291,15 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 
 	public void updateBlocks(World world) {
 		for (BlockPos pos : containedBlocks) {
-			TileEntity entity = pos.getTileEntity(world);
+			TileEntity entity = world.getTileEntity(pos);
 			if (entity != null) {
 				entity.markDirty();
 			}
-			world.markBlockForUpdate(pos.x, pos.y, pos.z);
+			world.markBlockForUpdate(pos);
 		}
 	}
 
-	public ForgeDirection getOrientation() {
+	public EnumFacing getOrientation() {
 		return orientation;
 	}
 

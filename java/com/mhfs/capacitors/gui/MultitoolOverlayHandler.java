@@ -17,11 +17,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -61,7 +62,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		String text = "H";
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 10, yPos + 22, Color.WHITE.getRGB());
+		gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 10, yPos + 22, Color.WHITE.getRGB());
 		renderGas(entity.getHydrogenTank(), xPos + 5, yPos + 5);
 	}
 
@@ -77,7 +78,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		renderGas(entity.getHydrogenTank(), xPos + 8, yPos + 5);
 		
 		String text = "at " + (int)entity.getTemperature() + " °C";
-		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos - 3, yPos + 22, Color.WHITE.getRGB());
+		gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos - 3, yPos + 22, Color.WHITE.getRGB());
 	}
 
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {
@@ -134,10 +135,10 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		if (stack != null) {
 			Fluid fluid = stack.getFluid();
-			IIcon icon = fluid.getIcon();
+			ResourceLocation icon = fluid.getStill();
 			if (icon != null) {
-				bindTexture(fluid.getSpriteNumber());
-				this.drawTexturedModelRectFromIcon(x, (int) (y + (1 - filled) * 16), icon, 16, (int) (16 * filled));
+				bindTexture(icon);
+				this.drawTexturedModalRect(x, (int) (y + (1 - filled) * 16), 16, (int) (16 * filled), 16, (int) (16 * filled));
 			}
 		}
 
@@ -159,13 +160,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
-		Tessellator tes = Tessellator.instance;
-		tes.startDrawing(GL11.GL_LINES);
-		tes.setColorOpaque_I(0x0);
+		Tessellator tes = Tessellator.getInstance();
+		WorldRenderer wr = tes.getWorldRenderer();
+		wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
+		wr.color(0, 0, 0, 1);
 		double xEnd = x + 8 - Math.cos(filled * Math.PI)*6;
 		double yEnd = y + 8 - Math.sin(filled * Math.PI)*6;
-		tes.addVertex(xEnd, yEnd, zLevel);
-		tes.addVertex(x + 8, y + 8, zLevel);
+		wr.pos(xEnd, yEnd, zLevel).endVertex();
+		wr.pos(x + 8, y + 8, zLevel).endVertex();
 		tes.draw();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -173,10 +175,9 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 
 	private void renderItemStack(ItemStack stack, int x, int y) {
-		RenderItem ri = RenderItem.getInstance();
-		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-		TextureManager tm = Minecraft.getMinecraft().renderEngine;
-		ri.renderItemAndEffectIntoGUI(fr, tm, stack, x, y);
+		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
+		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+		ri.renderItemAndEffectIntoGUI(stack, x, y);
 		
 		String out = stack.stackSize + "";
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -200,7 +201,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
 		} else {
 			String text = "Energy: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
-			gui.drawString(Minecraft.getMinecraft().fontRenderer, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
+			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}
 	}
 
@@ -208,13 +209,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		Minecraft.getMinecraft().renderEngine.bindTexture(loc);
 	}
 
-	protected void bindTexture(int id) {
-		ResourceLocation loc = Minecraft.getMinecraft().renderEngine.getResourceLocation(id);
-		this.bindTexture(loc);
-	}
-
 	@Override
-	public void drawOverlay(RenderGameOverlayEvent event, Block block, IBlockAccess world, int x, int y, int z) {
-		drawOverlay(event, world.getTileEntity(x, y, z));
+	public void drawOverlay(RenderGameOverlayEvent event, Block block, IBlockAccess world, BlockPos pos) {
+		drawOverlay(event, world.getTileEntity(pos));
 	}
 }

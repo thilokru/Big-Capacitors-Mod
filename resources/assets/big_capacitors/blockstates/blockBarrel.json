@@ -1,0 +1,13 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+        "model": "big_capacitors:model/Barrel.obj",
+    	"textures": {
+        	"texture": "big_capacitors:models/barrel"
+    	},
+    	"uvlock": true
+    },
+    "variants": {
+    	"inventory": []
+    }
+}

@@ -1,8 +1,8 @@
 package com.mhfs.capacitors.misc;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public interface IRotatable {
 
-	public ForgeDirection getRotation();
+	public EnumFacing getRotation();
 }

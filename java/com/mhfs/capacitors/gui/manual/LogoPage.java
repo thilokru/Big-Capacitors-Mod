@@ -10,8 +10,8 @@ public class LogoPage implements IPage {
 
 	@Override
 	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos, int yPos, int width, int height, int mouseX, int mouseY) {
-		boolean backup = mc.fontRenderer.getUnicodeFlag();
-		mc.fontRenderer.setUnicodeFlag(false);
+		boolean backup = mc.fontRendererObj.getUnicodeFlag();
+		mc.fontRendererObj.setUnicodeFlag(false);
 		mc.getTextureManager().bindTexture(GuiManual.BOOK_TEXTURES);
 		int logoX = xPos;
 		int logoY = yPos + (height / 2) - 16;
@@ -26,10 +26,10 @@ public class LogoPage implements IPage {
 		
 		int textY = yPos + (height / 2);
 		int color = 0x333333;
-		FontRenderer fr = mc.fontRenderer;
+		FontRenderer fr = mc.fontRendererObj;
 		fr.drawString("Big", textX, textY - fr.FONT_HEIGHT, color, false);
 		fr.drawString("Capacitors", textX, textY, color, false);
-		mc.fontRenderer.setUnicodeFlag(backup);
+		mc.fontRendererObj.setUnicodeFlag(backup);
 	}
 
 	@Override

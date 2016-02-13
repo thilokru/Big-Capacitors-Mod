@@ -2,7 +2,6 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Fluids;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,14 +9,15 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbourEnergyHandler {
+public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbourEnergyHandler, ITickable {
 
 	private long energy;
 	private FluidTank hydrogenTank;
@@ -42,8 +42,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 		temperature = ROOM_TEMP;
 	}
 
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 		formed = checkFormed();
 		if(worldObj.isRemote)return;
 		if(formed){
@@ -62,23 +61,23 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 				temperature -= (temperature - ROOM_TEMP)*LOSS_FACTOR;
 			}
 			this.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.markBlockForUpdate(this.pos);
 		}else{
 			if(temperature > ROOM_TEMP){
 				this.temperature = ROOM_TEMP;
 				this.markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.markBlockForUpdate(this.pos);
 			}
 			if(energy > 0){
 				energy = 0;
 				this.markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.markBlockForUpdate(this.pos);
 			}
 		}
 	}
 	
 	private boolean checkFormed() {
-		return BigCapacitorsMod.instance.fusionReactorMulti.complete(new BlockPos(xCoord, yCoord, zCoord), worldObj);
+		return BigCapacitorsMod.instance.fusionReactorMulti.complete(this.pos, worldObj);
 	}
 
 	public boolean isFormed(){
@@ -90,7 +89,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		if (resource.getFluid() == Fluids.gasHydrogen) {
 			return hydrogenTank.fill(resource, doFill);
 		}
@@ -98,7 +97,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 		if (resource.getFluid() == Fluids.gasHydrogen) {
 			return hydrogenTank.drain(resource.amount, doDrain);
 		}
@@ -107,25 +106,25 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 	
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		return hydrogenTank.drain(maxDrain, doDrain);
 	}
 	
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		return fluid == Fluids.gasHydrogen;
 	}
 	
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		return fluid == Fluids.gasHydrogen;
 	}
 	
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		return new FluidTankInfo[] { hydrogenTank.getInfo()};
 	}
 	
@@ -144,13 +143,13 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, INeighbou
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 	
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	public double getTemperature() {

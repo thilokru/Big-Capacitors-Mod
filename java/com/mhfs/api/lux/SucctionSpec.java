@@ -1,6 +1,6 @@
 package com.mhfs.api.lux;
 
-import com.mhfs.capacitors.misc.BlockPos;
+import net.minecraft.util.BlockPos;
 
 public class SucctionSpec {
 	

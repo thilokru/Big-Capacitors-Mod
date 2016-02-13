@@ -10,14 +10,15 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbourEnergyHandler, IRotatable {
+public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbourEnergyHandler, IRotatable, ITickable{
 	
 	private long energy;
 	private FluidTank hydrogen, oxygen, water;
@@ -30,7 +31,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 		water = new FluidTank(2000);
 	}
 	
-	public void updateEntity(){
+	public void update(){
 		if(worldObj.isRemote)return;
 		long en = Math.min(80, energy);
 		FluidStack wa = water.drain(1, false);
@@ -40,7 +41,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 			hydrogen.fill(new FluidStack(Fluids.gasHydrogen, 10), true);
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 	
 	public void readFromNBT(NBTTagCompound tag) {
@@ -66,28 +67,28 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	@Override
-	public ForgeDirection getRotation() {
-		return ((BlockFuelCell) worldObj.getBlock(xCoord, yCoord, zCoord)).getOrientation(worldObj, xCoord, yCoord, zCoord);
+	public EnumFacing getRotation() {
+		return ((BlockFuelCell) this.blockType).getOrientation(worldObj, this.pos);
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		if(!canFill(from, resource.getFluid()))return 0;
 		return water.fill(resource, doFill);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 		if(!canDrain(from, resource.getFluid()))return null;
 		FluidTank tank = getTankForDirection(from);
 		if(tank.getFluidAmount() == 0 || tank.getFluid().getFluid() != resource.getFluid())return null;
@@ -95,7 +96,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		if(!canDrain(from, null))return null;
 		FluidTank tank = getTankForDirection(from);
 		if(tank.getFluidAmount() == 0)return null;
@@ -103,21 +104,21 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return from == ForgeDirection.UP && fluid.equals(Fluids.fluidDestilledWater);
+	public boolean canFill(EnumFacing from, Fluid fluid) {
+		return from == EnumFacing.UP && fluid.equals(Fluids.fluidDestilledWater);
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		FluidTank tank = getTankForDirection(from);
 		if(tank == null)return false;
 		return fluid == null || tank.getFluid().getFluid() == fluid;
 	}
 	
-	private FluidTank getTankForDirection(ForgeDirection from){
-		ForgeDirection orientation = getRotation();
-		ForgeDirection hydrOrientation = orientation.getRotation(ForgeDirection.UP);
-		ForgeDirection oxOrientation = hydrOrientation.getOpposite();
+	private FluidTank getTankForDirection(EnumFacing from){
+		EnumFacing orientation = getRotation();
+		EnumFacing hydrOrientation = orientation.rotateY();
+		EnumFacing oxOrientation = hydrOrientation.getOpposite();
 		if(from == oxOrientation){
 			return oxygen;
 		}else if(from == hydrOrientation){
@@ -127,7 +128,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		return new FluidTankInfo[]{water.getInfo(), hydrogen.getInfo(), oxygen.getInfo()};
 	}
 

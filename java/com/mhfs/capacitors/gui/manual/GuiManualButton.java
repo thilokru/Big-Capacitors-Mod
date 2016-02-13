@@ -29,15 +29,13 @@ public class GuiManualButton extends GuiButton {
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			mc.getTextureManager().bindTexture(GuiManual.BOOK_TEXTURES);
 			int u = mode == FORWARD ? 0 : mode == BACKWARD ? 16 : 32;
-			this.drawTexturedModalRect(this.xPosition, this.yPosition, u,
-					hover ? 16 : 0, 16, 16);
+			this.drawTexturedModalRect(this.xPosition, this.yPosition, u, hover ? 16 : 0, 16, 16);
 		}
 	}
-	
+
 	@Override
-	public void func_146113_a(SoundHandler sh) {
-		sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(
-				"big_capacitors:pageTurn"), 1.0F));
+	public void playPressSound(SoundHandler sh) {
+		sh.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
 	}
 
 	private boolean isMouseHovering(int mouseX, int mouseY) {

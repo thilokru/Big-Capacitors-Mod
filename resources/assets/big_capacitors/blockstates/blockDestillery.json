@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+        "model": "big_capacitors:model/Destillery.obj",
+    	"textures": {
+        	"texture": "big_capacitors:models/destillery"
+    	},
+    	"uvlock": true
+    },
+    "variants": {
+        "orientation=north": {},
+        "orientation=west": {"y": 90},
+        "orientation=south": {"y": 180},
+        "orientation=east": {"y": 270},
+        "inventory": {}
+    }
+}

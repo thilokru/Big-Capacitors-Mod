@@ -13,9 +13,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -43,15 +44,16 @@ public class GuiHandler implements IGuiHandler {
 			int x, int y, int z) {
 		IKnowledgeRegistry reg = BigCapacitorsMod.instance.knowledge;
 		SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
-		soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
+		soundHandler.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
 		if(ID == 1){
-			Block block = world.getBlock(x, y, z);
+			BlockPos pos = new BlockPos(x, y, z);
+			Block block = world.getBlockState(pos).getBlock();
 			if(block instanceof IChapterRelated){
 				IChapterRelated rel = (IChapterRelated)block;
-				if(rel.getChapter(world, x, y, z) == null){
+				if(rel.getChapter(world, pos) == null){
 					return getDisplayChapter(reg.getIndex());
 				}
-				return getDisplayChapter(reg.getChapter(rel.getChapter(world, x, y, z)));
+				return getDisplayChapter(reg.getChapter(rel.getChapter(world, pos)));
 			}
 		}
 		return getDisplayChapter(reg.getIndex());

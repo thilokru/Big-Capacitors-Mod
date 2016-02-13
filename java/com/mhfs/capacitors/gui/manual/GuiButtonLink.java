@@ -10,8 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiButtonLink extends GuiButton {
 
-	public GuiButtonLink(int id, int x, int y, int width, int height,
-			String text) {
+	public GuiButtonLink(int id, int x, int y, int width, int height, String text) {
 		super(id, x, y, width, height, text);
 	}
 
@@ -21,11 +20,11 @@ public class GuiButtonLink extends GuiButton {
 
 	private static int getTextWidth(String text) {
 		Minecraft mc = Minecraft.getMinecraft();
-		return mc.fontRenderer.getStringWidth(text);
+		return mc.fontRendererObj.getStringWidth(text);
 	}
 
 	private static int getTextHeight() {
-		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+		return Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 	}
 
 	@Override
@@ -35,8 +34,7 @@ public class GuiButtonLink extends GuiButton {
 		if (state == 2) {
 			color = Color.BLUE.getRGB();
 		}
-		mc.fontRenderer.drawString(this.displayString, this.xPosition,
-				this.yPosition, color, false);
+		mc.fontRendererObj.drawString(this.displayString, this.xPosition, this.yPosition, color, false);
 	}
 
 	private boolean isMouseHovering(int mouseX, int mouseY) {
@@ -50,8 +48,7 @@ public class GuiButtonLink extends GuiButton {
 	}
 
 	@Override
-	public void func_146113_a(SoundHandler sh) {
-		sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(
-				"big_capacitors:pageTurn"), 1.0F));
+	public void playPressSound(SoundHandler sh) {
+		sh.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
 	}
 }

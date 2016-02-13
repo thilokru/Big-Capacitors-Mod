@@ -38,17 +38,14 @@ import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
-import com.mhfs.capacitors.village.TradeHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
-import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
 
@@ -64,6 +61,12 @@ public class CommonProxy {
 				return Item.getItemFromBlock(Blocks.capacitorIron);
 			}
 		};
+		
+		MinecraftForge.EVENT_BUS.register(mod.bucketHandler = new BucketHandler());
+		Lo.g.info("Setting up blocks, fluids and items...");
+		Fluids.setup(mod.creativeTab);
+		Blocks.setup(mod);
+		Items.setup(mod);
 	}
 
 	private void setupRecipies() {		
@@ -95,7 +98,7 @@ public class CommonProxy {
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
 		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.obsidian, 'G', Blocks.gravel));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTomahawk, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 4), 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTokamak, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 4), 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
 		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.obsidian, 'W', new ItemStack(Items.itemMany, 1, 0)));
@@ -125,11 +128,8 @@ public class CommonProxy {
 	public void init(FMLInitializationEvent event,
 			BigCapacitorsMod mod) {
 		MinecraftForge.EVENT_BUS.register(mod.bucketHandler = new BucketHandler());
-		Lo.g.info("Setting up ingame-stuff...");
-		Fluids.setup();
-		Blocks.setup(mod);
-		Items.setup(mod);
-		VillagerRegistry.instance().registerVillageTradeHandler(2, new TradeHandler());
+		
+		//VillagerRegistry.instance().registerVillageTradeHandler(2, new TradeHandler());
 		
 		System.out.println(FluidRegistry.getRegisteredFluids());
 		
@@ -150,7 +150,6 @@ public class CommonProxy {
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-		FMLCommonHandler.instance().bus().register(new EventHandler());
 	}
 
 	public void postInit(FMLPostInitializationEvent event,

@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+        "model": "big_capacitors:model/LuxTransformer.obj",
+    	"textures": {
+        	"texture": "big_capacitors:models/fuel_cellv2"
+    	},
+    	"uvlock": true
+    },
+    "variants": {
+        "orientation=north": {},
+        "orientation=west": {"y": 90},
+        "orientation=south": {"y": 180},
+        "orientation=east": {"y": 270},
+        "orientation=up": {"x": 90},
+        "orientation=down": {"x": 270},
+        "inventory": {}
+    }
+}

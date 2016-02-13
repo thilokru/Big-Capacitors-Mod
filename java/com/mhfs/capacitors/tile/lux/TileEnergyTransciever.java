@@ -5,23 +5,23 @@ import com.mhfs.api.lux.IRouting;
 import com.mhfs.api.lux.LuxDrain;
 import com.mhfs.api.lux.LuxHandler;
 import com.mhfs.capacitors.blocks.IOrientedBlock;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.IRotatable;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements LuxDrain, IRotatable{
 	
 	private boolean isDrain = true;
 	
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if (worldObj.isRemote)
 			return;
 		if (connection == null)
 			return;
-		IRouting tile = (IRouting) connection.getTileEntity(worldObj);
+		IRouting tile = (IRouting) this.worldObj.getTileEntity(connection);
 		if (tile == null) {
 			connection = null;
 			return;
@@ -29,9 +29,9 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		if(isDrain){
 			tile.drainSetup(this.getPosition(), this.getPosition(), 64);
 		}else{
-			LuxHandler link = (LuxHandler)connection.getTileEntity(worldObj);
+			LuxHandler link = (LuxHandler)this.worldObj.getTileEntity(connection);
 			for(BlockPos pos:drains){
-				LuxDrain drain = (LuxDrain)pos.getTileEntity(worldObj);
+				LuxDrain drain = (LuxDrain)this.worldObj.getTileEntity(pos);
 				if(drain == null)continue;
 				link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
 			}
@@ -53,7 +53,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	public void switchMode(){
 		isDrain = !isDrain;
 		if(this.connection == null)return;
-		IRouting handler = (IRouting)this.connection.getTileEntity(worldObj);
+		IRouting handler = (IRouting)this.worldObj.getTileEntity(connection);
 		if(handler == null)return;
 		handler.handleDisconnect(this.getPosition(), 64);
 		handler.connect(this.getPosition());
@@ -61,9 +61,9 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	
 	public INeighbourEnergyHandler getConnectedTile(){
 		if(this.blockType == null)return null;
-		ForgeDirection direction = ((IOrientedBlock)this.blockType).getOrientation(worldObj, xCoord, yCoord, zCoord);
-		BlockPos tilePos = this.getPosition().clone().goTowards(direction, 1);
-		TileEntity entity = tilePos.getTileEntity(worldObj);
+		EnumFacing direction = ((IOrientedBlock)this.blockType).getOrientation(worldObj, this.pos);
+		BlockPos tilePos = this.getPosition().offset(direction);
+		TileEntity entity = this.worldObj.getTileEntity(tilePos);
 		if(entity instanceof INeighbourEnergyHandler){
 			INeighbourEnergyHandler handler = (INeighbourEnergyHandler)entity;
 			return handler;
@@ -95,8 +95,8 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	}
 
 	@Override
-	public ForgeDirection getRotation() {
-		return ((IOrientedBlock)this.blockType).getOrientation(worldObj, xCoord, yCoord, zCoord);
+	public EnumFacing getRotation() {
+		return ((IOrientedBlock)this.blockType).getOrientation(worldObj, this.pos);
 	}
 
 }

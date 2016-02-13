@@ -1,0 +1,7 @@
+{
+     "parent": "block/cube_column",
+     "textures": {
+        "side": "big_capacitors:blocks/coil",
+     	"end": "big_capacitors:blocks/coilTop"
+     }
+}

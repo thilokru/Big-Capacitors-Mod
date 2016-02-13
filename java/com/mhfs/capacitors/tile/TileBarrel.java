@@ -11,16 +11,18 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHandler{
+public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHandler, ITickable{
 	
 	private final static int maxProgress = 1000;
 	private final static int tankCapacity = 5000;
@@ -36,7 +38,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 	
 	@Override
-	public void updateEntity(){
+	public void update(){
 		if(worldObj.isRemote)return;
 		if(potatoStack.stackSize == this.getInventoryStackLimit() && !processing){
 			this.processing = true;
@@ -52,7 +54,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 			}
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 	
 	public void onRightClick(World world, EntityPlayer player) {
@@ -71,7 +73,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 				}
 			}
 			this.markDirty();
-			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			this.worldObj.markBlockForUpdate(this.pos);
 		}
 	}
 
@@ -92,25 +94,10 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return null;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		if(stack.getItem() == Items.potato && potatoStack == null){
 			potatoStack = stack;
 		}
-	}
-
-	@Override
-	public String getInventoryName() {
-		return StatCollector.translateToLocal("tile.barrel.name");
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
 	}
 
 	@Override
@@ -124,29 +111,13 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	@Override
-	public void openInventory() {}
-
-	@Override
-	public void closeInventory() {}
-
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return stack.getItem() == Items.potato;
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int sideID) {
-		ForgeDirection side = ForgeDirection.getOrientation(sideID);
-		if(side == ForgeDirection.UP){
-			return new int[]{0};
-		}else{
-			return new int[]{};
-		}
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideID) {
-		if(ForgeDirection.getOrientation(sideID) == ForgeDirection.UP){
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing face) {
+		if(face == EnumFacing.UP){
 			if(stack.getItem() == Items.potato){
 				return true;
 			}
@@ -155,8 +126,8 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int sideID) {
-		if(ForgeDirection.getOrientation(sideID) == ForgeDirection.UP){
+	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing face) {
+		if(face == EnumFacing.UP){
 			if(stack.getItem() == Items.potato){
 				return true;
 			}
@@ -165,42 +136,42 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		return 0;
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		if(from == ForgeDirection.DOWN && resource.getFluid() == wineTank.getFluid().getFluid()){
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
+		if(from == EnumFacing.DOWN && resource.getFluid() == wineTank.getFluid().getFluid()){
 			return wineTank.drain(resource.amount, doDrain);
 		}
 		return null;
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		if(from == ForgeDirection.DOWN){
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
+		if(from == EnumFacing.DOWN){
 			return wineTank.drain(maxDrain, doDrain);
 		}
 		return null;
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		return false;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		if(from == ForgeDirection.DOWN){
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
+		if(from == EnumFacing.DOWN){
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		if(from == ForgeDirection.DOWN){
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
+		if(from == EnumFacing.DOWN){
 			return new FluidTankInfo[]{wineTank.getInfo()};
 		}
 		return new FluidTankInfo[]{};
@@ -235,17 +206,70 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	public FluidTank getWineTank() {
 		return wineTank;
 	}
 
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		if(index == 0){
+			return potatoStack;
+		}
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {}
+
+	@Override
+	public String getName() {
+		return StatCollector.translateToLocal("tile.barrel.name");
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return null;
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		if(side == EnumFacing.UP){
+			return new int[]{0};
+		}else{
+			return new int[]{};
+		}
+	}
 }

@@ -7,9 +7,9 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.misc.Lo;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class ConfigUpdateMessage implements IMessage, IMessageHandler<ConfigUpdateMessage, IMessage>{
 	

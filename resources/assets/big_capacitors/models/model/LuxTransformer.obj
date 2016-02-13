@@ -1,6 +1,6 @@
 # Blender v2.74 (sub 0) OBJ File: 'LuxTransformer.blend'
 # www.blender.org
-mtllib LuxTransformer.mtl
+# mtllib LuxTransformer.mtl
 o Icosphere
 v -0.132831 0.368848 0.095287
 v -0.132831 0.395078 0.076229
@@ -45,7 +45,7 @@ vn -0.000000 0.809000 0.587800
 vn -0.000000 0.809000 -0.587800
 vn 0.000000 -0.309000 -0.951100
 vn -1.000000 -0.000000 0.000000
-usemtl None
+# usemtl None
 s off
 f 2//1 1//1 16//1
 f 3//1 4//1 14//1

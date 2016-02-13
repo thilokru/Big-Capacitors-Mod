@@ -9,7 +9,6 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,8 +16,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ITickable;
 
-public abstract class AbstractRoutingTile extends TileEntity implements IRouting{
+public abstract class AbstractRoutingTile extends TileEntity implements IRouting, ITickable{
 
 	protected Set<BlockPos> connections;
 	protected Map<BlockPos, SucctionSpec> routes; // Maps Specs (including route)
@@ -31,11 +32,12 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		disconnecting = new HashSet<BlockPos>();
 	}
 
-	public void updateEntity() {
+	@Override
+	public void update() {
 		disconnecting.clear();
 		if (!worldObj.isRemote) {
 			for (BlockPos pos : connections) {
-				TileEntity tile = pos.getTileEntity(this.worldObj);
+				TileEntity tile = this.worldObj.getTileEntity(pos);
 				if(!(tile instanceof IRouting))continue;
 				IRouting foreign = (IRouting) tile;
 				for (BlockPos requester : routes.keySet()) {
@@ -69,18 +71,18 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	@Override
 	public BlockPos getPosition() {
-		return new BlockPos(this.xCoord, this.yCoord, this.zCoord);
+		return new BlockPos(this.pos);
 	}
 
 	@Override
@@ -90,12 +92,12 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 			return;
 		routes.put(requester, new SucctionSpec(lastHop, value));
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 
 	@Override
 	public void handlerSetupRequest(BlockPos pos) {
-		IRouting requester = (IRouting) pos.getTileEntity(this.worldObj);
+		IRouting requester = (IRouting) worldObj.getTileEntity(pos);
 		for (BlockPos drain : routes.keySet()) {
 			SucctionSpec spec = routes.get(drain);
 			if (spec.sucction > 1) {
@@ -113,24 +115,24 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		disconnecting.add(handler);
 		connections.remove(handler);
 		for (BlockPos pos : connections) {
-			IRouting foreign = (IRouting) pos.getTileEntity(this.worldObj);
+			IRouting foreign = (IRouting) this.worldObj.getTileEntity(pos);
 			if(foreign == null)continue;
 			if (level > 1)
 				foreign.handleDisconnect(handler, level - 1);
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
-		IRouting router = (IRouting) pos.getTileEntity(worldObj);
+		IRouting router = (IRouting) this.worldObj.getTileEntity(pos);
 		if(router == null || connections.contains(pos))return;
 		this.connections.add(pos);
 		router.handlerSetupRequest(this.getPosition());
 		router.connect(this.getPosition());
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 	
 	/**
@@ -148,7 +150,7 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		Set<BlockPos> clone = new HashSet<BlockPos>();
 		clone.addAll(connections);
 		for (BlockPos pos : clone) {
-			IRouting foreign = (IRouting) pos.getTileEntity(this.worldObj);
+			IRouting foreign = (IRouting) this.worldObj.getTileEntity(pos);
 			if(foreign == null)continue;
 			foreign.handleDisconnect(this.getPosition(), 64);
 		}

@@ -1,16 +1,17 @@
 package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.IRotatable;
 import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
-public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler, IRotatable {
+public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler, IRotatable, ITickable {
 
 	private CapacitorWallWrapper wrapper;
 	private boolean isLoading, isFirstTick = true;
@@ -25,7 +26,7 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if (wrapper == null) {
 			createEntity();
 		}
@@ -42,24 +43,24 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 	}
 
 	private void createEntity() {
-		CapacitorWallWrapper instance = new CapacitorWallWrapper(worldObj, new BlockPos(xCoord, yCoord, zCoord));
+		CapacitorWallWrapper instance = new CapacitorWallWrapper(worldObj, new BlockPos(this.pos));
 		if (wrapper == null) {
 			wrapper = instance;
 		}
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(this.pos);
 	}
 
-	public ForgeDirection getRotation() {
-		return Blocks.capacitorIron.getOrientation(worldObj, xCoord, yCoord, zCoord);
+	public EnumFacing getRotation() {
+		return Blocks.capacitorIron.getOrientation(worldObj, this.pos);
 	}
 
 	public void onBreak(BreakEvent event) {
 		if (wrapper != null) {
 			if (event != null) {
-				wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, event.getPlayer());
+				wrapper.leave(new BlockPos(this.pos), worldObj, event.getPlayer());
 			} else {
-				wrapper.leave(new BlockPos(xCoord, yCoord, zCoord), worldObj, null);
+				wrapper.leave(new BlockPos(this.pos), worldObj, null);
 			}
 		}
 	}
@@ -67,7 +68,7 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 	public void onEntityChange(CapacitorWallWrapper cap) {
 		this.wrapper = cap;
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(this.pos);
 	}
 
 	public CapacitorWallWrapper getEntityCapacitor() {

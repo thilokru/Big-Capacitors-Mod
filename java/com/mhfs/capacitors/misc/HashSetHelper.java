@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 
 public class HashSetHelper {
 
@@ -16,7 +17,7 @@ public class HashSetHelper {
 		BlockPos[] entries = containedBlocks.toArray(new BlockPos[0]);
 		for(int i = 0; i < entries.length; i++){
 			BlockPos pos = entries[i];
-			tag.setIntArray(i + "", new int[]{pos.x, pos.y, pos.z});
+			tag.setIntArray(i + "", new int[]{pos.getX(), pos.getY(), pos.getZ()});
 		}
 		tag.setInteger("size", entries.length);
 		return tag;
@@ -38,9 +39,9 @@ public class HashSetHelper {
 		buf.writeInt(entries.length);
 		for(int i = 0; i < entries.length; i++){
 			BlockPos pos = entries[i];
-			buf.writeInt(pos.x);
-			buf.writeInt(pos.y);
-			buf.writeInt(pos.z);
+			buf.writeInt(pos.getX());
+			buf.writeInt(pos.getY());
+			buf.writeInt(pos.getZ());
 		}
 	}
 	

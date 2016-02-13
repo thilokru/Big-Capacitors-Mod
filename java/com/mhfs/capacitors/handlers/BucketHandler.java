@@ -2,8 +2,8 @@ package com.mhfs.capacitors.handlers;
 
 import java.util.HashMap;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,12 +26,12 @@ public class BucketHandler {
 	}
 
 	private ItemStack checkFill(World world, MovingObjectPosition target) {
-		Block block = world.getBlock(target.blockX, target.blockY, target.blockZ);
+		Block block = world.getBlockState(target.getBlockPos()).getBlock();
 		
 		Item bucket = FLUID_BLOCK_TO_BUCKET.get(block);
 		
-		if(bucket != null && world.getBlockMetadata(target.blockX, target.blockY, target.blockZ) == 0){
-			world.setBlockToAir(target.blockX, target.blockY, target.blockZ);
+		if(bucket != null){
+			world.setBlockToAir(target.getBlockPos());
 			return new ItemStack(bucket);
 		}
 		return null;

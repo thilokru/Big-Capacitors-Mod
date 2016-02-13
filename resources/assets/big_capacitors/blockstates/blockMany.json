@@ -1,0 +1,28 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "uvlock": true
+    },
+    "variants": {
+       "type": {
+            0: {
+                "model": "big_capacitors:blockReactorShield"
+            },
+            1: {
+                "model": "big_capacitors:blockCeramic"
+            },
+            2: {
+                "model": "big_capacitors:blockCoil"
+            },
+            3: {
+                "model": "big_capacitors:oreRutil"
+            },
+            4: {
+                "model": "big_capacitors:oreWitherite"
+            },
+            5: {
+                "model": "big_capacitors:blockCoilEmpty"
+            }
+        }
+    }
+}

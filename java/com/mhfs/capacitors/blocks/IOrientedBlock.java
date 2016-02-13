@@ -1,9 +1,10 @@
 package com.mhfs.capacitors.blocks;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public interface IOrientedBlock {
 
-	public ForgeDirection getOrientation(IBlockAccess world, int x, int y, int z);
+	public EnumFacing getOrientation(IBlockAccess world, BlockPos pos);
 }

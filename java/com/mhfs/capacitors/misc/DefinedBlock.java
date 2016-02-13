@@ -1,6 +1,8 @@
 package com.mhfs.capacitors.misc;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class DefinedBlock extends BlockPos {
@@ -23,8 +25,10 @@ public class DefinedBlock extends BlockPos {
 	}
 
 	public boolean check(BlockPos init, World world) {
-		BlockPos pos = this.translate(init);
-		return block.equals(pos.getBlock(world)) && pos.getMetadata(world) == metadata;
+		BlockPos pos = this.add(init);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		return this.block.equals(block) && block.getMetaFromState(state) == metadata;
 	}
 
 }

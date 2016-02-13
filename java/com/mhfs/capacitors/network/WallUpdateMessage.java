@@ -8,9 +8,9 @@ import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileCapacitor;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMessage, IMessage> {
 
@@ -52,7 +52,7 @@ public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMe
 	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
 		World world = Minecraft.getMinecraft().theWorld;
 		if(world == null)return null;
-		TileCapacitor cap = (TileCapacitor) message.getWrapper().getRandomBlock().getTileEntity(world);
+		TileCapacitor cap = (TileCapacitor) world.getTileEntity(message.getWrapper().getRandomBlock());
 		if(cap == null)return null;
 		CapacitorWallWrapper local = cap.getEntityCapacitor();
 		if (local != null) {

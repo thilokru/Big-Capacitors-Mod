@@ -3,15 +3,15 @@ package com.mhfs.api.lux;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.mhfs.capacitors.misc.BlockPos;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ITickable;
 
-public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implements IRouting{
+public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implements IRouting, ITickable{
 
 	protected BlockPos connection;
 	protected Set<BlockPos> drains;
@@ -23,11 +23,12 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 	/**
 	 * Fetches routing information
 	 */
-	public void updateEntity(){
+	@Override
+	public void update(){
 		if(worldObj.isRemote)return;
 		this.drains.clear();
 		if(connection == null)return;
-		LuxHandler link = (LuxHandler)connection.getTileEntity(worldObj);
+		LuxHandler link = (LuxHandler)this.worldObj.getTileEntity(connection);
 		if(link == null)return;
 		link.handlerSetupRequest(getPosition());
 	}
@@ -53,11 +54,11 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
-		IRouting router = (IRouting) pos.getTileEntity(worldObj);
+		IRouting router = (IRouting) worldObj.getTileEntity(pos);
 		if(router == null)return;
 		if(router.equals(this))return;
 		if(connection != null && !pos.equals(connection)){
-			IRouting handler = (IRouting)connection.getTileEntity(worldObj);
+			IRouting handler = (IRouting)this.worldObj.getTileEntity(connection);
 			if(handler != null){
 				handler.handleDisconnect(this.getPosition(), 64);
 			}
@@ -70,13 +71,13 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 
 	@Override
 	public BlockPos getPosition() {
-		return new BlockPos(this.xCoord, this.yCoord, this.zCoord);
+		return new BlockPos(this.pos);
 	}
 	
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("connection")){
-			connection = BlockPos.fromNBT(tag, "connection");
+			connection = BlockPos.fromLong(tag.getLong("connection"));
 		}
 	}
 
@@ -84,27 +85,27 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 		super.writeToNBT(tag);
 		
 		if(connection == null)return;
-		connection.writeToNBT(tag, "connection");
+		tag.setLong("connection", connection.toLong());
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
 	}
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(this.pos);
 	}
 
 	public void onDestroy() {
 		if(connection == null)return;
-		IRouting router = (IRouting) connection.getTileEntity(worldObj);
+		IRouting router = (IRouting) this.worldObj.getTileEntity(connection);
 		if(router == null)return;
 		router.handleDisconnect(getPosition(), 64);
 	}

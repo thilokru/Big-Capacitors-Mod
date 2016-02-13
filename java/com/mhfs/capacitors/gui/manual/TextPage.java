@@ -19,8 +19,8 @@ public class TextPage implements IPage {
 	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos, int yPos, int height, int width, int mouseX, int mouseY) {
 		String[] lines = text.split(newLine);
 		for(String line:lines){
-			mc.fontRenderer.drawString(line, xPos, yPos, Color.BLACK.getRGB(), false);
-			yPos += mc.fontRenderer.FONT_HEIGHT;
+			mc.fontRendererObj.drawString(line, xPos, yPos, Color.BLACK.getRGB(), false);
+			yPos += mc.fontRendererObj.FONT_HEIGHT;
 		}
 	}
 

@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class EventHandler {
 
@@ -35,7 +35,7 @@ public class EventHandler {
 	public void handleBlockBreak(BreakEvent event) {
 		if (event.world.isRemote)
 			return;
-		TileEntity entity = event.world.getTileEntity(event.x, event.y, event.z);
+		TileEntity entity = event.world.getTileEntity(event.pos);
 		if (entity != null && entity instanceof TileCapacitor) {
 			((TileCapacitor) entity).onBreak(event);
 		}

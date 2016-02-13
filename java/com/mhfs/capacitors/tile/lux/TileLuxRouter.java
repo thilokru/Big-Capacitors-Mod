@@ -6,13 +6,13 @@ import java.util.Set;
 import com.mhfs.api.lux.AbstractRoutingTile;
 import com.mhfs.api.lux.IRouting;
 import com.mhfs.api.lux.LuxHandler;
-import com.mhfs.capacitors.misc.BlockPos;
 import com.mhfs.capacitors.misc.HashSetHelper;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 
 public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 
@@ -52,10 +52,10 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
 		BlockPos hopPos = routes.get(dst).lastHop;
 		this.toRender.add(hopPos);
-		LuxHandler hop = (LuxHandler) hopPos.getTileEntity(this.worldObj);
+		LuxHandler hop = (LuxHandler) this.worldObj.getTileEntity(hopPos);
 		hop.energyFlow(this.getPosition(), dst, amount);
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(this.pos);
 	}
 
 	public int getRouteSucction() {

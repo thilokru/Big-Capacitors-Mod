@@ -35,7 +35,7 @@ public class IndexPage implements IPage, IKeyboardHandler {
 		this.yPos = yPos;
 		this.mc = mc;
 
-		searchField = new BetterTextBox(mc.fontRenderer, xPos, yPos - 5);
+		searchField = new BetterTextBox(-1, mc.fontRendererObj, xPos, yPos - 5);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setTextColor(Color.BLACK.getRGB());
 		searchField.setVisible(false);
@@ -51,7 +51,7 @@ public class IndexPage implements IPage, IKeyboardHandler {
 			GuiButton button = new GuiButtonLink(id, xPos, tmpY, name);
 			screen.addButton(button);
 			myButtons.add(button);
-			tmpY += mc.fontRenderer.FONT_HEIGHT + 2;
+			tmpY += mc.fontRendererObj.FONT_HEIGHT + 2;
 			id++;
 		}
 	}
@@ -77,9 +77,9 @@ public class IndexPage implements IPage, IKeyboardHandler {
 	@Override
 	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos,
 			int yPos, int width, int height, int mouseX, int mouseY) {
-		mc.fontRenderer.setUnicodeFlag(false);
+		mc.fontRendererObj.setUnicodeFlag(false);
 		searchField.drawTextBox();
-		mc.fontRenderer.setUnicodeFlag(true);
+		mc.fontRendererObj.setUnicodeFlag(true);
 		searchField.updateCursorCounter();
 	}
 
@@ -110,8 +110,8 @@ public class IndexPage implements IPage, IKeyboardHandler {
 
 	public class BetterTextBox extends GuiTextField {
 
-		public BetterTextBox(FontRenderer fr, int x, int y) {
-			super(fr, x, y, 50, 10);
+		public BetterTextBox(int id, FontRenderer fr, int x, int y) {
+			super(id, fr, x, y, 50, 10);
 			this.setMaxStringLength(12);
 		}
 
@@ -126,7 +126,7 @@ public class IndexPage implements IPage, IKeyboardHandler {
 			this.drawTexturedModalRect(this.xPosition - 2, this.yPosition - 2,
 					82, 0, this.width + 2, this.height + 2);
 
-			FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+			FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 			fr.setUnicodeFlag(true);
 			fr.drawString(this.getText(), this.xPosition, this.yPosition,
 					Color.BLACK.getRGB());

@@ -10,6 +10,7 @@ import com.mhfs.capacitors.misc.IChapterRelated;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,10 +20,10 @@ public class ManualOverlayHandler extends Gui implements IOverlayHandler {
 	private final static ResourceLocation overlayTexture = new ResourceLocation(BigCapacitorsMod.modid, "textures/other/overlay.png");
 
 	@Override
-	public void drawOverlay(RenderGameOverlayEvent event, Block block, IBlockAccess world, int x, int y, int z) {
+	public void drawOverlay(RenderGameOverlayEvent event, Block block, IBlockAccess world, BlockPos pos) {
 		if (block instanceof IChapterRelated) {
 			IChapterRelated rel = (IChapterRelated) block;
-			if (rel.getChapter(world, x, y, z) == null)
+			if (rel.getChapter(world, pos) == null)
 				return;
 			Gui gui = Minecraft.getMinecraft().ingameGUI;
 
@@ -38,7 +39,7 @@ public class ManualOverlayHandler extends Gui implements IOverlayHandler {
 			this.drawTexturedModalRect(xPos - 16, yPos, 62, 0, 16, 16);
 			GL11.glPopMatrix();
 			
-			gui.drawString(Minecraft.getMinecraft().fontRenderer, rel.getChapter(world, x, y, z), xPos + 2, yPos + 5, Color.WHITE.getRGB());
+			gui.drawString(Minecraft.getMinecraft().fontRendererObj, rel.getChapter(world, pos), xPos + 2, yPos + 5, Color.WHITE.getRGB());
 		}
 	}
 

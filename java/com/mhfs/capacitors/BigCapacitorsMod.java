@@ -12,16 +12,15 @@ import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.proxy.CommonProxy;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = BigCapacitorsMod.modid, useMetadata = true, guiFactory = BigCapacitorsMod.guiFactory, version = BigCapacitorsMod.version)
 public class BigCapacitorsMod {
@@ -46,8 +45,6 @@ public class BigCapacitorsMod {
 	public IKnowledgeRegistry knowledge;
 	
 	public Multiblock fusionReactorMulti;
-	
-	public static ISimpleBlockRenderingHandler capacitorRenderer;
 
 	public SimpleNetworkWrapper network;
 	

@@ -35,12 +35,12 @@ public class GuiManual extends GuiScreen {
 	}
 
 	public void preTextRender() {
-		this.unicodeFlag = mc.fontRenderer.getUnicodeFlag();
-		mc.fontRenderer.setUnicodeFlag(true);
+		this.unicodeFlag = mc.fontRendererObj.getUnicodeFlag();
+		mc.fontRendererObj.setUnicodeFlag(true);
 	}
 
 	public void postTextRender() {
-		mc.fontRenderer.setUnicodeFlag(unicodeFlag);
+		mc.fontRendererObj.setUnicodeFlag(unicodeFlag);
 	}
 
 	public float getZpos() {

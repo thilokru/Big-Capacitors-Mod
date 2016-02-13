@@ -10,7 +10,9 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -18,7 +20,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-public class TileDistillery extends TileEntity implements IFluidHandler, IRotatable, INeighbourEnergyHandler {
+public class TileDistillery extends TileEntity implements IFluidHandler, IRotatable, INeighbourEnergyHandler, ITickable {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
@@ -34,7 +36,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if (worldObj.isRemote)
 			return;
 		forceTransmit();
@@ -65,11 +67,11 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	
 	private void forceTransmit(){
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		if (canFill(from, resource.getFluid())) {
 			int filled = input.fill(resource, doFill);
 			return filled;
@@ -78,7 +80,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
+	public FluidStack drain(EnumFacing from, FluidStack resource,
 			boolean doDrain) {
 		if (canDrain(from, resource.getFluid())) {
 			return output.drain(resource.amount, doDrain);
@@ -87,7 +89,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		if (canDrain(from, null)) {
 			return output.drain(maxDrain, doDrain);
 		}
@@ -95,7 +97,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		IFluidTank tank = getTankFromDirection(from);
 		if (tank == null || tank == output) {
 			return false;
@@ -108,7 +110,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		IFluidTank tank = getTankFromDirection(from);
 		if (tank == null || tank == input) {
 			return false;
@@ -123,14 +125,15 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		return new FluidTankInfo[] { input.getInfo(), output.getInfo() };
 	}
 
-	private IFluidTank getTankFromDirection(ForgeDirection from) {
-		ForgeDirection orientation = getRotation();
-		ForgeDirection left = orientation.getRotation(ForgeDirection.DOWN);
-		ForgeDirection right = left.getOpposite();
+	private IFluidTank getTankFromDirection(EnumFacing from) {
+		EnumFacing orientation = getRotation();
+		if(orientation == null)return null;
+		EnumFacing left = orientation.rotateAround(Axis.Y);
+		EnumFacing right = left.getOpposite();
 
 		if (from == left) {
 			return input;
@@ -141,13 +144,13 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 		}
 	}
 
-	public ForgeDirection getRotation() {
-		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
+	public EnumFacing getRotation() {
+		Block block = worldObj.getBlockState(pos).getBlock();
 		if (block instanceof IOrientedBlock) {
 			IOrientedBlock ori = (IOrientedBlock) block;
-			return ori.getOrientation(worldObj, xCoord, yCoord, zCoord);
+			return ori.getOrientation(worldObj, pos);
 		} else {
-			return ForgeDirection.UNKNOWN;
+			return null;
 		}
 	}
 
@@ -180,13 +183,13 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public Packet getDescriptionPacket() {
+	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(pos, 1, tag);
 	}
 
 	public IFluidTank getInputTank() {

@@ -24,7 +24,7 @@ public class Fluids {
 	
 	public static void setup(CreativeTabs tab) {
 		
-		Fluids.fluidDestilledWater = regFluid("destilledWater", "minecraft", "blocks/water_still", "blocks/water_flow", 1000, 1000, false);
+		Fluids.fluidDestilledWater = regFluid("destilledwater", "minecraft", "blocks/water_still", "blocks/water_flow", 1000, 1000, false);
 		Fluids.blockDestilledWater = regFluidBlock(tab, fluidDestilledWater, "blockDestilledWater");
 		
 		Fluids.fluidEthanol = regFluid("ethanol", "blocks/ethanol_still", "blocks/ethanol_flow", 789, 1190, false);

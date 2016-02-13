@@ -5,8 +5,8 @@
         "transform": "forge:default-item"
     },
     "variants": {
-        "destilledWater": [{
-            "custom": { "fluid": "destilledWater" }
+        "destilledwater": [{
+            "custom": { "fluid": "destilledwater" }
         }],
         "ethanol": [{
             "custom": { "fluid": "ethanol" }

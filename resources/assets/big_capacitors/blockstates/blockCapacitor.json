@@ -4,12 +4,14 @@
 		"model": "big_capacitors:blockCapacitor"
 	},
     "variants": {
-        "orientation=north": [],
-        "orientation=west": [{"y": 90}],
-        "orientation=south": [{"y": 180}],
-        "orientation=east": [{"y": 270}],
-        "orientation=up": [{"y": 90}],
-        "orientation=down": [{"y": 270}],
-        "inventory": []
+    	"orientation": {
+        	"north": {},
+        	"west": {"y": 90},
+        	"south": {"y": 180},
+        	"east": {"y": 270},
+        	"up": {"y": 90},
+        	"down": {"y": 270}
+        },
+        "inventory": [{}]
     }
 }

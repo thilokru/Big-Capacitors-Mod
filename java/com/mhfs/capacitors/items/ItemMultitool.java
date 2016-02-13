@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemMultitool extends Item {
 
-	public final static String name = "itemMutiltool";
+	public final static String name = "itemMultitool";
 	
 	public ItemMultitool(){
 		GameRegistry.registerItem(this, name);

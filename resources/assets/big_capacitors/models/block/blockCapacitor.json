@@ -4,6 +4,6 @@
          "metal": "blocks/iron_block",
          "break": "big_capacitors:blocks/capacitorIron"
      },
-    "parent": "big_capacitors:model/modelCapacitor",
+    "parent": "big_capacitors:block/modelCapacitor",
     "uvlock": true
 }

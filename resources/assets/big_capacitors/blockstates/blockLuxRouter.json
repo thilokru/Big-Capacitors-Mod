@@ -1,13 +1,14 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-        "model": "big_capacitors:model/LuxRouter.obj",
+        "model": "big_capacitors:LuxRouter.obj",
     	"textures": {
         	"texture": "big_capacitors:models/fuel_cellv2"
     	},
     	"uvlock": true
-    }
+    },
     "variants": {
-    	"inventory": {}
+    	"normal": [{}],
+    	"inventory": [{}]
     }
 }

@@ -23,4 +23,8 @@ public class BlockTokamak extends BlockContainer{
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileTomahawk();
 	}
+	
+	public int getRenderType() {
+		return 3;
+	}
 }

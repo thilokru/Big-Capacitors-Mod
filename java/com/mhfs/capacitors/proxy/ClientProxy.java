@@ -12,6 +12,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,6 +28,7 @@ import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.blocks.BlockLuxRouter;
+import com.mhfs.capacitors.blocks.BlockTokamak;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
 import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
@@ -79,6 +81,7 @@ public class ClientProxy extends CommonProxy {
 		registerMesher(Blocks.blockFuelCell, BlockFuelCell.name);
 		registerMesher(Blocks.blockLuxRouter, BlockLuxRouter.name);
 		registerMesher(Blocks.blockEnergyTransfer, BlockEnergyTransfer.name);
+		registerMesher(Blocks.blockTokamak, BlockTokamak.name);
 
 		registerMesher(Items.itemBucketDestilledWater, "bucketDestilledWater");
 		registerMesher(Items.itemBucketEthanol, "bucketEthanol");
@@ -86,19 +89,51 @@ public class ClientProxy extends CommonProxy {
 		registerMesher(Items.itemBucketWine, "bucketWine");
 		registerMesher(Items.itemManual, ItemManual.name);
 		registerMesher(Items.itemMultitool, ItemMultitool.name);
-
-		ItemData[] data = Items.itemMany.getData();
-		for (int i = 0; i < data.length; i++) {
-			registerMesher(Items.itemMany, i, data[i].getName());
-		}
-
+		
+		registerSubItems();
+		registerSubBlocks();
+		
 		RendererLuxRouter<TileLuxRouter> renderer = new RendererLuxRouter<TileLuxRouter>();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, renderer);
+	}
+	
+	private void registerSubBlocks(){
+		/*BlockData[] blockData = Blocks.blockMany.getData();
+		ResourceLocation[] locs = new ResourceLocation[blockData.length];
+		for(int i = 0; i < blockData.length; i++){
+			locs[i] = new ResourceLocation(BigCapacitorsMod.modid, blockData[i].getName());
+		}
+		ModelBakery.registerItemVariants(Item.getItemFromBlock(Blocks.blockMany), locs);*/
+		
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		mesher.register(Item.getItemFromBlock(Blocks.blockMany), new ItemMeshDefinition(){
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+				//String itemName = Blocks.blockMany.getData()[stack.getItemDamage()].getName();
+				return new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, "blockMany"), "inventory");
+			}
+		});
+	}
+	
+	private void registerSubItems(){
+		ItemData[] itemData = Items.itemMany.getData();
+		ResourceLocation[] locs = new ResourceLocation[itemData.length];
+		for(int i = 0; i < itemData.length; i++){
+			locs[i] = new ResourceLocation(BigCapacitorsMod.modid, itemData[i].getName());
+		}
+		
+		ModelBakery.registerItemVariants(Items.itemMany, locs);
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		mesher.register(Items.itemMany, new ItemMeshDefinition(){
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+				String itemName = Items.itemMany.getData()[stack.getItemDamage()].getName();
+				return new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, itemName), "inventory");
+			}
+		});
 	}
 
 	private void registerFluidBlock(BlockFluidClassic block, String identifier) {
 		Item item = Item.getItemFromBlock(block);
-		final ModelResourceLocation mrl = new ModelResourceLocation(BigCapacitorsMod.modid + ":" + fluidStateModel, identifier);
+		final ModelResourceLocation mrl = new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, fluidStateModel), identifier);
 		ModelBakery.registerItemVariants(item);
 		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
 			public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -122,7 +157,8 @@ public class ClientProxy extends CommonProxy {
 
 	private void registerMesher(Item item, int meta, String name) {
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		mesher.register(item, meta, new ModelResourceLocation(BigCapacitorsMod.modid + ":" + name, "inventory"));
+		ResourceLocation loc = new ResourceLocation(BigCapacitorsMod.modid, name);
+		mesher.register(item, meta, new ModelResourceLocation(loc, "inventory"));
 	}
 
 	@Override

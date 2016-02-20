@@ -27,7 +27,7 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 
 	@Override
 	public void update() {
-		if (wrapper == null) {
+		if (wrapper == null && worldObj != null) {
 			createEntity();
 		}
 		

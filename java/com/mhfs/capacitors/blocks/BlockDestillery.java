@@ -93,16 +93,8 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 		return false;
 	}
 
-	public boolean renderAsNormalBlock() {
-		return false;
-	}
-
-	public int getRenderBlockPass() {
-		return 1;
-	}
-
 	public int getRenderType() {
-		return -1;
+		return 3;
 	}
 	
 	@Override

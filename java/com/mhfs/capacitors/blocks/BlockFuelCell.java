@@ -106,7 +106,7 @@ public class BlockFuelCell extends BlockContainer implements IOrientedBlock {
 	}
 
 	public int getRenderType() {
-		return -1;
+		return 3;
 	}
 
 }

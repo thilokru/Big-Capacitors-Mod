@@ -80,7 +80,7 @@ public class BlockEnergyTransfer extends BlockContainer implements IOrientedBloc
 	}
 
 	public int getRenderType() {
-		return -1;
+		return 3;
 	}
 
 }

@@ -41,6 +41,6 @@ public class BlockBarrel extends BlockContainer {
 	}
 	
 	public int getRenderType() {
-		return -1;
+		return 3;
 	}
 }

@@ -92,4 +92,8 @@ public class BlockMany extends Block implements IChapterRelated{
 	public String getChapter(IBlockAccess access, BlockPos pos) {
 		return subBlocks[getID(access.getBlockState(pos))].getChapter();
 	}
+
+	public BlockData[] getData() {
+		return subBlocks;
+	}
 }

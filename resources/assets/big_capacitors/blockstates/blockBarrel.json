@@ -3,7 +3,7 @@
 	"defaults": {
         "model": "big_capacitors:Barrel.obj",
     	"textures": {
-        	"texture": "big_capacitors:models/barrel"
+        	"#None": "big_capacitors:models/barrel"
     	},
     	"uvlock": true
     },

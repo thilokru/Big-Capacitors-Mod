@@ -33,7 +33,9 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileDistillery();
+		TileEntity te = new TileDistillery();
+		te.setWorldObj(world);
+		return te;
 	}
 
 	public EnumFacing getOrientation(IBlockAccess world, BlockPos pos) {

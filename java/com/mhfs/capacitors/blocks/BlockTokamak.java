@@ -20,8 +20,10 @@ public class BlockTokamak extends BlockContainer{
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		return new TileTomahawk();
+	public TileEntity createNewTileEntity(World world, int meta) {
+		TileEntity te = new TileTomahawk();
+		te.setWorldObj(world);
+		return te;
 	}
 	
 	public int getRenderType() {

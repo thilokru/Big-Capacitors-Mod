@@ -26,7 +26,9 @@ public class BlockLuxRouter extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileLuxRouter();
+		TileEntity te = new TileLuxRouter();
+		te.setWorldObj(world);
+		return te;
 	}
 
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {

@@ -32,8 +32,10 @@ public class BlockFuelCell extends BlockContainer implements IOrientedBlock {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		return new TileFuelCell();
+	public TileEntity createNewTileEntity(World world, int meta) {
+		TileEntity te = new TileFuelCell();
+		te.setWorldObj(world);
+		return te;
 	}
 
 	@Override

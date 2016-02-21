@@ -26,7 +26,9 @@ public class BlockBarrel extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileBarrel();
+		TileEntity te = new TileBarrel();
+		te.setWorldObj(world);
+		return te;
 	}
 
 	@Override

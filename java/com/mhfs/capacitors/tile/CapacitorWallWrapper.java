@@ -40,7 +40,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		for (BlockPos pos : containedBlocks) {
 			if (pos.equals(init))
 				continue;
-			TileCapacitor cap = (TileCapacitor) world.getTileEntity(init);
+			TileCapacitor cap = (TileCapacitor) world.getTileEntity(pos);
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
 			if (ent != null && ent != this) {
 				ent.checkJoin(world, false);

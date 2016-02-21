@@ -66,11 +66,11 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 		EnumFacing dir = getOrientation(world, pos);
 		for (EnumFacing direction : EnumFacing.VALUES) {
 			if (direction != dir && direction != dir.getOpposite()) {
-				pos.offset(direction);
-				Block block = world.getBlockState(pos).getBlock();
+				BlockPos work = pos.offset(direction);
+				Block block = world.getBlockState(work).getBlock();
 				if (block instanceof BlockCapacitor) {
-					if (this.getOrientation(world, pos) == dir) {
-						list.add(new BlockPos(pos));
+					if (this.getOrientation(world, work) == dir) {
+						list.add(work);
 					}
 				}
 			}
@@ -80,7 +80,9 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileCapacitor(false);
+		TileEntity te = new TileCapacitor(false);
+		te.setWorldObj(world);
+		return te;
 	}
 
 	public boolean onBlockEventReceived(World world, BlockPos pos, IBlockState state, int eventID, int eventParam) {

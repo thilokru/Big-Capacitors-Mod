@@ -31,8 +31,10 @@ public class BlockEnergyTransfer extends BlockContainer implements IOrientedBloc
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		return new TileEnergyTransciever();
+	public TileEntity createNewTileEntity(World world, int meta) {
+		TileEntity te = new TileEnergyTransciever();
+		te.setWorldObj(world);
+		return te;
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class BlockEnergyTransfer extends BlockContainer implements IOrientedBloc
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(ORIENTATION, facing);
+		return this.getDefaultState().withProperty(ORIENTATION, facing.getOpposite());
 	}
 
 	@Override

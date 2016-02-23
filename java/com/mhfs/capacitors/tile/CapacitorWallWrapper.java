@@ -175,8 +175,9 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 			BlockPos work = chk.offset(orientation, distance + 1);
 			if (otherWall.contains(work)) {
 				surface++;
+				work = chk;
 				for (int i = 0; i < distance; i++) {
-					work.offset(orientation);
+					work = work.offset(orientation);
 					IBlockState state = world.getBlockState(work);
 					Block block = state.getBlock();
 					int metadata = block.getMetaFromState(state);

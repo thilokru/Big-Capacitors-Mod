@@ -160,14 +160,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
+		GL11.glColor4f(0, 0, 0, 1);
 		Tessellator tes = Tessellator.getInstance();
 		WorldRenderer wr = tes.getWorldRenderer();
 		wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
-		wr.color(0, 0, 0, 1);
 		double xEnd = x + 8 - Math.cos(filled * Math.PI)*6;
 		double yEnd = y + 8 - Math.sin(filled * Math.PI)*6;
-		wr.pos(xEnd, yEnd, zLevel).endVertex();
-		wr.pos(x + 8, y + 8, zLevel).endVertex();
+		wr.pos(xEnd, yEnd, zLevel).color(0, 0, 0, 1).endVertex();
+		wr.pos(x + 8, y + 8, zLevel).color(0, 0, 0, 1).endVertex();
 		tes.draw();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -197,6 +197,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			return;
 		CapacitorWallWrapper storage = tile.getEntityCapacitor();
 		if (storage.isGrounded()) {
+			GL11.glEnable(GL11.GL_BLEND);
 			bindTexture(overlayTexture);
 			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
 		} else {

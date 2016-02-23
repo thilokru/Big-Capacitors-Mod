@@ -3,18 +3,18 @@
 	"defaults": {
         "model": "big_capacitors:LuxTransformer.obj",
     	"textures": {
-        	"texture": "big_capacitors:models/fuel_cellv2"
+        	"#None": "big_capacitors:models/fuel_cellv2"
     	},
     	"uvlock": true
     },
     "variants": {
     	"orientation": {
-        	"north": {"y": 90},
-        	"west": {"y": 0},
-        	"south": {"y": 270},
-        	"east": {"y": 180},
-        	"up": {"z": 90},
-        	"down": {"z": 270}
+        	"north": {"y": 180},
+        	"west": {"y": 90},
+        	"south": {"y": 0},
+        	"east": {"y": 270},
+        	"up": {"x": 90},
+        	"down": {"x": 270}
         },
         "inventory": [{}]
     }

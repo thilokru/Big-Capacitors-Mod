@@ -3,7 +3,7 @@
 	"defaults": {
         "model": "big_capacitors:fuel_cell-v2.obj",
     	"textures": {
-        	"texture": "big_capacitors:models/fuel_cellv2"
+        	"#None": "big_capacitors:models/fuel_cellv2"
     	},
     	"uvlock": true
     },

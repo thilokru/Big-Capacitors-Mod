@@ -11,6 +11,7 @@ import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.IRotatable;
 import com.mhfs.capacitors.render.IConnected;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +41,17 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 				link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
 			}
 		}
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag){
+		super.readFromNBT(tag);
+		this.isDrain = tag.getBoolean("isDrain");
+	}
+	
+	public void writeToNBT(NBTTagCompound tag){
+		super.writeToNBT(tag);
+		tag.setBoolean("isDrain", isDrain);
 	}
 	
 	private long getEnergyForTarget(long maxInput, long need, int drainCount) {

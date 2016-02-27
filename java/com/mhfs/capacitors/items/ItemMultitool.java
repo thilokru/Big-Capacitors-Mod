@@ -24,7 +24,7 @@ public class ItemMultitool extends Item {
 	
 	public ItemMultitool(){
 		GameRegistry.registerItem(this, name);
-		setUnlocalizedName(BigCapacitorsMod.modid + "_" + name);
+		setUnlocalizedName(name);
 		setCreativeTab(BigCapacitorsMod.instance.creativeTab);
 	}
 	

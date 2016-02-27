@@ -11,6 +11,7 @@ import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
+import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -47,8 +48,19 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderFusionOverlay(event, (TileTomahawk) entity);
 		} else if (entity instanceof TileFuelCell){
 			renderFuelCellOverlay(event, (TileFuelCell)entity);
+		} else if (entity instanceof TileEnergyTransciever){
+			renderEnergyTransferOverlay(event, (TileEnergyTransciever)entity);
 		}
 
+	}
+
+	private void renderEnergyTransferOverlay(RenderGameOverlayEvent event, TileEnergyTransciever entity) {
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+		Gui gui = Minecraft.getMinecraft().ingameGUI;
+		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+		String text = entity.isDrain()?"Drain":"Emitter";
+		gui.drawString(fr, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 	}
 
 	private void renderFuelCellOverlay(RenderGameOverlayEvent event, TileFuelCell entity) {

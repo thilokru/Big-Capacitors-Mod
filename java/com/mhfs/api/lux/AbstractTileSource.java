@@ -1,18 +1,15 @@
-package com.mhfs.capacitors.tile.lux;
+package com.mhfs.api.lux;
 
-import com.mhfs.api.lux.AbstractMonoconnectedRoutingTile;
-import com.mhfs.api.lux.LuxDrain;
-import com.mhfs.api.lux.LuxHandler;
 import net.minecraft.util.BlockPos;
 
-public abstract class AbstractTileSource extends AbstractMonoconnectedRoutingTile implements LuxHandler{
+public abstract class AbstractTileSource extends AbstractMonoconnectedRoutingTile implements ILuxHandler{
 	
 	public void update(){
 		super.update();
 		if(connection == null)return;
-		LuxHandler link = (LuxHandler)this.worldObj.getTileEntity(connection);
+		ILuxHandler link = (ILuxHandler)this.worldObj.getTileEntity(connection);
 		for(BlockPos pos:drains){
-			LuxDrain drain = (LuxDrain)this.worldObj.getTileEntity(pos);
+			ILuxDrain drain = (ILuxDrain)this.worldObj.getTileEntity(pos);
 			if(drain == null)continue;
 			link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
 		}

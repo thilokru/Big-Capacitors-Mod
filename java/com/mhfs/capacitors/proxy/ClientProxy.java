@@ -37,7 +37,8 @@ import com.mhfs.capacitors.items.ItemData;
 import com.mhfs.capacitors.items.ItemManual;
 import com.mhfs.capacitors.items.ItemMultitool;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
-import com.mhfs.capacitors.render.RendererLuxRouter;
+import com.mhfs.capacitors.render.RendererLux;
+import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -66,6 +67,12 @@ public class ClientProxy extends CommonProxy {
 		super.init(event, mod);
 
 		setupModels(event, mod);
+		
+		RendererLux<TileLuxRouter> rendererRouter = new RendererLux<TileLuxRouter>();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, rendererRouter);
+		
+		RendererLux<TileEnergyTransciever> rendererTransciever = new RendererLux<TileEnergyTransciever>();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyTransciever.class, rendererTransciever);
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());
@@ -92,9 +99,6 @@ public class ClientProxy extends CommonProxy {
 		
 		registerSubItems();
 		registerSubBlocks();
-		
-		RendererLuxRouter<TileLuxRouter> renderer = new RendererLuxRouter<TileLuxRouter>();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileLuxRouter.class, renderer);
 	}
 	
 	private void registerSubBlocks(){

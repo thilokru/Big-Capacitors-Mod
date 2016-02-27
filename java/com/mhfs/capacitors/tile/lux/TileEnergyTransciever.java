@@ -1,17 +1,21 @@
 package com.mhfs.capacitors.tile.lux;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.mhfs.api.lux.AbstractMonoconnectedRoutingTile;
 import com.mhfs.api.lux.IRouting;
-import com.mhfs.api.lux.LuxDrain;
-import com.mhfs.api.lux.LuxHandler;
+import com.mhfs.api.lux.ILuxDrain;
+import com.mhfs.api.lux.ILuxHandler;
 import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.render.IConnected;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
-public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements LuxDrain, IRotatable{
+public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements ILuxDrain, IRotatable, IConnected{
 	
 	private boolean isDrain = true;
 	
@@ -29,9 +33,9 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		if(isDrain){
 			tile.drainSetup(this.getPosition(), this.getPosition(), 64);
 		}else{
-			LuxHandler link = (LuxHandler)this.worldObj.getTileEntity(connection);
+			ILuxHandler link = (ILuxHandler)this.worldObj.getTileEntity(connection);
 			for(BlockPos pos:drains){
-				LuxDrain drain = (LuxDrain)this.worldObj.getTileEntity(pos);
+				ILuxDrain drain = (ILuxDrain)this.worldObj.getTileEntity(pos);
 				if(drain == null)continue;
 				link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
 			}
@@ -97,6 +101,13 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	@Override
 	public EnumFacing getRotation() {
 		return ((IOrientedBlock)this.blockType).getOrientation(worldObj, this.pos);
+	}
+
+	@Override
+	public Set<BlockPos> getConnections() {
+		Set<BlockPos> set = new HashSet<BlockPos>();
+		set.add(this.connection);
+		return set;
 	}
 
 }

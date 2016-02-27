@@ -8,7 +8,7 @@ import net.minecraft.util.BlockPos;
  * @author Thilo
  *
  */
-public interface LuxHandler extends IRouting{
+public interface ILuxHandler extends IRouting{
 	
 	/**
 	 * This method is called when energy should be sent to its destination. This is used e.g to

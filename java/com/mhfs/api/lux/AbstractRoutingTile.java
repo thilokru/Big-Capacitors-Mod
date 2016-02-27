@@ -110,7 +110,6 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 	public void handleDisconnect(BlockPos handler, int level) {
 		if (disconnecting.contains(handler))
 			return;
-		this.connections.remove(handler);
 		this.routes.clear();
 		disconnecting.add(handler);
 		connections.remove(handler);
@@ -127,6 +126,7 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 	public void connect(BlockPos pos) {
 		if(worldObj.isRemote)return;
 		IRouting router = (IRouting) this.worldObj.getTileEntity(pos);
+		if(!isValidConnection(router))return;
 		if(router == null || connections.contains(pos))return;
 		this.connections.add(pos);
 		router.handlerSetupRequest(this.getPosition());

@@ -1,6 +1,6 @@
 package com.mhfs.api.lux;
 
-public interface LuxDrain extends LuxHandler{
+public interface ILuxDrain extends ILuxHandler{
 
 	public long getNeed();
 	

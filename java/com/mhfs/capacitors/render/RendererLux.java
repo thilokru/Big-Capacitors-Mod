@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.capacitors.tile.lux.TileLuxRouter;
-
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -15,15 +13,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3i;
 
-public class RendererLuxRouter<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
+public class RendererLux<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
 
 	public void renderTileEntityAt(T entity, double x, double y, double z, float partialTicks, int destroyStage) {
-		TileLuxRouter router = (TileLuxRouter) entity;
-		BlockPos local = router.getPosition();
+		IConnected router = (IConnected) entity;
+		BlockPos local = entity.getPos();
 		Set<BlockPos> destinations = router.getConnections();
 		Iterator<BlockPos> it = destinations.iterator();
 		while (it.hasNext()) {
 			BlockPos foreign = it.next();
+			if(foreign == null)continue;
 			renderConnection(foreign.subtract(local), x, y, z);
 		}
 	}

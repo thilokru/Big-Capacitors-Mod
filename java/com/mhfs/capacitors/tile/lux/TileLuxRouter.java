@@ -5,8 +5,9 @@ import java.util.Set;
 
 import com.mhfs.api.lux.AbstractRoutingTile;
 import com.mhfs.api.lux.IRouting;
-import com.mhfs.api.lux.LuxHandler;
+import com.mhfs.api.lux.ILuxHandler;
 import com.mhfs.capacitors.misc.HashSetHelper;
+import com.mhfs.capacitors.render.IConnected;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
-public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
+public class TileLuxRouter extends AbstractRoutingTile implements ILuxHandler, IConnected {
 
 	private Set<BlockPos> toRender;
 
@@ -52,7 +53,7 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
 		BlockPos hopPos = routes.get(dst).lastHop;
 		this.toRender.add(hopPos);
-		LuxHandler hop = (LuxHandler) this.worldObj.getTileEntity(hopPos);
+		ILuxHandler hop = (ILuxHandler) this.worldObj.getTileEntity(hopPos);
 		hop.energyFlow(this.getPosition(), dst, amount);
 		this.markDirty();
 		worldObj.markBlockForUpdate(this.pos);
@@ -66,7 +67,7 @@ public class TileLuxRouter extends AbstractRoutingTile implements LuxHandler {
 
 	@Override
 	public boolean isValidConnection(IRouting foreign) {
-		return foreign instanceof LuxHandler;
+		return foreign instanceof ILuxHandler;
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -11,6 +11,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 
+/**
+ * This class provides an example implementation for a monoconnected network member.
+ * It does not route on its own, it lets a normal AbstractRoutingTile do the work.
+ * Therefore no direct links are allowed.
+ * @author Thilo
+ *
+ */
 public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implements IRouting, ITickable{
 
 	protected BlockPos connection;
@@ -28,8 +35,12 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 		if(worldObj.isRemote)return;
 		this.drains.clear();
 		if(connection == null)return;
-		LuxHandler link = (LuxHandler)this.worldObj.getTileEntity(connection);
-		if(link == null)return;
+		ILuxHandler link = (ILuxHandler)this.worldObj.getTileEntity(connection);
+		if(link == null){
+			connection = null;
+			markForUpdate();
+			return;
+		}
 		link.handlerSetupRequest(getPosition());
 	}
 	
@@ -53,10 +64,9 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 	}
 
 	public void connect(BlockPos pos) {
-		if(worldObj.isRemote)return;
 		IRouting router = (IRouting) worldObj.getTileEntity(pos);
-		if(router == null)return;
-		if(router.equals(this))return;
+		if(router == null || router.equals(this) || pos.equals(this.connection))return;
+		if(router instanceof AbstractMonoconnectedRoutingTile)return;
 		if(connection != null && !pos.equals(connection)){
 			IRouting handler = (IRouting)this.worldObj.getTileEntity(connection);
 			if(handler != null){
@@ -78,6 +88,8 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 		super.readFromNBT(tag);
 		if(tag.hasKey("connection")){
 			connection = BlockPos.fromLong(tag.getLong("connection"));
+		}else{
+			connection = null;
 		}
 	}
 

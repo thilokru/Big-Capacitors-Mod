@@ -2,7 +2,7 @@ package com.mhfs.capacitors.items;
 
 import java.util.List;
 
-import com.mhfs.api.lux.LuxHandler;
+import com.mhfs.api.lux.ILuxHandler;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
@@ -40,8 +40,8 @@ public class ItemMultitool extends Item {
 					return false;
 				cap.getEntityCapacitor().onGroundSwitch(world);
 				return true;
-			} else if (entity instanceof LuxHandler) {
-				LuxHandler router = (LuxHandler) entity;
+			} else if (entity instanceof ILuxHandler) {
+				ILuxHandler router = (ILuxHandler) entity;
 				if (stack.getTagCompound() == null) {
 					stack.setTagCompound(new NBTTagCompound());
 				}

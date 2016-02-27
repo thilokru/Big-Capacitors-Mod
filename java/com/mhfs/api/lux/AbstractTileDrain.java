@@ -1,11 +1,8 @@
-package com.mhfs.capacitors.tile.lux;
+package com.mhfs.api.lux;
 
-import com.mhfs.api.lux.AbstractMonoconnectedRoutingTile;
-import com.mhfs.api.lux.IRouting;
-import com.mhfs.api.lux.LuxDrain;
 import net.minecraft.util.BlockPos;
 
-public abstract class AbstractTileDrain extends AbstractMonoconnectedRoutingTile implements LuxDrain, IRouting {
+public abstract class AbstractTileDrain extends AbstractMonoconnectedRoutingTile implements ILuxDrain, IRouting {
 
 	public void update() {
 		super.update();

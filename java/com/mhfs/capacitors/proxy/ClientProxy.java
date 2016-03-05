@@ -24,6 +24,7 @@ import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.blocks.BlockBarrel;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
+import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
@@ -102,37 +103,26 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	private void registerSubBlocks(){
-		/*BlockData[] blockData = Blocks.blockMany.getData();
-		ResourceLocation[] locs = new ResourceLocation[blockData.length];
-		for(int i = 0; i < blockData.length; i++){
-			locs[i] = new ResourceLocation(BigCapacitorsMod.modid, blockData[i].getName());
-		}
-		ModelBakery.registerItemVariants(Item.getItemFromBlock(Blocks.blockMany), locs);*/
-		
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		mesher.register(Item.getItemFromBlock(Blocks.blockMany), new ItemMeshDefinition(){
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-				//String itemName = Blocks.blockMany.getData()[stack.getItemDamage()].getName();
-				return new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, "blockMany"), "inventory");
-			}
-		});
+		BlockData[] itemData = Blocks.blockMany.getData();
+		ResourceLocation[] locs = new ResourceLocation[itemData.length];
+		Item item = Item.getItemFromBlock(Blocks.blockMany);
+		for(int i = 0; i < itemData.length; i++){
+			locs[i] = new ResourceLocation(BigCapacitorsMod.modid, itemData[i].getName());
+			mesher.register(item, i, new ModelResourceLocation(locs[i], "inventory"));
+		}
+		ModelBakery.registerItemVariants(item, locs);
 	}
 	
 	private void registerSubItems(){
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 		ItemData[] itemData = Items.itemMany.getData();
 		ResourceLocation[] locs = new ResourceLocation[itemData.length];
 		for(int i = 0; i < itemData.length; i++){
 			locs[i] = new ResourceLocation(BigCapacitorsMod.modid, itemData[i].getName());
+			mesher.register(Items.itemMany, i, new ModelResourceLocation(locs[i], "inventory"));
 		}
-		
 		ModelBakery.registerItemVariants(Items.itemMany, locs);
-		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-		mesher.register(Items.itemMany, new ItemMeshDefinition(){
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-				String itemName = Items.itemMany.getData()[stack.getItemDamage()].getName();
-				return new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, itemName), "inventory");
-			}
-		});
 	}
 
 	private void registerFluidBlock(BlockFluidClassic block, String identifier) {

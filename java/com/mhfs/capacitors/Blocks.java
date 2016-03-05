@@ -56,17 +56,17 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockEnergyTransfer.setHarvestLevel("pickaxe", 2);
 		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
-		blockData.add(new BlockData("reactorShield", "pickaxe", 2, 3.0F));//0
+		blockData.add(new BlockData("blockReactorShield", "pickaxe", 2, 3.0F));//0
 		
 		blockData.add(new BlockData("blockCeramic", "pickaxe", 2, 0.5F, "Ores"));//1
 		
-		blockData.add(new BlockData("coil", "pickaxe", 2, 3.0F));//2
+		blockData.add(new BlockData("blockCoil", "pickaxe", 2, 3.0F));//2
 		
 		blockData.add(new BlockData("oreRutil", "pickaxe", 2, 1F, "Ores"));//3
 		
 		blockData.add(new BlockData("oreWitherite", "pickaxe", 2, 1F, "Ores"));//4
 		
-		blockData.add(new BlockData("coilEmpty", "pickaxe", 2, 3.0F));//5
+		blockData.add(new BlockData("blockCoilEmpty", "pickaxe", 2, 3.0F));//5
 		
 		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
 		

@@ -1,5 +1,5 @@
 {
-    "parent": "big_capacitors:block/ceramic",
+    "parent": "big_capacitors:block/blockCeramic",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

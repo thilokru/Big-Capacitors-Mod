@@ -1,4 +1,4 @@
-tile.capacitorIron.name=Iron Capacitor
+tile.blockCapacitor.name=Iron Capacitor
 tile.blockBarrel.name=Barrel
 tile.blockDestillery.name=Distillery
 tile.blockDestilledWater.name=Distilled Water
@@ -9,22 +9,25 @@ tile.blockFuelCell.name=Fuel Cell
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherite
 tile.blockCeramic.name=Barium Titanate Ceramic
-tile.reactorShield.name=Reactor Shielding
-tile.coil.name=Superconducting Coil
-tile.coilEmpty.name=Empty Coil
-tile.blockTomahawk.name=Fusion Reactor Controller
+tile.blockReactorShield.name=Reactor Shielding
+tile.blockCoil.name=Superconducting Coil
+tile.blockCoilEmpty.name=Empty Coil
+tile.blockTokamak.name=Fusion Reactor Controller
 
-item.multitool.name=Multitool
-item.wire.name=Wire
-item.heater.name=Heater
-item.manual.name=Manual
-item.dustRutil.name=Rutil dust
-item.dustWitherite.name=Witherite dust
+tile.blockLuxRouter.name=Lux Router
+tile.blockEnergyTransfer.name=Energy Transciever
+
+item.itemMultitool.name=Multitool
+item.itemWire.name=Wire
+item.itemHeater.name=Heater
+item.itemManual.name=Manual
+item.itemDustRutil.name=Rutil dust
+item.itemDustWitherite.name=Witherite dust
 item.bucketDestilledWater.name=Distilled Water Bucket
 item.bucketEthanol.name=Alcohol Bucket
 item.bucketWine.name=Wine Bucket
 item.bucketHydrogen.name=Hydrogen Bucket
-item.fusionProcessor.name=Fusion Controlling Processor
+item.itemFusionProcessor.name=Fusion Controlling Processor
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Distilled Water

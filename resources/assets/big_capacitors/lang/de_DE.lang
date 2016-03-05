@@ -1,4 +1,4 @@
-tile.capacitorIron.name=Eisen Kondensator
+tile.blockCapacitor.name=Eisen Kondensator
 tile.blockBarrel.name=Fass
 tile.blockDestillery.name=Destillerie
 tile.blockDestilledWater.name=destilliertes Wasser
@@ -9,22 +9,25 @@ tile.blockFuelCell.name=Brennstoffzelle
 tile.oreRutil.name=Rutil
 tile.oreWitherite.name=Witherit
 tile.blockCeramic.name=Bariumtitanatkeramik
-tile.reactorShield.name=Reaktorenabschirmung
-tile.coil.name=Supraleitende Spule
-tile.coilEmpty.name=Leere Spule
-tile.blockTomahawk.name=Fusionsreaktorsteuerung
+tile.blockReactorShield.name=Reaktorenabschirmung
+tile.blockCoil.name=Supraleitende Spule
+tile.blockCoilEmpty.name=Leere Spule
+tile.blockTokamak.name=Fusionsreaktorsteuerung
 
-item.multitool.name=Multifunktionswerkzeug
-item.wire.name=Kabel
-item.heater.name=Heizpilz
-item.manual.name=Benutzerhandbuch
-item.dustRutil.name=Rutilstaub
-item.dustWitherite.name=Witheritstaub
+tile.blockLuxRouter.name=Lux Router
+tile.blockEnergyTransfer.name=Energietransciever
+
+item.itemMultitool.name=Multifunktionswerkzeug
+item.itemWire.name=Kabel
+item.itemHeater.name=Heizpilz
+item.itemManual.name=Benutzerhandbuch
+item.itemDustRutil.name=Rutilstaub
+item.itemDustWitherite.name=Witheritstaub
 item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer
 item.bucketHydrogen.name=Wasserstoffeimer
-item.fusionProcessor.name=Fusionskontrollierender Prozessor
+item.itemFusionProcessor.name=Fusionskontrollierender Prozessor
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Destilliertes Wasser

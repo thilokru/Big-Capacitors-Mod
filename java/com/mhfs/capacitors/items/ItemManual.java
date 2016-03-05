@@ -17,7 +17,7 @@ public class ItemManual extends Item {
 	
 	public ItemManual(){
 		GameRegistry.registerItem(this, name);
-		setUnlocalizedName(BigCapacitorsMod.modid + "_" + name);
+		setUnlocalizedName(name);
 		setCreativeTab(BigCapacitorsMod.instance.creativeTab);
 	}
 

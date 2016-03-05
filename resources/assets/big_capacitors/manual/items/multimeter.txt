@@ -5,7 +5,6 @@ minecraft:redstone_block
 oredict:ingotCopper
 oredict:ingotCopper
 minecraft:iron_ingot
-big_capacitors:wire
+big_capacitors:itemMany
 
-big_capacitors:multitool
-1
+big_capacitors:itemMultitool

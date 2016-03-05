@@ -7,5 +7,4 @@ minecraft:iron_ingot
 
 
 
-big_capacitors:manual
-1
+big_capacitors:itemManual

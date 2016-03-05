@@ -7,5 +7,4 @@ oredict:ingotCopper
 
 minecraft:stick
 
-big_capacitors:wire
-2
+big_capacitors:itemMany 2

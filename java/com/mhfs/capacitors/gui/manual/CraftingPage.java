@@ -17,7 +17,6 @@ public class CraftingPage implements IPage {
 
 	private String[] in;
 	private String out;
-	private int outAmnt;
 
 	private ItemStack tempToDraw;
 
@@ -26,10 +25,9 @@ public class CraftingPage implements IPage {
 	private final static int TEXTURE_WIDTH = 52;
 	private final static int TEXTURE_FRAME_SIZE = 2;
 
-	public CraftingPage(String[] input, String output, int outputAmount) {
+	public CraftingPage(String[] input, String output) {
 		this.in = input;
 		this.out = output;
-		this.outAmnt = outputAmount;
 	}
 
 	@Override
@@ -50,8 +48,7 @@ public class CraftingPage implements IPage {
 		y += ITEM_SIZE / 2 + TEXTURE_FRAME_SIZE;
 
 		ItemStack outputStack = parseFromString(out);
-		outputStack.stackSize = outAmnt;
-
+		
 		ri.renderItemAndEffectIntoGUI(outputStack, x, y);
 		fr.setUnicodeFlag(false);
 		ri.renderItemOverlays(fr, outputStack, x, y);
@@ -63,16 +60,11 @@ public class CraftingPage implements IPage {
 
 		int xID = 0;
 		int yID = 0;
-		for (String itemName : in) {
-			if (!itemName.equals("")) {
-				ItemStack inputStack = null;
-				if (itemName.startsWith("oredict")) {
-					String name = itemName.split(":")[1];
-					inputStack = OreDictionary.getOres(name).get(0);
-				} else {
-					inputStack = parseFromString(itemName);
-				}
-				doGLStuff();
+		for (String desc : in) {
+			if (!desc.equals("")) {
+				ItemStack inputStack = parseFromString(desc);
+				if(inputStack == null)continue;
+				//doGLStuff();
 				int tmpX = xID * (ITEM_SIZE + TEXTURE_FRAME_SIZE) + x;
 				int tmpY = yID * (ITEM_SIZE + TEXTURE_FRAME_SIZE) + y;
 				ri.renderItemAndEffectIntoGUI(inputStack, tmpX, tmpY);
@@ -89,12 +81,29 @@ public class CraftingPage implements IPage {
 	private ItemStack parseFromString(String input) {
 		String[] args = input.split(" ");
 		ResourceLocation resourcelocation = new ResourceLocation(args[0]);
-		Item item = (Item) Item.itemRegistry.getObject(resourcelocation);
-		int meta = 0;
-		if(args.length >= 2){
-			meta = Integer.parseInt(args[1]);
+		
+		//Determine Item type
+		String itemName = args[0];
+		Item item = null;
+		if (itemName.startsWith("oredict")) {
+			String name = itemName.split(":")[1];
+			item =  OreDictionary.getOres(name).get(0).getItem();
+		} else {
+			item = (Item) Item.itemRegistry.getObject(resourcelocation);
 		}
-		return new ItemStack(item, 1, meta);
+		if(item == null)return null;
+		
+		//Parse meta and count (optional)
+		int count = 1;
+		int meta = 0;
+		if(args.length == 2){
+			count = Integer.parseInt(args[1]);
+		}else if(args.length == 3){
+			meta = Integer.parseInt(args[2]);
+			
+		}
+		
+		return new ItemStack(item, count, meta);
 	}
 
 	private void checkDraw(int x, int y, int mouseX, int mouseY, ItemStack stack) {
@@ -112,8 +121,8 @@ public class CraftingPage implements IPage {
 
 	private void doGLStuff() {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 

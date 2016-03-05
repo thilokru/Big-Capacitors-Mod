@@ -7,5 +7,4 @@ minecraft:iron_block
 
 
 
-big_capacitors:capacitorIron
-4
+big_capacitors:blockCapacitor 4

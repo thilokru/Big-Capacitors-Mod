@@ -128,14 +128,12 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 	private IPage loadCraftingPage(ResourceLocation location) throws IOException {
 		String[] in = new String[9];
 		String out;
-		int outAmount;
 		BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream(location)));
 		for(int i = 0; i < in.length; i++){
 			in[i] = br.readLine();
 		}
 		out = br.readLine();
-		outAmount = Integer.parseInt(br.readLine());
-		return new CraftingPage(in, out, outAmount);
+		return new CraftingPage(in, out);
 	}
 	
 	private IPage loadImagePage(ResourceLocation location) throws IOException {

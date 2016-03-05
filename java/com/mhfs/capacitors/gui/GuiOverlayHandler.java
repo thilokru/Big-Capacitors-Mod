@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GuiOverlayHandler {
 
-	Map<Item, IOverlayHandler> handlers;
+	private Map<Item, IOverlayHandler> handlers;
 
 	public GuiOverlayHandler() {
 		handlers = new HashMap<Item, IOverlayHandler>();

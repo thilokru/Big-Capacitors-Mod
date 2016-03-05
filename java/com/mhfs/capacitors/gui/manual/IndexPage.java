@@ -119,7 +119,6 @@ public class IndexPage implements IPage, IKeyboardHandler {
 		public void drawTextBox() {
 			if (!this.getVisible())
 				return;
-			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glColor4f(1, 1, 1, 1);
 			TextureManager tm = Minecraft.getMinecraft().renderEngine;
 			tm.bindTexture(GuiManual.BOOK_TEXTURES);
@@ -131,7 +130,6 @@ public class IndexPage implements IPage, IKeyboardHandler {
 			fr.drawString(this.getText(), this.xPosition, this.yPosition,
 					Color.BLACK.getRGB());
 			fr.setUnicodeFlag(false);
-			GL11.glEnable(GL11.GL_LIGHTING);
 		}
 
 	}

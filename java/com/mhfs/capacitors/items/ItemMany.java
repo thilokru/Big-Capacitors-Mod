@@ -18,18 +18,22 @@ public class ItemMany extends Item {
 		setHasSubtypes(true);
 	}
 
-	public ItemData[] getData(){
+	public ItemData[] getData() {
 		return data;
 	}
-	
+
 	public String getUnlocalizedName(ItemStack stack) {
 		return "item." + data[stack.getItemDamage()].getName();
+	}
+
+	public boolean hasEffect(ItemStack stack) {
+		return data[stack.getItemDamage()].isSpecial();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		for(int i = 0; i < data.length; i++){
+		for (int i = 0; i < data.length; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
 	}

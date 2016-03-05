@@ -23,6 +23,7 @@ item.itemHeater.name=Heizpilz
 item.itemManual.name=Benutzerhandbuch
 item.itemDustRutil.name=Rutilstaub
 item.itemDustWitherite.name=Witheritstaub
+item.ingotCopper.name=Kupferbarren
 item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer

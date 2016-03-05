@@ -23,6 +23,7 @@ item.itemHeater.name=Heater
 item.itemManual.name=Manual
 item.itemDustRutil.name=Rutil dust
 item.itemDustWitherite.name=Witherite dust
+item.ingotCopper.name=Copper Ingot
 item.bucketDestilledWater.name=Distilled Water Bucket
 item.bucketEthanol.name=Alcohol Bucket
 item.bucketWine.name=Wine Bucket

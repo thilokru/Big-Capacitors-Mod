@@ -84,26 +84,29 @@ public class CraftingPage implements IPage {
 		
 		//Determine Item type
 		String itemName = args[0];
-		Item item = null;
 		if (itemName.startsWith("oredict")) {
 			String name = itemName.split(":")[1];
-			item =  OreDictionary.getOres(name).get(0).getItem();
+			ItemStack stack = OreDictionary.getOres(name).get(0);
+			if(args.length == 2){
+				stack.stackSize = Integer.parseInt(args[1]);
+			}
+			return stack;
 		} else {
-			item = (Item) Item.itemRegistry.getObject(resourcelocation);
-		}
-		if(item == null)return null;
-		
-		//Parse meta and count (optional)
-		int count = 1;
-		int meta = 0;
-		if(args.length == 2){
-			count = Integer.parseInt(args[1]);
-		}else if(args.length == 3){
-			meta = Integer.parseInt(args[2]);
+			Item item = (Item) Item.itemRegistry.getObject(resourcelocation);
+			if(item == null)return null;
 			
+			//Parse meta and count (optional)
+			int count = 1;
+			int meta = 0;
+			if(args.length == 2){
+				count = Integer.parseInt(args[1]);
+			}else if(args.length == 3){
+				meta = Integer.parseInt(args[2]);
+				
+			}
+			
+			return new ItemStack(item, count, meta);
 		}
-		
-		return new ItemStack(item, count, meta);
 	}
 
 	private void checkDraw(int x, int y, int mouseX, int mouseY, ItemStack stack) {

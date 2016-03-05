@@ -40,6 +40,7 @@ public class Items extends net.minecraft.init.Items{
 		data.add(new ItemData("itemDustRutil", false));//2, TiO2
 		data.add(new ItemData("itemDustWitherite", false));//3, BaCO3
 		data.add(new ItemData("itemFusionProcessor", true));//4
+		data.add(new ItemData("ingotCopper", false));//5
 		
 		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));
 		Items.itemMany.setCreativeTab(mod.creativeTab);
@@ -47,6 +48,7 @@ public class Items extends net.minecraft.init.Items{
 		
 		OreDictionary.registerOre("dustTitandioxid", new ItemStack(Items.itemMany, 1, 2));
 		OreDictionary.registerOre("dustBariumCarbonate",  new ItemStack(Items.itemMany, 1, 3));
+		OreDictionary.registerOre("ingotCopper", new ItemStack(Items.itemMany, 1, 5));
 	
 		Items.itemBucketDestilledWater = createBucket(Fluids.fluidDestilledWater, Fluids.blockDestilledWater, "bucketDestilledWater");
 		Items.itemBucketEthanol = createBucket(Fluids.fluidEthanol, Fluids.blockEthanol, "bucketEthanol");

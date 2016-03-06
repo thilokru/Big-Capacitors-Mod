@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,14 +42,15 @@ public class CraftingPage implements IPage {
 		int x = (int) (xPos + width / 2 - TEXTURE_WIDTH / 2);
 		int y = yPos + GuiManual.MARGIN;
 
-		doGLStuff();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glDisable(GL11.GL_LIGHTING);
 		drawCraftingGrid(mc, screen, x, y);
 
 		x = (int) (xPos + width / 2 - ITEM_SIZE / 2);
 		y += ITEM_SIZE / 2 + TEXTURE_FRAME_SIZE;
 
 		ItemStack outputStack = parseFromString(out);
-		
+		RenderHelper.enableGUIStandardItemLighting();
 		ri.renderItemAndEffectIntoGUI(outputStack, x, y);
 		fr.setUnicodeFlag(false);
 		ri.renderItemOverlays(fr, outputStack, x, y);
@@ -64,7 +66,6 @@ public class CraftingPage implements IPage {
 			if (!desc.equals("")) {
 				ItemStack inputStack = parseFromString(desc);
 				if(inputStack == null)continue;
-				//doGLStuff();
 				int tmpX = xID * (ITEM_SIZE + TEXTURE_FRAME_SIZE) + x;
 				int tmpY = yID * (ITEM_SIZE + TEXTURE_FRAME_SIZE) + y;
 				ri.renderItemAndEffectIntoGUI(inputStack, tmpX, tmpY);
@@ -120,13 +121,6 @@ public class CraftingPage implements IPage {
 	private void drawCraftingGrid(Minecraft mc, GuiManualChapter screen, int x, int y) {
 		mc.renderEngine.bindTexture(background);
 		screen.drawTexturedModalRect(x, y, 0, 0, 52, 96);
-	}
-
-	private void doGLStuff() {
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	@Override

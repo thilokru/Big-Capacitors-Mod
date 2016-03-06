@@ -1,0 +1,4 @@
+[submodule "api/CoFH Energy API"]
+	path = api/CoFH Energy API
+	url = https://github.com/CoFH/RedstoneFlux-API.git
+	branch = 1.8

@@ -11,6 +11,9 @@ import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.IRotatable;
 import com.mhfs.capacitors.render.IConnected;
 
+import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -18,7 +21,8 @@ import net.minecraft.util.EnumFacing;
 
 public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements ILuxDrain, IRotatable, IConnected{
 	
-	private boolean isDrain = true;
+	private Mode mode = Mode.TRANSCEIVER;
+	private boolean isTransmitting = false;;
 	
 	public void update() {
 		super.update();
@@ -31,14 +35,19 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 			connection = null;
 			return;
 		}
-		if(isDrain){
+		if(mode.isReceiver()){
 			tile.drainSetup(this.getPosition(), this.getPosition(), 64);
-		}else{
+		}
+		if(mode.isTransmitter()){
 			ILuxHandler link = (ILuxHandler)this.worldObj.getTileEntity(connection);
 			for(BlockPos pos:drains){
 				ILuxDrain drain = (ILuxDrain)this.worldObj.getTileEntity(pos);
-				if(drain == null)continue;
-				link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
+				if(drain == null || drain == this)continue;
+				long energy = getEnergyForTarget(drain.getNeed(), drains.size());
+				if(energy != 0){
+					isTransmitting = true;
+					link.energyFlow(this.getPosition(), pos, energy);
+				}
 			}
 		}
 	}
@@ -46,68 +55,80 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	@Override
 	public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
-		this.isDrain = tag.getBoolean("isDrain");
+		String string = tag.getString("mode");
+		if(string.equals("")){
+			this.mode = Mode.RECEIVER;
+		}else{
+			this.mode = Mode.valueOf(string);
+		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag){
 		super.writeToNBT(tag);
-		tag.setBoolean("isDrain", isDrain);
+		tag.setString("mode", mode.toString());
 	}
 	
-	private long getEnergyForTarget(long maxInput, long need, int drainCount) {
-		INeighbourEnergyHandler handler = getConnectedTile();
+	private long getEnergyForTarget(long need, int drainCount) {
+		IEnergyHandler handler = getConnectedTile();
 		if(handler == null)return 0;
-		long amount = Math.min(maxInput, Math.min(need, handler.getEnergyStored()/drainCount));
-		handler.drain(amount);
+		if(!(handler instanceof IEnergyProvider))return 0;
+		IEnergyProvider provider = (IEnergyProvider)handler;
+		int amount = Math.min((int)need, provider.extractEnergy(getRotation().getOpposite(), Integer.MAX_VALUE, true)/drainCount);
+		provider.extractEnergy(getRotation().getOpposite(), amount, false);
 		return amount;
 	}
 
-	public boolean isDrain(){
-		return isDrain;
+	public Mode getMode(){
+		return mode;
 	}
 	
 	public void switchMode(){
-		isDrain = !isDrain;
-		if(this.connection == null)return;
+		mode = mode.getNext();
+		if(this.connection == null){
+			this.markForUpdate();
+			return;
+		}
 		IRouting handler = (IRouting)this.worldObj.getTileEntity(connection);
 		if(handler == null)return;
 		handler.handleDisconnect(this.getPosition(), 64);
 		handler.connect(this.getPosition());
 	}
 	
-	public INeighbourEnergyHandler getConnectedTile(){
+	public IEnergyHandler getConnectedTile(){
 		if(this.blockType == null)return null;
-		EnumFacing direction = ((IOrientedBlock)this.blockType).getOrientation(worldObj, this.pos);
+		EnumFacing direction = getRotation();
 		BlockPos tilePos = this.getPosition().offset(direction);
 		TileEntity entity = this.worldObj.getTileEntity(tilePos);
-		if(entity instanceof INeighbourEnergyHandler){
-			INeighbourEnergyHandler handler = (INeighbourEnergyHandler)entity;
-			return handler;
+		if(entity instanceof IEnergyHandler){
+			IEnergyHandler handler = (IEnergyHandler)entity;
+			if(handler.canConnectEnergy(direction.getOpposite())){
+				return handler;
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
-		if(isDrain){
-			INeighbourEnergyHandler handler = getConnectedTile();
+		if(mode.isReceiver()){
+			IEnergyHandler handler = getConnectedTile();
 			if(handler == null)return;
-			handler.fill(amount);
+			if(handler instanceof IEnergyReceiver){
+				IEnergyReceiver receiver = (IEnergyReceiver)handler;
+				receiver.receiveEnergy(getRotation().getOpposite(), (int) amount, false);
+			}
 		}
 	}
 
 	@Override
 	public long getNeed() {
-		INeighbourEnergyHandler handler = getConnectedTile();
+		IEnergyHandler handler = getConnectedTile();
 		if(handler == null)return 0;
-		return handler.getNeed();
-	}
-
-	@Override
-	public long getMaxInput() {
-		INeighbourEnergyHandler handler = getConnectedTile();
-		if(handler == null)return 0;
-		return handler.getMaxTransfer();
+		if(handler instanceof IEnergyReceiver){
+			IEnergyReceiver receiver = (IEnergyReceiver)handler;
+			return receiver.receiveEnergy(getRotation().getOpposite(), Integer.MAX_VALUE, true);
+		}
+		return 0;
 	}
 
 	@Override
@@ -120,6 +141,57 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		Set<BlockPos> set = new HashSet<BlockPos>();
 		set.add(this.connection);
 		return set;
+	}
+
+	@Override
+	public Set<BlockPos> getActiveConnections() {
+		if(isTransmitting){
+			Set<BlockPos> set = new HashSet<BlockPos>();
+			set.add(this.connection);
+			return set;
+		}
+		return null;
+	}
+
+	@Override
+	public void resetConnectionState() {
+		this.isTransmitting = false;
+	}
+	
+	public static enum Mode{
+		RECEIVER(true, false) {
+			@Override
+			public Mode getNext() {
+				return TRANSMITTER;
+			}
+		}, TRANSMITTER(false, true) {
+			@Override
+			public Mode getNext() {
+				return TRANSCEIVER;
+			}
+		}, TRANSCEIVER(true, true) {
+			@Override
+			public Mode getNext() {
+				return RECEIVER;
+			}
+		};
+		
+		private boolean receiver, transmitter;
+		
+		Mode(boolean receiver, boolean transmitter){
+			this.receiver = receiver;
+			this.transmitter = transmitter;
+		}
+		
+		public abstract Mode getNext();
+
+		public boolean isReceiver(){
+			return receiver;
+		}
+		
+		public boolean isTransmitter(){
+			return transmitter;
+		}
 	}
 
 }

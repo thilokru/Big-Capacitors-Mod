@@ -1,6 +1,9 @@
 package com.mhfs.capacitors.blocks;
 
+import java.util.Random;
+
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.render.RendererLux;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -59,6 +62,11 @@ public class BlockEnergyTransfer extends BlockContainer implements IOrientedBloc
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(ORIENTATION, facing.getOpposite());
+	}
+	
+	@Override
+	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		RendererLux.createParticles(world, pos);
 	}
 
 	@Override

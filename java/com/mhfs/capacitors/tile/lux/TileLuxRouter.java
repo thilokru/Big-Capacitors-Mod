@@ -37,7 +37,7 @@ public class TileLuxRouter extends AbstractRoutingTile implements ILuxHandler, I
 		toRender.clear();
 	}
 
-	public Set<BlockPos> getPoweredConnections() {
+	public Set<BlockPos> getActiveConnections() {
 		return this.toRender;
 	}
 
@@ -45,7 +45,7 @@ public class TileLuxRouter extends AbstractRoutingTile implements ILuxHandler, I
 		return this.connections;
 	}
 
-	public void resetPoweredState() {
+	public void resetConnectionState() {
 		this.toRender.clear();
 	}
 

@@ -11,11 +11,11 @@ public abstract class AbstractTileSource extends AbstractMonoconnectedRoutingTil
 		for(BlockPos pos:drains){
 			ILuxDrain drain = (ILuxDrain)this.worldObj.getTileEntity(pos);
 			if(drain == null)continue;
-			link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getMaxInput(), drain.getNeed(), drains.size()));
+			link.energyFlow(this.getPosition(), pos, getEnergyForTarget(drain.getNeed(), drains.size()));
 		}
 	}
 	
-	protected abstract long getEnergyForTarget(long maxInput, long need, int drainCount);
+	protected abstract long getEnergyForTarget(long need, int drainCount);
 
 	@Override
 	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {

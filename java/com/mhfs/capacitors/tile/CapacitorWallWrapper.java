@@ -11,8 +11,6 @@ import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.HashSetHelper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
-import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +22,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import static net.minecraft.util.EnumFacing.*;
 
-public class CapacitorWallWrapper implements INeighbourEnergyHandler {
+public class CapacitorWallWrapper {
 
 	private static final int MAX_DISTANCE = 10;
 	private Set<BlockPos> containedBlocks;
@@ -314,12 +312,10 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		updateEnergy(world);
 	}
 
-	@Override
 	public long getEnergyStored() {
 		return charge;
 	}
 
-	@Override
 	public long getMaxEnergyStored() {
 		return maxCharge;
 	}
@@ -346,18 +342,7 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		this.containedBlocks = wrapper.containedBlocks;
 	}
 
-	@Override
-	public long getNeed() {
-		return maxCharge - charge;
-	}
-
-	@Override
-	public long getMaxTransfer() {
-		return Long.MAX_VALUE;
-	}
-
-	@Override
-	public long drain(long amount) {
+	public int drain(int amount, boolean simulate) {
 		long pot = Math.min(charge, amount);
 		int extract;
 		if (pot > Integer.MAX_VALUE) {
@@ -365,12 +350,13 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		} else {
 			extract = (int) pot;
 		}
-		charge -= extract;
+		if(!simulate){
+			charge -= extract;
+		}
 		return extract;
 	}
 
-	@Override
-	public long fill(long amount) {
+	public int fill(int amount, boolean simulate) {
 		long pot = Math.min(maxCharge - charge, amount);
 		int receive;
 		if (pot > Integer.MAX_VALUE) {
@@ -378,7 +364,9 @@ public class CapacitorWallWrapper implements INeighbourEnergyHandler {
 		} else {
 			receive = (int) pot;
 		}
-		charge += receive;
+		if(!simulate){
+			charge += receive;
+		}
 		return receive;
 	}
 }

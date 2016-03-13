@@ -3,8 +3,7 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.misc.IRotatable;
-import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
-
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -18,12 +17,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbourEnergyHandler, IRotatable, ITickable{
+public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyReceiver, IRotatable, ITickable{
 	
-	private long energy;
+	private int energy;
 	private FluidTank hydrogen, oxygen, water;
 	
-	public final static long MAX_ENERGY = 120000, MAX_TRANSFER = 800;
+	public final static int MAX_ENERGY = 120000, MAX_TRANSFER = 800;
 	
 	public TileFuelCell(){
 		hydrogen = new FluidTank(2000);
@@ -49,7 +48,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 
 		this.water.readFromNBT(tag.getCompoundTag("water"));
 		this.hydrogen.readFromNBT(tag.getCompoundTag("hydrogen"));
-		this.energy = tag.getLong("energy");
+		this.energy = tag.getInteger("energy");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -140,39 +139,29 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, INeighbou
 		return hydrogen;
 	}
 
-	@Override
-	public long getNeed() {
-		return Math.min(MAX_TRANSFER, MAX_ENERGY - energy);
-	}
 
 	@Override
-	public long getMaxTransfer() {
-		return MAX_TRANSFER;
-	}
-
-	@Override
-	public long getEnergyStored() {
+	public int getEnergyStored(EnumFacing from) {
 		return energy;
 	}
 
 	@Override
-	public long getMaxEnergyStored() {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return MAX_ENERGY;
 	}
 
 	@Override
-	public long drain(long amount) {
-		return 0;
+	public boolean canConnectEnergy(EnumFacing from) {
+		return from == EnumFacing.DOWN;
 	}
 
 	@Override
-	public long fill(long amount) {
-		long accepted = Math.min(getNeed(), amount);
-		energy += accepted;
-		if(energy > MAX_ENERGY){
-			energy = MAX_ENERGY;
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		int amount = Math.min(MAX_TRANSFER, Math.min(MAX_ENERGY - energy, maxReceive));
+		if(!simulate){
+			energy += amount;
 		}
-		return accepted;
+		return amount;
 	}
 
 }

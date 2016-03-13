@@ -2,8 +2,9 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.misc.IRotatable;
-import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
 
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -11,12 +12,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
-public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler, IRotatable, ITickable {
+public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
 
 	private CapacitorWallWrapper wrapper;
 	private boolean isLoading, isFirstTick = true;
-	
-	public TileCapacitor(){
+
+	public TileCapacitor() {
 		this(true);
 	}
 
@@ -30,14 +31,15 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 		if (wrapper == null) {
 			createEntity();
 		}
-		
-		if (worldObj.isRemote)return;
-		
-		if(this.isFirstTick){
+
+		if (worldObj.isRemote)
+			return;
+
+		if (this.isFirstTick) {
 			this.isFirstTick = false;
 			wrapper.checkJoin(worldObj, true);
 		}
-		
+
 		wrapper.setupCapacity(worldObj);
 		wrapper.updateEnergy(worldObj);
 	}
@@ -90,42 +92,43 @@ public class TileCapacitor extends TileEntity implements INeighbourEnergyHandler
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if(wrapper != null){
+		if (wrapper != null) {
 			tag.setTag("multi", wrapper.getNBTRepresentation());
 		}
 	}
 
 	@Override
-	public long getNeed() {
-		return wrapper.getNeed();
+	public boolean canConnectEnergy(EnumFacing from) {
+		return from == getRotation().getOpposite();
 	}
 
 	@Override
-	public long getMaxTransfer() {
-		return wrapper.getMaxTransfer();
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		if (canConnectEnergy(from)) {
+			int ret = wrapper.fill(maxReceive, simulate);
+			if(!simulate)wrapper.updateEnergy(worldObj);
+			return ret;
+		}
+		return 0;
+	}
+	
+	@Override
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
+		if (canConnectEnergy(from)) {
+			int ret = wrapper.drain(maxExtract, simulate);
+			if(!simulate)wrapper.updateEnergy(worldObj);
+			return ret;
+		}
+		return 0;
 	}
 
 	@Override
-	public long getEnergyStored() {
-		return wrapper.getEnergyStored();
+	public int getEnergyStored(EnumFacing from) {
+		return (int)wrapper.getEnergyStored();
 	}
 
 	@Override
-	public long getMaxEnergyStored() {
-		return wrapper.getMaxEnergyStored();
-	}
-
-	@Override
-	public long drain(long amount) {
-		long ret = wrapper.drain(amount);
-		wrapper.updateEnergy(worldObj);
-		return ret;
-	}
-
-	@Override
-	public long fill(long amount) {
-		long ret = wrapper.fill(amount);
-		wrapper.updateEnergy(worldObj);
-		return ret;
+	public int getMaxEnergyStored(EnumFacing from) {
+		return (int)wrapper.getMaxEnergyStored();
 	}
 }

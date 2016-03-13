@@ -7,6 +7,12 @@ All rights reserved
 
 Also, don't be a jerk.
 
+BUILDING:
+This project contains submodules. Therefore you need to load them.
+You need to execute these commands:
+git submodule init
+git submodule update
+
 
 Das ganze nochmal in Deutsch:
 

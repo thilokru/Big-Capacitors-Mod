@@ -59,7 +59,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
-		String text = entity.isDrain()?"Drain":"Emitter";
+		String text = entity.getMode().toString();
 		gui.drawString(fr, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 	}
 
@@ -70,7 +70,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		renderFluidStack(entity.getInputTank(), xPos - 20, yPos + 5);
 
-		float filled = (float) entity.getEnergyStored() / (float) entity.getMaxEnergyStored();
+		float filled = (float) entity.getEnergyStored(null) / (float) entity.getMaxEnergyStored(null);
 		renderEnergy(xPos - 3, yPos + 5, filled);
 		
 		String text = "H";

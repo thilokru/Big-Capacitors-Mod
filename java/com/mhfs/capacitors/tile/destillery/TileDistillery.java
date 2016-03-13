@@ -2,8 +2,7 @@ package com.mhfs.capacitors.tile.destillery;
 
 import com.mhfs.capacitors.blocks.IOrientedBlock;
 import com.mhfs.capacitors.misc.IRotatable;
-import com.mhfs.capacitors.tile.lux.INeighbourEnergyHandler;
-
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -20,14 +19,14 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-public class TileDistillery extends TileEntity implements IFluidHandler, IRotatable, INeighbourEnergyHandler, ITickable {
+public class TileDistillery extends TileEntity implements IFluidHandler, IRotatable, IEnergyReceiver, ITickable {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
 	public final static int TANK_CAPCITY = 2000;
 
 	private FluidTank input, output;
-	private long energy;
+	private int energy;
 
 	public TileDistillery() {
 		super();
@@ -165,7 +164,7 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 		outputTank.readFromNBT(tag.getCompoundTag("output"));
 		this.output = outputTank;
 
-		this.energy = tag.getLong("energy");
+		this.energy = tag.getInteger("energy");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -199,11 +198,6 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	public IFluidTank getOutputTank() {
 		return output;
 	}
-
-	@Override
-	public long getNeed() {
-		return Math.min(MAX_RF_PER_TICK, RF_CAPACITY - this.energy);
-	}
 	
 	public long getEnergyStored(){
 		return this.energy;
@@ -214,19 +208,26 @@ public class TileDistillery extends TileEntity implements IFluidHandler, IRotata
 	}
 
 	@Override
-	public long getMaxTransfer() {
-		return MAX_RF_PER_TICK;
+	public int getEnergyStored(EnumFacing from) {
+		return energy;
 	}
 
 	@Override
-	public long drain(long amount) {
-		return 0;
+	public int getMaxEnergyStored(EnumFacing from) {
+		return RF_CAPACITY;
 	}
 
 	@Override
-	public long fill(long amount) {
-		this.energy += amount;
-		if(this.energy > RF_CAPACITY)this.energy = RF_CAPACITY;
+	public boolean canConnectEnergy(EnumFacing from) {
+		return from == EnumFacing.DOWN;
+	}
+
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		int amount = Math.min(MAX_RF_PER_TICK, Math.min(RF_CAPACITY - energy, maxReceive));
+		if(!simulate){
+			energy += amount;
+		}
 		return amount;
 	}
 }

@@ -80,7 +80,7 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		TileEntity te = new TileCapacitor(false);
+		TileEntity te = new TileCapacitor();
 		te.setWorldObj(world);
 		return te;
 	}

@@ -2,7 +2,6 @@ package com.mhfs.capacitors.tile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import static net.minecraft.util.EnumFacing.*;
 
 public class CapacitorWallWrapper {
 
@@ -40,7 +38,9 @@ public class CapacitorWallWrapper {
 				continue;
 			TileCapacitor cap = (TileCapacitor) world.getTileEntity(pos);
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
-			if (ent != null && ent != this) {
+			if (ent == null) {
+				cap.onEntityChange(this);
+			}else if(ent != this){
 				ent.checkJoin(world, false);
 				return;
 			}
@@ -104,23 +104,17 @@ public class CapacitorWallWrapper {
 	}
 
 	public void leave(BlockPos destroied, World world, EntityPlayer player) {
-		containedBlocks.remove(destroied);
-		if (containedBlocks.size() == 0) {
-			return;
+		for(BlockPos pos:containedBlocks){
+			TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
+			if (tile != null) {
+				tile.onEntityChange(null);
+			}				
 		}
-		if (checkSplit(destroied, world, player)) {
-			Set<BlockPos> setCopy = new HashSet<BlockPos>();
-			setCopy.addAll(containedBlocks);
-			for (BlockPos pos : setCopy) {
-				TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
-				if (tile == null) {
-					this.containedBlocks.remove(pos);
-				} else
-					tile.onEntityChange(null);
+		if(player != null){
+			if(!this.isGrounded()){
+				player.attackEntityFrom(BigCapacitorsMod.instance.damageElectric, charge / 10000);
 			}
 		}
-		setupCapacity(world);
-		updateEnergy(world);
 	}
 
 	public boolean setupCapacity(World world) {
@@ -213,46 +207,6 @@ public class CapacitorWallWrapper {
 		return capacity != oldCapacity;
 	}
 
-	/**
-	 * @param destroied
-	 * @param world
-	 * @param player
-	 * @param player
-	 * @return whether the Entity was destroied.
-	 */
-	private boolean checkSplit(BlockPos destroied, World world, EntityPlayer player) {
-		List<EnumFacing> toCheck = new ArrayList<EnumFacing>();
-		if (orientation == UP || orientation == DOWN) {
-			toCheck.add(NORTH);
-			toCheck.add(SOUTH);
-			toCheck.add(EAST);
-			toCheck.add(WEST);
-		} else {
-			toCheck.add(UP);
-			toCheck.add(DOWN);
-			toCheck.add(DOWN.rotateAround(orientation.getAxis()));
-			toCheck.add(UP.rotateAround(orientation.getAxis()));
-		}
-
-		List<EnumFacing> remove = new ArrayList<EnumFacing>();
-
-		for (EnumFacing dir : toCheck) {
-			TileEntity ent = world.getTileEntity(destroied.offset(dir));
-			if (ent == null || !(ent instanceof TileCapacitor)) {
-				remove.add(dir);
-			}
-		}
-		toCheck.remove(remove);
-		if (toCheck.size() <= 1)
-			return false;
-
-		BlockPos test = destroied.offset(toCheck.get(1));
-		if (containedBlocks.containsAll(searchWallFrom(new HashSet<BlockPos>(), test, world)))
-			return false;
-
-		return true;
-	}
-
 	public NBTTagCompound getNBTRepresentation() {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setLong("charge", charge);
@@ -260,12 +214,7 @@ public class CapacitorWallWrapper {
 		if (orientation != null)
 			tag.setInteger("orientation", orientation.ordinal());
 		tag.setTag("blocks", HashSetHelper.blockPosSetToNBT(containedBlocks));
-		
-		/**Set<BlockPos> refs = new HashSet<BlockPos>();
-		for(CapacitorWallWrapper wrapper : linkedWalls){
-			refs.add(wrapper.getRandomBlock());
-		}
-		tag.setTag("linked", HashSetHelper.blockPosSetToNBT(refs));**/
+
 		return tag;
 	}
 
@@ -278,15 +227,8 @@ public class CapacitorWallWrapper {
 		}
 		cap.containedBlocks = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("blocks"));
 		
-		/**Set<BlockPos> refs = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("linked"));
-		cap.linkedWalls = new HashSet<CapacitorWallWrapper>();
-		for(BlockPos pos:refs)**/
 		return cap;
 	}
-	
-	/**private BlockPos getRandomBlock() {
-		return containedBlocks.iterator().next();
-	}**/
 
 	public void updateBlocks(World world) {
 		for (BlockPos pos : containedBlocks) {
@@ -340,6 +282,10 @@ public class CapacitorWallWrapper {
 		this.maxCharge = wrapper.maxCharge;
 		this.orientation = wrapper.orientation;
 		this.containedBlocks = wrapper.containedBlocks;
+	}
+	
+	public boolean isMember(BlockPos pos){
+		return containedBlocks.contains(pos);
 	}
 
 	public int drain(int amount, boolean simulate) {

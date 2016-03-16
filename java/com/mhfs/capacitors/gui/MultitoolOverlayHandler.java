@@ -216,6 +216,17 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			String text = "Energy: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}
+		
+		if(Minecraft.getMinecraft().gameSettings.showDebugInfo){
+			String text = "Hash: " + storage.hashCode() + " Tile:" + tile.hashCode();
+			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 15, Color.WHITE.getRGB());
+			
+			text = "Charge: " + storage.getEnergyStored() + " Cap:" + storage.getMaxEnergyStored();
+			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 25, Color.WHITE.getRGB());
+			
+			text = "Grounded: " + storage.isGrounded();
+			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 35, Color.WHITE.getRGB());
+		}
 	}
 
 	protected void bindTexture(ResourceLocation loc) {

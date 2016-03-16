@@ -8,47 +8,33 @@ import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
 public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
 
 	private CapacitorWallWrapper wrapper;
-	private boolean isLoading, isFirstTick = true;
-
-	public TileCapacitor() {
-		this(true);
-	}
-
-	public TileCapacitor(boolean isLoading) {
-		super();
-		this.isLoading = isLoading;
-	}
+	private boolean isFirstTick = true;
 
 	@Override
 	public void update() {
-		if (wrapper == null) {
+		if (wrapper == null || !wrapper.isMember(this.pos)) {
 			createEntity();
 		}
-
+		if(isFirstTick){
+			wrapper.checkJoin(worldObj, isFirstTick);
+		}
 		if (worldObj.isRemote)
 			return;
 
-		if (this.isFirstTick) {
-			this.isFirstTick = false;
-			wrapper.checkJoin(worldObj, true);
-		}
-
 		wrapper.setupCapacity(worldObj);
 		wrapper.updateEnergy(worldObj);
+		isFirstTick = false;
 	}
 
 	private void createEntity() {
-		CapacitorWallWrapper instance = new CapacitorWallWrapper(worldObj, this.pos);
-		if (wrapper == null) {
-			wrapper = instance;
-		}
+		wrapper = new CapacitorWallWrapper(worldObj, this.pos);
+		wrapper.checkJoin(worldObj, this.isFirstTick);
 		this.markDirty();
 		worldObj.markBlockForUpdate(this.pos);
 	}
@@ -60,9 +46,9 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 	public void onBreak(BreakEvent event) {
 		if (wrapper != null) {
 			if (event != null) {
-				wrapper.leave(new BlockPos(this.pos), worldObj, event.getPlayer());
+				wrapper.leave(this.pos, worldObj, event.getPlayer());
 			} else {
-				wrapper.leave(new BlockPos(this.pos), worldObj, null);
+				wrapper.leave(this.pos, worldObj, null);
 			}
 		}
 	}
@@ -85,8 +71,10 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if (this.isLoading && tag.hasKey("multi")) {
+		if (tag.hasKey("multi") && wrapper == null) {
 			wrapper = CapacitorWallWrapper.fromNBT(tag.getCompoundTag("multi"));
+		} else {
+			wrapper = null;
 		}
 	}
 
@@ -104,9 +92,12 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if (canConnectEnergy(from)) {
+		if (canConnectEnergy(from) && wrapper != null) {
 			int ret = wrapper.fill(maxReceive, simulate);
-			if(!simulate)wrapper.updateEnergy(worldObj);
+			if(!simulate){
+				wrapper.updateEnergy(worldObj);
+				wrapper.updateBlocks(worldObj);
+			}
 			return ret;
 		}
 		return 0;
@@ -114,9 +105,12 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 	
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		if (canConnectEnergy(from)) {
+		if (canConnectEnergy(from) && wrapper != null) {
 			int ret = wrapper.drain(maxExtract, simulate);
-			if(!simulate)wrapper.updateEnergy(worldObj);
+			if(!simulate){
+				wrapper.updateEnergy(worldObj);
+				wrapper.updateBlocks(worldObj);
+			}
 			return ret;
 		}
 		return 0;

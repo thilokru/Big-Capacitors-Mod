@@ -16,9 +16,9 @@ public class ItemManual extends Item {
 	public final static String name = "itemManual";
 	
 	public ItemManual(){
-		GameRegistry.registerItem(this, name);
 		setUnlocalizedName(name);
 		setCreativeTab(BigCapacitorsMod.instance.creativeTab);
+		GameRegistry.registerItem(this, name);
 	}
 
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {

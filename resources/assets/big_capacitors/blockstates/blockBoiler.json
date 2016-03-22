@@ -1,0 +1,10 @@
+{
+	"forge_marker": 1,
+	"defaults":{
+		 "model": "big_capacitors:blockBoiler"
+	},
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}]
+    }
+}

@@ -39,6 +39,8 @@ public class ItemRenderHelper {
 		registerMesher(Blocks.blockLuxRouter);
 		registerMesher(Blocks.blockEnergyTransfer);
 		registerMesher(Blocks.blockTokamak);
+		registerMesher(Blocks.blockBoiler);
+		registerMesher(Blocks.blockDestillationTower);
 
 		registerMesher(Items.itemManual);
 		registerMesher(Items.itemMultitool);

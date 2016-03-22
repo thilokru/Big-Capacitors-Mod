@@ -35,7 +35,9 @@ import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
+import com.mhfs.capacitors.tile.destillery.TileBoiler;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
+import com.mhfs.capacitors.tile.destillery.TileTower;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -147,6 +149,8 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileFuelCell.class, "tileFuelCell");
 		GameRegistry.registerTileEntity(TileLuxRouter.class, "tileLuxRouter");
 		GameRegistry.registerTileEntity(TileEnergyTransciever.class, "tileEnergyTransciever");
+		GameRegistry.registerTileEntity(TileBoiler.class, "tileBoiler");
+		GameRegistry.registerTileEntity(TileTower.class, "tileDestillationTower");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

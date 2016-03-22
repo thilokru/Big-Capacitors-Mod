@@ -1,0 +1,7 @@
+{
+     "parent": "big_capacitors:block/pillarSlim",
+     "textures": {
+        "side": "minecraft:blocks/iron_block",
+     	"end": "minecraft:blocks/iron_block"
+     }
+}

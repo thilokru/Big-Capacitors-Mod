@@ -3,8 +3,10 @@ package com.mhfs.capacitors;
 import java.util.ArrayList;
 
 import com.mhfs.capacitors.blocks.BlockBarrel;
+import com.mhfs.capacitors.blocks.BlockBoiler;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockData;
+import com.mhfs.capacitors.blocks.BlockDestillationTower;
 import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
@@ -25,6 +27,8 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockFuelCell blockFuelCell;
 	public static BlockLuxRouter blockLuxRouter;
 	public static BlockEnergyTransfer blockEnergyTransfer;
+	public static BlockBoiler blockBoiler;
+	public static BlockDestillationTower blockDestillationTower;
 	
 	public static void setup(BigCapacitorsMod mod){
 		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
@@ -54,6 +58,14 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockEnergyTransfer = new BlockEnergyTransfer(Material.rock);
 		Blocks.blockEnergyTransfer.setHardness(0.25F);
 		Blocks.blockEnergyTransfer.setHarvestLevel("pickaxe", 2);
+		
+		Blocks.blockBoiler = new BlockBoiler(Material.rock);
+		Blocks.blockBoiler.setHardness(1.5F);
+		Blocks.blockBoiler.setHarvestLevel("pickaxe", 2);
+		
+		Blocks.blockDestillationTower = new BlockDestillationTower(Material.rock);
+		Blocks.blockDestillationTower.setHardness(1.5F);
+		Blocks.blockDestillationTower.setHarvestLevel("pickaxe", 2);
 		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
 		blockData.add(new BlockData("blockReactorShield", "pickaxe", 2, 3.0F));//0

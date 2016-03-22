@@ -36,7 +36,6 @@ import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
-import com.mhfs.capacitors.tile.destillery.TileDistillery;
 import com.mhfs.capacitors.tile.destillery.TileTower;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
@@ -87,9 +86,6 @@ public class CommonProxy {
 		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(Items.itemMany, 1, 1), true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.wool), 'C',  new ItemStack(Items.itemMany, 1, 0)));
-		
-		Item destilleryItem = Item.getItemFromBlock(Blocks.blockDestillery);
-		GameRegistry.addRecipe(new ShapedOreRecipe(destilleryItem, true, "II ", "B B", "H  ", 'I', "ingotIron", 'B', Items.bucket, 'H',  new ItemStack(Items.itemMany, 1, 1)));
 		
 		Item barrelItem = Item.getItemFromBlock(Blocks.blockBarrel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
@@ -143,7 +139,6 @@ public class CommonProxy {
 		mod.fusionReactorMulti = new Multiblock(rl, manager);
 		
 		GameRegistry.registerTileEntity(TileCapacitor.class, "tileCapacitor");
-		GameRegistry.registerTileEntity(TileDistillery.class, "tileDistillery");
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
 		GameRegistry.registerTileEntity(TileTomahawk.class, "tileTomahawk");
 		GameRegistry.registerTileEntity(TileFuelCell.class, "tileFuelCell");

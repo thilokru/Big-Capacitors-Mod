@@ -7,7 +7,6 @@ import com.mhfs.capacitors.blocks.BlockBoiler;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.blocks.BlockDestillationTower;
-import com.mhfs.capacitors.blocks.BlockDestillery;
 import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.blocks.BlockLuxRouter;
@@ -20,7 +19,6 @@ import net.minecraftforge.oredict.OreDictionary;
 public class Blocks extends net.minecraft.init.Blocks{
 
 	public static BlockCapacitor capacitorIron;
-	public static BlockDestillery blockDestillery;
 	public static BlockBarrel blockBarrel;
 	public static BlockMany blockMany;
 	public static BlockTokamak blockTokamak;
@@ -34,10 +32,6 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
 		Blocks.capacitorIron.setHardness(1.5F);
 		Blocks.capacitorIron.setHarvestLevel("pickaxe", 2);
-		
-		Blocks.blockDestillery = new BlockDestillery(Material.rock);
-		Blocks.blockDestillery.setHardness(1.5F);
-		Blocks.blockDestillery.setHarvestLevel("pickaxe", 2);
 		
 		Blocks.blockBarrel = new BlockBarrel(Material.wood);
 		Blocks.blockBarrel.setHardness(1F);

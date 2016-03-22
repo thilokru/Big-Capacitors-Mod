@@ -11,7 +11,6 @@ import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
-import com.mhfs.capacitors.tile.destillery.TileDistillery;
 import com.mhfs.capacitors.tile.destillery.TileTower;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
@@ -42,8 +41,6 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			return;
 		if (entity instanceof TileCapacitor) {
 			renderCapacitorOverlay(event, entity);
-		} else if (entity instanceof TileDistillery) {
-			renderDestilleryOverlay(event, entity);
 		} else if (entity instanceof TileBoiler) {
 			renderBoilerOverlay(event, (TileBoiler) entity);
 		} else if (entity instanceof TileTower) {
@@ -108,21 +105,6 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		this.renderItemStack(barrel.getStackInSlot(0), xPos - 18, yPos + 2);
 		this.renderFluidStack(barrel.getWineTank(), xPos + 2, yPos + 5);
-	}
-
-	private void renderDestilleryOverlay(RenderGameOverlayEvent event, TileEntity entity) {
-		TileDistillery tile = (TileDistillery) entity;
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
-		if (tile == null)
-			return;
-
-		renderFluidStack(tile.getInputTank(), xPos - 20, yPos + 5);
-
-		float filled = (float) tile.getEnergyStored() / (float) tile.getMaxEnergyStored();
-		renderEnergy(xPos - 3, yPos + 5, filled);
-
-		renderFluidStack(tile.getOutputTank(), xPos + 2, yPos + 5);
 	}
 
 	private void renderBoilerOverlay(RenderGameOverlayEvent event, TileBoiler entity) {

@@ -1,7 +1,9 @@
 package com.mhfs.capacitors.tile.destillery;
 
 import com.mhfs.capacitors.Blocks;
+import com.mhfs.capacitors.misc.Helper;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -88,11 +90,18 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	}
 
 	public boolean isTopMost() {
-		return !worldObj.getBlockState(getPos().offset(EnumFacing.UP)).getBlock().equals(Blocks.blockDestillationTower);
+		return worldObj.getBlockState(getPos().offset(EnumFacing.DOWN, 2)).getBlock().equals(Blocks.blockBoiler);
 	}
 	
 	public IFluidTank getTank(){
 		return tank;
+	}
+
+	public void onBlockActivated(EntityPlayer player) {
+		if(Helper.checkBucketDrain(player, tank)){
+			this.markDirty();
+			worldObj.markBlockForUpdate(pos);
+		}
 	}
 
 }

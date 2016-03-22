@@ -33,7 +33,6 @@ public class ItemRenderHelper {
 		registerFluidBlock(Fluids.blockWine, "wine");
 		
 		registerMesher(Blocks.capacitorIron);
-		registerMesher(Blocks.blockDestillery);
 		registerMesher(Blocks.blockBarrel);
 		registerMesher(Blocks.blockFuelCell);
 		registerMesher(Blocks.blockLuxRouter);

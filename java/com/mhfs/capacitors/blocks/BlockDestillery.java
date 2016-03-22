@@ -13,16 +13,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDestillery extends BlockContainer implements IChapterRelated, IOrientedBlock {
-	
+
 	public static final PropertyDirection ORIENTATION = PropertyDirection.create("orientation", EnumFacing.Plane.HORIZONTAL);
-	
+
 	public final static String name = "blockDestillery";
-	
+
 	public BlockDestillery(Material mat) {
 		super(mat);
 		GameRegistry.registerBlock(this, name);
@@ -54,7 +55,7 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 	}
 
 	@Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return getDefaultState().withProperty(ORIENTATION, getPlacementOrientation(hitX, hitZ));
 	}
 
@@ -98,7 +99,11 @@ public class BlockDestillery extends BlockContainer implements IChapterRelated, 
 	public int getRenderType() {
 		return 3;
 	}
-	
+
+	public EnumWorldBlockLayer getBlockLayer() {
+		return EnumWorldBlockLayer.SOLID;
+	}
+
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(ORIENTATION, EnumFacing.getFront(meta));

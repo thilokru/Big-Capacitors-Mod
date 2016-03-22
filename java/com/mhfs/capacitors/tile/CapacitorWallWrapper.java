@@ -85,6 +85,7 @@ public class CapacitorWallWrapper {
 
 		for (BlockPos pos : containedBlocks) {
 			TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
+			if(tile == null)continue;
 			if (tile.getEntityCapacitor() != null) {
 				if (!controled.contains(tile.getEntityCapacitor())) {
 					if(isFirstTick){

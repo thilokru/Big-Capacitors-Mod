@@ -1,9 +1,12 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-        "model": "big_capacitors:Destillery.obj",
+        "model": "big_capacitors:blockDestillery",
     	"textures": {
-        	"#None": "big_capacitors:models/destillery"
+        	"glass": "big_capacitors:models/fuel_cellv2",
+        	"metal": "big_capacitors:models/fuel_cellv2",
+        	"wool": "minecraft:blocks/wool_colored_white",
+        	"particle": "big_capacitors:models/fuel_cellv2"
     	},
     	"uvlock": true
     },

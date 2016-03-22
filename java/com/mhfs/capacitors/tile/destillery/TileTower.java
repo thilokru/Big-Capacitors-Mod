@@ -1,5 +1,7 @@
 package com.mhfs.capacitors.tile.destillery;
 
+import com.mhfs.capacitors.Blocks;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -11,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 
 public class TileTower extends TileEntity implements IFluidHandler{
 	
@@ -27,6 +30,8 @@ public class TileTower extends TileEntity implements IFluidHandler{
 		if(accepted != condense.amount){
 			//TODO release steam
 		}
+		this.markDirty();
+		worldObj.markBlockForUpdate(pos);
 	}
 
 	@Override
@@ -41,7 +46,10 @@ public class TileTower extends TileEntity implements IFluidHandler{
 
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return tank.drain(maxDrain, doDrain);
+		FluidStack ret = tank.drain(maxDrain, doDrain);
+		this.markDirty();
+		worldObj.markBlockForUpdate(getPos());
+		return ret;
 	}
 
 	@Override
@@ -77,6 +85,14 @@ public class TileTower extends TileEntity implements IFluidHandler{
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(pos, 1, tag);
+	}
+
+	public boolean isTopMost() {
+		return !worldObj.getBlockState(getPos().offset(EnumFacing.UP)).getBlock().equals(Blocks.blockDestillationTower);
+	}
+	
+	public IFluidTank getTank(){
+		return tank;
 	}
 
 }

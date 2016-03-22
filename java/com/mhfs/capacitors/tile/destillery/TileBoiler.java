@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 
 public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, IEnergyReceiver{
 
@@ -116,6 +117,8 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		if(!simulate){
 			energy += receive;
 		}
+		this.markDirty();
+		worldObj.markBlockForUpdate(pos);
 		return receive;
 	}
 	
@@ -145,6 +148,10 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(pos, 1, tag);
+	}
+
+	public IFluidTank getInputTank() {
+		return inputTank;
 	}
 
 }

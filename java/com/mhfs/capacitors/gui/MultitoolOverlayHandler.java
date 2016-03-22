@@ -10,7 +10,9 @@ import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileTomahawk;
+import com.mhfs.capacitors.tile.destillery.TileBoiler;
 import com.mhfs.capacitors.tile.destillery.TileDistillery;
+import com.mhfs.capacitors.tile.destillery.TileTower;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
 import net.minecraft.block.Block;
@@ -42,14 +44,18 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderCapacitorOverlay(event, entity);
 		} else if (entity instanceof TileDistillery) {
 			renderDestilleryOverlay(event, entity);
+		} else if (entity instanceof TileBoiler) {
+			renderBoilerOverlay(event, (TileBoiler) entity);
+		} else if (entity instanceof TileTower) {
+			renderTowerOverlay(event, (TileTower) entity);
 		} else if (entity instanceof TileBarrel) {
 			renderBarrelOverlay(event, entity);
-		} else if (entity instanceof TileTomahawk){
+		} else if (entity instanceof TileTomahawk) {
 			renderFusionOverlay(event, (TileTomahawk) entity);
-		} else if (entity instanceof TileFuelCell){
-			renderFuelCellOverlay(event, (TileFuelCell)entity);
-		} else if (entity instanceof TileEnergyTransciever){
-			renderEnergyTransferOverlay(event, (TileEnergyTransciever)entity);
+		} else if (entity instanceof TileFuelCell) {
+			renderFuelCellOverlay(event, (TileFuelCell) entity);
+		} else if (entity instanceof TileEnergyTransciever) {
+			renderEnergyTransferOverlay(event, (TileEnergyTransciever) entity);
 		}
 
 	}
@@ -72,7 +78,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		float filled = (float) entity.getEnergyStored(null) / (float) entity.getMaxEnergyStored(null);
 		renderEnergy(xPos - 3, yPos + 5, filled);
-		
+
 		String text = "H";
 		gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 10, yPos + 22, Color.WHITE.getRGB());
 		renderGas(entity.getHydrogenTank(), xPos + 5, yPos + 5);
@@ -82,14 +88,15 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		int xPos = event.resolution.getScaledWidth() / 2;
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
-		
+
 		float filled = (float) ((double) entity.getEnergyStored() / (double) entity.getMaxEnergyStored());
 		renderEnergy(xPos - 3, yPos + 5, filled);
-		
-		//String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount() + "/" + entity.getHydrogenTank().getCapacity();
+
+		// String text = "Plasma: " + entity.getHydrogenTank().getFluidAmount()
+		// + "/" + entity.getHydrogenTank().getCapacity();
 		renderGas(entity.getHydrogenTank(), xPos + 8, yPos + 5);
-		
-		String text = "at " + (int)entity.getTemperature() + " °C";
+
+		String text = "at " + (int) entity.getTemperature() + " °C";
 		gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos - 3, yPos + 22, Color.WHITE.getRGB());
 	}
 
@@ -115,7 +122,25 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		float filled = (float) tile.getEnergyStored() / (float) tile.getMaxEnergyStored();
 		renderEnergy(xPos - 3, yPos + 5, filled);
 
-		renderFluidStack(tile.getOutputTank(), xPos + 5, yPos + 5);
+		renderFluidStack(tile.getOutputTank(), xPos + 2, yPos + 5);
+	}
+
+	private void renderBoilerOverlay(RenderGameOverlayEvent event, TileBoiler entity) {
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+
+		renderFluidStack(entity.getInputTank(), xPos + 10, yPos + 5);
+
+		float filled = (float) entity.getEnergyStored(null) / (float) entity.getMaxEnergyStored(null);
+		renderEnergy(xPos, yPos + 5, filled);
+	}
+
+	private void renderTowerOverlay(RenderGameOverlayEvent event, TileTower entity) {
+		if (entity.isTopMost()) {
+			int xPos = event.resolution.getScaledWidth() / 2;
+			int yPos = event.resolution.getScaledHeight() / 2;
+			renderFluidStack(entity.getTank(), xPos + 5, yPos + 5);
+		}
 	}
 
 	private void renderEnergy(int x, int y, float filled) {
@@ -141,8 +166,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 32, 0, 16, 16);
-		
-		float filled = tank.getFluidAmount()/(float)tank.getCapacity();
+
+		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
 		FluidStack stack = tank.getFluid();
 
 		if (stack != null) {
@@ -158,8 +183,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 		GL11.glPopMatrix();
 	}
-	
-	private void renderGas(IFluidTank tank, int x, int y){
+
+	private void renderGas(IFluidTank tank, int x, int y) {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -167,21 +192,21 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 78, 0, 16, 16);
-		
-		float filled = tank.getFluidAmount()/(float)tank.getCapacity();
-		
+
+		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
 		GL11.glColor4f(0, 0, 0, 1);
 		Tessellator tes = Tessellator.getInstance();
 		WorldRenderer wr = tes.getWorldRenderer();
 		wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
-		double xEnd = x + 8 - Math.cos(filled * Math.PI)*6;
-		double yEnd = y + 8 - Math.sin(filled * Math.PI)*6;
+		double xEnd = x + 8 - Math.cos(filled * Math.PI) * 6;
+		double yEnd = y + 8 - Math.sin(filled * Math.PI) * 6;
 		wr.pos(xEnd, yEnd, zLevel).color(0, 0, 0, 1).endVertex();
 		wr.pos(x + 8, y + 8, zLevel).color(0, 0, 0, 1).endVertex();
 		tes.draw();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}
@@ -190,7 +215,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		ri.renderItemAndEffectIntoGUI(stack, x, y);
-		
+
 		String out = stack.stackSize + "";
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -216,14 +241,14 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			String text = "Energy: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
 		}
-		
-		if(Minecraft.getMinecraft().gameSettings.showDebugInfo){
+
+		if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
 			String text = "Hash: " + storage.hashCode() + " Tile:" + tile.hashCode();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 15, Color.WHITE.getRGB());
-			
+
 			text = "Charge: " + storage.getEnergyStored() + " Cap:" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 25, Color.WHITE.getRGB());
-			
+
 			text = "Grounded: " + storage.isGrounded();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 35, Color.WHITE.getRGB());
 		}

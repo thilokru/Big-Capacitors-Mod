@@ -2,6 +2,8 @@ package com.mhfs.capacitors.misc;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -64,5 +66,15 @@ public class Helper {
 			}
 		}
 		return false;
+	}
+	
+	public static ResourceLocation getTextureFromFluid(Fluid fluid){
+		ResourceLocation still = fluid.getStill();
+		return new ResourceLocation(still.getResourceDomain(), "textures/" + still.getResourcePath() + ".png");
+	}
+
+	public static boolean isHoldingContainer(EntityPlayer player) {
+		ItemStack stack = player.inventory.getCurrentItem();
+		return FluidContainerRegistry.isContainer(stack);
 	}
 }

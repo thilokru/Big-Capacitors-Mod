@@ -31,7 +31,7 @@ public class BlockBoiler extends BlockContainer {
 
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote)
-			((TileBoiler) world.getTileEntity(pos)).onBlockActivated(player);
+			return ((TileBoiler) world.getTileEntity(pos)).onBlockActivated(player);
 		return true;
 	}
 

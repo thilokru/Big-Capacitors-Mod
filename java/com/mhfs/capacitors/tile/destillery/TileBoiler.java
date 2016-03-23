@@ -48,8 +48,11 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 					int fluidTimes = inputTank.getFluidAmount() / recipe.getInput().amount;
 					int times = Math.min(elecTimes, fluidTimes);
 					energy -= cost * times;
+					inputTank.drain(recipe.getInput().amount * times, true);
 					TileTower tank = (TileTower) worldObj.getTileEntity(this.getPos().offset(EnumFacing.UP, 2));
 					tank.condense(recipe.getOutput(), times);
+					this.markDirty();
+					this.worldObj.markBlockForUpdate(pos);
 				}
 			}
 		}
@@ -157,11 +160,13 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		return inputTank;
 	}
 
-	public void onBlockActivated(EntityPlayer player) {
+	public boolean onBlockActivated(EntityPlayer player) {
+		boolean ret = Helper.isHoldingContainer(player);
 		if (Helper.checkBucketFill(player, inputTank)) {
 			this.markDirty();
 			worldObj.markBlockForUpdate(pos);
 		}
+		return ret;
 	}
 
 }

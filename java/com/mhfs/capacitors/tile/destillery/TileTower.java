@@ -20,17 +20,19 @@ import net.minecraftforge.fluids.IFluidTank;
 public class TileTower extends TileEntity implements IFluidHandler{
 	
 	private FluidTank tank;
+	private boolean releasingSteam;
 	
 	public TileTower(){
 		tank = new FluidTank(2000);
 	}
 
 	public void condense(FluidStack output, int times) {
+		releasingSteam = false;
 		FluidStack condense = output.copy();
 		condense.amount *= times;
 		int accepted = tank.fill(condense, true);
 		if(accepted != condense.amount){
-			//TODO release steam
+			releasingSteam = true;
 		}
 		this.markDirty();
 		worldObj.markBlockForUpdate(pos);
@@ -72,11 +74,13 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		tank.readFromNBT(tag);
+		this.releasingSteam = tag.getBoolean("steam");
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tank.writeToNBT(tag);
+		tag.setBoolean("steam", releasingSteam);
 	}
 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
@@ -88,6 +92,16 @@ public class TileTower extends TileEntity implements IFluidHandler{
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(pos, 1, tag);
 	}
+	
+	public boolean isReleasingSteam(){
+		return releasingSteam;
+	}
+	
+	public void resetSteamState(){
+		this.releasingSteam = false;
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(pos);
+	}
 
 	public boolean isTopMost() {
 		return worldObj.getBlockState(getPos().offset(EnumFacing.DOWN, 2)).getBlock().equals(Blocks.blockBoiler);
@@ -97,11 +111,14 @@ public class TileTower extends TileEntity implements IFluidHandler{
 		return tank;
 	}
 
-	public void onBlockActivated(EntityPlayer player) {
+	public boolean onBlockActivated(EntityPlayer player) {
+		boolean ret = Helper.isHoldingContainer(player);
 		if(Helper.checkBucketDrain(player, tank)){
+			this.releasingSteam = false;
 			this.markDirty();
 			worldObj.markBlockForUpdate(pos);
 		}
+		return ret;
 	}
 
 }

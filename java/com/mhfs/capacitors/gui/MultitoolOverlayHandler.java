@@ -5,6 +5,7 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
@@ -149,19 +150,20 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		bindTexture(overlayTexture);
 		this.drawTexturedModalRect(x, y, 32, 0, 16, 16);
 
-		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
 		FluidStack stack = tank.getFluid();
 
 		if (stack != null) {
 			Fluid fluid = stack.getFluid();
-			ResourceLocation icon = fluid.getStill();
-			if (icon != null) {
-				bindTexture(icon);
-				this.drawTexturedModalRect(x, (int) (y + (1 - filled) * 16), 16, (int) (16 * filled), 16, (int) (16 * filled));
+			ResourceLocation loc = Helper.getTextureFromFluid(fluid);
+			if (loc != null) {
+				bindTexture(loc);
+				Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);
 			}
 		}
 
 		bindTexture(overlayTexture);
+		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
+		this.drawTexturedModalRect(x, y, 32, 0, 16, (int)(16 * (1 - filled)));
 		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 		GL11.glPopMatrix();
 	}
@@ -194,17 +196,23 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 
 	private void renderItemStack(ItemStack stack, int x, int y) {
+		renderItemStack(stack, x, y, true);
+	}
+
+	private void renderItemStack(ItemStack stack, int x, int y, boolean itemCount) {
 		RenderItem ri = Minecraft.getMinecraft().getRenderItem();
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		ri.renderItemAndEffectIntoGUI(stack, x, y);
 
-		String out = stack.stackSize + "";
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_BLEND);
-		fr.drawStringWithShadow(out, x + 19 - 2 - fr.getStringWidth(out), y + 6 + 3, Color.WHITE.getRGB());
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		if (itemCount) {
+			String out = stack.stackSize + "";
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GL11.glDisable(GL11.GL_BLEND);
+			fr.drawStringWithShadow(out, x + 19 - 2 - fr.getStringWidth(out), y + 6 + 3, Color.WHITE.getRGB());
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+		}
 	}
 
 	private void renderCapacitorOverlay(RenderGameOverlayEvent event, TileEntity entity) {

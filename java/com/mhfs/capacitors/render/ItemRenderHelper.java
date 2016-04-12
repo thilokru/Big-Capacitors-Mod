@@ -24,7 +24,7 @@ public class ItemRenderHelper {
 	
 	private final static String fluidStateModel = "fluidState";
 
-	public static void setupModels(BigCapacitorsMod mod) {
+	public static void setupItemModels(BigCapacitorsMod mod) {
 		OBJLoader.instance.addDomain(BigCapacitorsMod.modid);
 		
 		registerFluidBlock(Fluids.blockDestilledWater, "destilledWater");
@@ -40,6 +40,7 @@ public class ItemRenderHelper {
 		registerMesher(Blocks.blockTokamak);
 		registerMesher(Blocks.blockBoiler);
 		registerMesher(Blocks.blockDestillationTower);
+		registerMesher(Blocks.blockStirlingEngine);
 
 		registerMesher(Items.itemManual);
 		registerMesher(Items.itemMultitool);

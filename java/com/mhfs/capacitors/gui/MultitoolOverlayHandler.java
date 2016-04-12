@@ -233,7 +233,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		}
 
 		if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-			String text = "Hash: " + storage.hashCode() + " Tile:" + tile.hashCode();
+			String text = "Wrapper: " + storage.hashCode() + " Tile:" + tile.hashCode();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 15, Color.WHITE.getRGB());
 
 			text = "Charge: " + storage.getEnergyStored() + " Cap:" + storage.getMaxEnergyStored();

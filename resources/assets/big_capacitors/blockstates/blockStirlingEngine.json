@@ -1,0 +1,20 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "big_capacitors:modelStirlingEngine",
+		"textures": {
+        	"metal": "big_capacitors:models/fuel_cell",
+        	"particle": "big_capacitors:models/fuel_cell"
+    	},
+    	"uvlock": true
+	},
+    "variants": {
+    	"orientation": {
+        	"north": {"y": 270},
+        	"west": {"y": 180},
+        	"south": {"y": 90},
+        	"east": {"y": 0}
+        },
+        "inventory": [{}]
+    }
+}

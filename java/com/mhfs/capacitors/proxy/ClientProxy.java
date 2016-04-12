@@ -28,7 +28,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event, BigCapacitorsMod mod) {
 		super.preInit(event, mod);
 
-		ItemRenderHelper.setupModels(mod);
+		ItemRenderHelper.setupItemModels(mod);
 	}
 
 	@Override

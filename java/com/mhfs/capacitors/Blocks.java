@@ -11,6 +11,7 @@ import com.mhfs.capacitors.blocks.BlockEnergyTransfer;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.blocks.BlockLuxRouter;
 import com.mhfs.capacitors.blocks.BlockMany;
+import com.mhfs.capacitors.blocks.BlockStirlingEngine;
 import com.mhfs.capacitors.blocks.BlockTokamak;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockEnergyTransfer blockEnergyTransfer;
 	public static BlockBoiler blockBoiler;
 	public static BlockDestillationTower blockDestillationTower;
+	public static BlockStirlingEngine blockStirlingEngine;
 	
 	public static void setup(BigCapacitorsMod mod){
 		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
@@ -60,6 +62,10 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockDestillationTower = new BlockDestillationTower(Material.rock);
 		Blocks.blockDestillationTower.setHardness(1.5F);
 		Blocks.blockDestillationTower.setHarvestLevel("pickaxe", 2);
+		
+		Blocks.blockStirlingEngine = new BlockStirlingEngine(Material.rock);
+		Blocks.blockStirlingEngine.setHardness(1.5F);
+		Blocks.blockStirlingEngine.setHarvestLevel("pickaxe", 2);
 		
 		ArrayList<BlockData> blockData = new ArrayList<BlockData>();
 		blockData.add(new BlockData("blockReactorShield", "pickaxe", 2, 3.0F));//0

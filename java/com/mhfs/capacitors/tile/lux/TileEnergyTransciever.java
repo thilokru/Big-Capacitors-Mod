@@ -73,7 +73,8 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 		if(handler == null)return 0;
 		if(!(handler instanceof IEnergyProvider))return 0;
 		IEnergyProvider provider = (IEnergyProvider)handler;
-		int amount = Math.min((int)need, provider.extractEnergy(getRotation().getOpposite(), Integer.MAX_VALUE, true)/drainCount);
+		int maxProvide = provider.extractEnergy(getRotation().getOpposite(), Integer.MAX_VALUE, true);
+		int amount = Math.min((int)need, maxProvide/drainCount);
 		provider.extractEnergy(getRotation().getOpposite(), amount, false);
 		return amount;
 	}

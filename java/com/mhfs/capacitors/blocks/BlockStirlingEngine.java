@@ -1,6 +1,7 @@
 package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.tile.TileStirlingEngine;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -31,8 +32,7 @@ public class BlockStirlingEngine extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		// TODO Auto-generated method stub
-		return null;
+		return new TileStirlingEngine();
 	}
 	
 	@Override

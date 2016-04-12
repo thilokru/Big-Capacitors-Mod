@@ -10,11 +10,13 @@ import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
+import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
 import com.mhfs.capacitors.tile.destillery.TileTower;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -54,8 +56,17 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderFuelCellOverlay(event, (TileFuelCell) entity);
 		} else if (entity instanceof TileEnergyTransciever) {
 			renderEnergyTransferOverlay(event, (TileEnergyTransciever) entity);
+		} else if (entity instanceof TileStirlingEngine){
+			renderEnergyContainerOverlay(event, (IEnergyHandler) entity);
 		}
 
+	}
+	
+	private void renderEnergyContainerOverlay(RenderGameOverlayEvent event, IEnergyHandler handler){
+		int xPos = event.resolution.getScaledWidth() / 2;
+		int yPos = event.resolution.getScaledHeight() / 2;
+		float filled = (float)handler.getEnergyStored(null)/handler.getMaxEnergyStored(null);
+		renderEnergy(xPos + 5, yPos + 5, filled);
 	}
 
 	private void renderEnergyTransferOverlay(RenderGameOverlayEvent event, TileEnergyTransciever entity) {

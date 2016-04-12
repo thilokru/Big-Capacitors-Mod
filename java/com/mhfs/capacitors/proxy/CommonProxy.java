@@ -33,6 +33,7 @@ import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileFuelCell;
+import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTomahawk;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
@@ -146,6 +147,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileEnergyTransciever.class, "tileEnergyTransciever");
 		GameRegistry.registerTileEntity(TileBoiler.class, "tileBoiler");
 		GameRegistry.registerTileEntity(TileTower.class, "tileDestillationTower");
+		GameRegistry.registerTileEntity(TileStirlingEngine.class, "tileStirlingEngine");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

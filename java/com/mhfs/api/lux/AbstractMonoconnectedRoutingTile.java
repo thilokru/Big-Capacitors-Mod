@@ -107,7 +107,7 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
+		return new S35PacketUpdateTileEntity(this.pos, this.getBlockMetadata(), tag);
 	}
 	
 	protected void markForUpdate(){

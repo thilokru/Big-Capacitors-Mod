@@ -22,7 +22,7 @@ import net.minecraft.util.EnumFacing;
 public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile implements ILuxDrain, IRotatable, IConnected{
 	
 	private Mode mode = Mode.TRANSCEIVER;
-	private boolean isTransmitting = false;;
+	private boolean isTransmitting = false;
 	
 	public void update() {
 		super.update();
@@ -35,6 +35,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 			connection = null;
 			return;
 		}
+		isTransmitting = false;
 		if(mode.isReceiver()){
 			tile.drainSetup(this.getPosition(), this.getPosition(), 64);
 		}
@@ -47,6 +48,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 				if(energy != 0){
 					isTransmitting = true;
 					link.energyFlow(this.getPosition(), pos, energy);
+					this.markForUpdate();
 				}
 			}
 		}
@@ -55,6 +57,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	@Override
 	public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
+		this.isTransmitting = tag.getBoolean("transmitting");
 		String string = tag.getString("mode");
 		if(string.equals("")){
 			this.mode = Mode.RECEIVER;
@@ -66,6 +69,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	public void writeToNBT(NBTTagCompound tag){
 		super.writeToNBT(tag);
 		tag.setString("mode", mode.toString());
+		tag.setBoolean("transmitting", this.isTransmitting);
 	}
 	
 	private long getEnergyForTarget(long need, int drainCount) {
@@ -157,6 +161,7 @@ public class TileEnergyTransciever extends AbstractMonoconnectedRoutingTile impl
 	@Override
 	public void resetConnectionState() {
 		this.isTransmitting = false;
+		this.markForUpdate();
 	}
 	
 	public static enum Mode{

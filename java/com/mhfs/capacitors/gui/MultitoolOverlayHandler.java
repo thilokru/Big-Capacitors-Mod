@@ -133,7 +133,12 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		if (entity.isTopMost()) {
 			int xPos = event.resolution.getScaledWidth() / 2;
 			int yPos = event.resolution.getScaledHeight() / 2;
-			renderFluidStack(entity.getTank(), xPos + 5, yPos + 5);
+			boolean gaseous = entity.getTank().getFluid().getFluid().isGaseous();
+			if(gaseous){
+				renderGas(entity.getTank(), xPos + 5, yPos + 5);
+			}else{
+				renderFluidStack(entity.getTank(), xPos + 5, yPos + 5);
+			}
 		}
 	}
 

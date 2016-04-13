@@ -4,11 +4,14 @@ import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockStirlingEngine;
 
 import cofh.api.energy.IEnergyProvider;
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
@@ -22,7 +25,7 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 	@Override
 	public void update() {
 		if(worldObj.isRemote)return;
-		if(active()){
+		if(isActive()){
 			energy += 40;
 			this.markDirty();
 			worldObj.markBlockForUpdate(pos);
@@ -84,8 +87,27 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		}
 	}
 	
-	private boolean active(){
-		return worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.lava;
+	private boolean isActive(){
+		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.lit_furnace){
+			TileEntityFurnace furnace = (TileEntityFurnace)worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
+			ItemStack todo = furnace.getStackInSlot(0);
+			return todo == null || todo.stackSize == 0;
+		}else if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.furnace){
+			TileEntityFurnace furnace = (TileEntityFurnace)worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
+			int burnTime = TileEntityFurnace.getItemBurnTime(furnace.getStackInSlot(1));
+			if(burnTime <= 0)return false;
+			furnace.setField(0, burnTime);//furnaceBurnTime: How long the furnace will be lit.
+			furnace.setField(1, burnTime);//currentBurnTime: How long the current item would burn in total.
+			furnace.setField(2, 1);//cookTime: the update method needs it.
+			ItemStack fuelStack = furnace.getStackInSlot(1);
+			fuelStack.stackSize--;
+			if(fuelStack.stackSize == 0){
+				furnace.setInventorySlotContents(1, fuelStack.getItem().getContainerItem(fuelStack));
+			}
+			BlockFurnace.setState(true, this.worldObj, furnace.getPos());
+			furnace.markDirty();
+		}
+		return false;
 	}
 
 }

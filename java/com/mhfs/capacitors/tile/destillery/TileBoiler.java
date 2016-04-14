@@ -162,12 +162,13 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 	}
 
 	public boolean onBlockActivated(EntityPlayer player) {
-		boolean ret = Helper.isHoldingContainer(player);
+		boolean holdingContainer = Helper.isHoldingContainer(player);
+		if(!holdingContainer)return false;
 		if (Helper.checkBucketFill(player, inputTank)) {
 			this.markDirty();
 			worldObj.markBlockForUpdate(pos);
 		}
-		return ret;
+		return true;
 	}
 
 }

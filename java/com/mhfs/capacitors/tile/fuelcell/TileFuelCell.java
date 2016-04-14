@@ -3,10 +3,12 @@ package com.mhfs.capacitors.tile.fuelcell;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
+import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.misc.IRotatable;
 import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -63,10 +65,10 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 	private boolean checkTower(BlockPos pos){
 		boolean formed = true;
 		formed = formed && worldObj.getBlockState(pos).getBlock().equals(Blocks.blockTower);
-		pos.offset(EnumFacing.UP);
+		pos = pos.offset(EnumFacing.UP);
 		formed = formed && worldObj.getBlockState(pos).getBlock().equals(Blocks.blockTower);
-		pos.offset(EnumFacing.UP);
-		formed = formed && !worldObj.getBlockState(pos).getBlock().equals(Blocks.blockTower);
+		pos = pos.offset(EnumFacing.UP);
+		formed = formed && !(worldObj.getBlockState(pos).getBlock().equals(Blocks.blockTower));
 		return formed;
 	}
 
@@ -162,8 +164,20 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		int amount = Math.min(MAX_TRANSFER, Math.min(MAX_ENERGY - energy, maxReceive));
 		if(!simulate){
 			energy += amount;
+			this.markDirty();
+			worldObj.markBlockForUpdate(pos);
 		}
 		return amount;
+	}
+
+	public boolean onBlockActivated(EntityPlayer player) {
+		boolean holdingContainer = Helper.isHoldingContainer(player);
+		if(!holdingContainer)return false;
+		if (Helper.checkBucketFill(player, water)) {
+			this.markDirty();
+			worldObj.markBlockForUpdate(pos);
+		}
+		return true;
 	}
 
 }

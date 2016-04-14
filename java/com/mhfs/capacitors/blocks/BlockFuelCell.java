@@ -10,6 +10,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -36,6 +37,13 @@ public class BlockFuelCell extends BlockContainer implements IOrientedBlock {
 		TileEntity te = new TileFuelCell();
 		te.setWorldObj(world);
 		return te;
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote)
+			return ((TileFuelCell) world.getTileEntity(pos)).onBlockActivated(player);
+		return true;
 	}
 
 	@Override

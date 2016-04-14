@@ -27,15 +27,20 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	}
 
 	public void condense(FluidStack output, int times) {
-		releasingSteam = false;
-		FluidStack condense = output.copy();
-		condense.amount *= times;
-		int accepted = tank.fill(condense, true);
-		if(accepted != condense.amount){
-			releasingSteam = true;
+		if(isTopMost()){
+			releasingSteam = false;
+			FluidStack condense = output.copy();
+			condense.amount *= times;
+			int accepted = tank.fill(condense, true);
+			if(accepted != condense.amount){
+				releasingSteam = true;
+			}
+			this.markDirty();
+			worldObj.markBlockForUpdate(pos);
+		}else{
+			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
+			tower.condense(output, times);
 		}
-		this.markDirty();
-		worldObj.markBlockForUpdate(pos);
 	}
 
 	@Override
@@ -112,13 +117,14 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	}
 
 	public boolean onBlockActivated(EntityPlayer player) {
-		boolean ret = Helper.isHoldingContainer(player);
+		boolean holdingContainer = Helper.isHoldingContainer(player);
+		if(!holdingContainer)return false;
 		if(Helper.checkBucketDrain(player, tank)){
 			this.releasingSteam = false;
 			this.markDirty();
 			worldObj.markBlockForUpdate(pos);
 		}
-		return ret;
+		return true;
 	}
 
 }

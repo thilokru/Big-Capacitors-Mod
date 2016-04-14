@@ -3,7 +3,7 @@
 	"defaults": {
         "model": "big_capacitors:LuxRouter.obj",
     	"textures": {
-        	"#None": "big_capacitors:models/fuel_cellv2"
+        	"#None": "big_capacitors:blocks/metal"
     	},
     	"uvlock": true
     },

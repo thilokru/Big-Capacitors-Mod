@@ -27,7 +27,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockLuxRouter blockLuxRouter;
 	public static BlockEnergyTransfer blockEnergyTransfer;
 	public static BlockBoiler blockBoiler;
-	public static BlockDestillationTower blockDestillationTower;
+	public static BlockDestillationTower blockTower;
 	public static BlockStirlingEngine blockStirlingEngine;
 	
 	public static void setup(BigCapacitorsMod mod){
@@ -59,9 +59,9 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockBoiler.setHardness(1.5F);
 		Blocks.blockBoiler.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockDestillationTower = new BlockDestillationTower(Material.rock);
-		Blocks.blockDestillationTower.setHardness(1.5F);
-		Blocks.blockDestillationTower.setHarvestLevel("pickaxe", 2);
+		Blocks.blockTower = new BlockDestillationTower(Material.rock);
+		Blocks.blockTower.setHardness(1.5F);
+		Blocks.blockTower.setHarvestLevel("pickaxe", 2);
 		
 		Blocks.blockStirlingEngine = new BlockStirlingEngine(Material.rock);
 		Blocks.blockStirlingEngine.setHardness(1.5F);

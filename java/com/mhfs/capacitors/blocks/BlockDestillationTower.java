@@ -3,7 +3,7 @@ package com.mhfs.capacitors.blocks;
 import java.util.Random;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.tile.destillery.TileTower;
+import com.mhfs.capacitors.tile.TileTower;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;

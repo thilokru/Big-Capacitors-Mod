@@ -9,11 +9,11 @@ import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
-import com.mhfs.capacitors.tile.TileFuelCell;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTomahawk;
+import com.mhfs.capacitors.tile.TileTower;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
-import com.mhfs.capacitors.tile.destillery.TileTower;
+import com.mhfs.capacitors.tile.fuelcell.TileFuelCell;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 
 import cofh.api.energy.IEnergyHandler;
@@ -81,16 +81,11 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	private void renderFuelCellOverlay(RenderGameOverlayEvent event, TileFuelCell entity) {
 		int xPos = event.resolution.getScaledWidth() / 2;
 		int yPos = event.resolution.getScaledHeight() / 2;
-		Gui gui = Minecraft.getMinecraft().ingameGUI;
 
 		renderFluidStack(entity.getInputTank(), xPos - 20, yPos + 5);
 
 		float filled = (float) entity.getEnergyStored(null) / (float) entity.getMaxEnergyStored(null);
 		renderEnergy(xPos - 3, yPos + 5, filled);
-
-		String text = "H";
-		gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 10, yPos + 22, Color.WHITE.getRGB());
-		renderGas(entity.getHydrogenTank(), xPos + 5, yPos + 5);
 	}
 
 	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {
@@ -133,7 +128,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		if (entity.isTopMost()) {
 			int xPos = event.resolution.getScaledWidth() / 2;
 			int yPos = event.resolution.getScaledHeight() / 2;
-			boolean gaseous = entity.getTank().getFluid().getFluid().isGaseous();
+			FluidStack stack = entity.getTank().getFluid();
+			boolean gaseous = stack == null?false:stack.getFluid().isGaseous();
 			if(gaseous){
 				renderGas(entity.getTank(), xPos + 5, yPos + 5);
 			}else{

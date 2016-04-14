@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.tile.destillery;
+package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.misc.Helper;
@@ -104,7 +104,7 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	}
 
 	public boolean isTopMost() {
-		return worldObj.getBlockState(getPos().offset(EnumFacing.DOWN, 2)).getBlock().equals(Blocks.blockBoiler);
+		return !worldObj.getBlockState(getPos().offset(EnumFacing.UP)).getBlock().equals(Blocks.blockTower);
 	}
 	
 	public IFluidTank getTank(){

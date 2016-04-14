@@ -2,6 +2,7 @@ package com.mhfs.capacitors.tile.destillery;
 
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
@@ -61,10 +62,10 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 	private boolean checkFormed() {
 		BlockPos working = this.pos.offset(EnumFacing.UP);
 		Block test = worldObj.getBlockState(working).getBlock();
-		if (test.equals(Blocks.blockDestillationTower)) {
+		if (test.equals(Blocks.blockTower)) {
 			working = working.offset(EnumFacing.UP);
 			test = worldObj.getBlockState(working).getBlock();
-			if (test.equals(Blocks.blockDestillationTower)) {
+			if (test.equals(Blocks.blockTower)) {
 				return true;
 			}
 		}

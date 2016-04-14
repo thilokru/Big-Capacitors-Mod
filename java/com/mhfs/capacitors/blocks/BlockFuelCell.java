@@ -1,7 +1,7 @@
 package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.tile.TileFuelCell;
+import com.mhfs.capacitors.tile.fuelcell.TileFuelCell;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -57,34 +57,7 @@ public class BlockFuelCell extends BlockContainer implements IOrientedBlock {
 
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(ORIENTATION, getPlacementOrientation(hitX, hitZ));
-	}
-
-	private EnumFacing getPlacementOrientation(float hitX, float hitZ) {
-		double xRelevance = Math.abs(0.5 - hitX);
-		double zRelevance = Math.abs(0.5 - hitZ);
-
-		// PosZ
-		boolean towardsSouth = hitZ > 0.5;
-		// PosX
-		boolean towardsEast = hitX > 0.5;
-
-		if (hitX == 0.5F && hitZ == 0.5F) {
-			return EnumFacing.NORTH;
-		}
-		if (xRelevance > zRelevance) {
-			if (towardsEast) {
-				return EnumFacing.EAST;
-			} else {
-				return EnumFacing.WEST;
-			}
-		} else {
-			if (towardsSouth) {
-				return EnumFacing.SOUTH;
-			} else {
-				return EnumFacing.NORTH;
-			}
-		}
+		return this.getDefaultState().withProperty(ORIENTATION, placer.getHorizontalFacing());
 	}
 
 	@Override

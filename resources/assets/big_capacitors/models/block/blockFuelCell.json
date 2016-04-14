@@ -1,0 +1,7 @@
+{
+     "parent": "big_capacitors:block/elongatedBlock",
+     "textures": {
+        "side": "big_capacitors:blocks/metal",
+     	"end": "minecraft:blocks/iron_block"
+     }
+}

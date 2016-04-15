@@ -10,7 +10,7 @@ import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
-import com.mhfs.capacitors.tile.TileTomahawk;
+import com.mhfs.capacitors.tile.TileTokamak;
 import com.mhfs.capacitors.tile.TileTower;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
 import com.mhfs.capacitors.tile.fuelcell.TileFuelCell;
@@ -50,8 +50,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderTowerOverlay(event, (TileTower) entity);
 		} else if (entity instanceof TileBarrel) {
 			renderBarrelOverlay(event, entity);
-		} else if (entity instanceof TileTomahawk) {
-			renderFusionOverlay(event, (TileTomahawk) entity);
+		} else if (entity instanceof TileTokamak) {
+			renderFusionOverlay(event, (TileTokamak) entity);
 		} else if (entity instanceof TileFuelCell) {
 			renderFuelCellOverlay(event, (TileFuelCell) entity);
 		} else if (entity instanceof TileEnergyTransciever) {
@@ -88,7 +88,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		renderEnergy(xPos - 3, yPos + 5, filled);
 	}
 
-	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTomahawk entity) {
+	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTokamak entity) {
 		int xPos = event.resolution.getScaledWidth() / 2;
 		int yPos = event.resolution.getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;

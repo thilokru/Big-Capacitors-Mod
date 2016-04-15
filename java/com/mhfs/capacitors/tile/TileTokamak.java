@@ -2,9 +2,11 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Fluids;
+import com.mhfs.capacitors.misc.Helper;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -18,7 +20,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileTomahawk extends TileEntity implements IFluidHandler, IEnergyReceiver, IEnergyProvider, ITickable {
+public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyReceiver, IEnergyProvider, ITickable {
 
 	private int energy;
 	private FluidTank hydrogenTank;
@@ -38,7 +40,7 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, IEnergyRe
 	
 	private final static int RF_PER_MB_HYDROGEN = 1500000;
 
-	public TileTomahawk() {
+	public TileTokamak() {
 		hydrogenTank = new FluidTank(MAX_GAS_VOLUME);
 		temperature = ROOM_TEMP;
 	}
@@ -197,5 +199,15 @@ public class TileTomahawk extends TileEntity implements IFluidHandler, IEnergyRe
 			energy -= amount;
 		}
 		return amount;
+	}
+
+	public boolean onBlockActivated(EntityPlayer player) {
+		boolean holdingContainer = Helper.isHoldingContainer(player);
+		if(!holdingContainer)return false;
+		if (Helper.checkBucketFill(player, hydrogenTank)) {
+			this.markDirty();
+			worldObj.markBlockForUpdate(pos);
+		}
+		return true;
 	}
 }

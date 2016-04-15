@@ -33,7 +33,7 @@ import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
-import com.mhfs.capacitors.tile.TileTomahawk;
+import com.mhfs.capacitors.tile.TileTokamak;
 import com.mhfs.capacitors.tile.TileTower;
 import com.mhfs.capacitors.tile.destillery.DestilleryRecipeRegistry;
 import com.mhfs.capacitors.tile.destillery.TileBoiler;
@@ -141,7 +141,7 @@ public class CommonProxy {
 		
 		GameRegistry.registerTileEntity(TileCapacitor.class, "tileCapacitor");
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
-		GameRegistry.registerTileEntity(TileTomahawk.class, "tileTomahawk");
+		GameRegistry.registerTileEntity(TileTokamak.class, "tileTomahawk");
 		GameRegistry.registerTileEntity(TileFuelCell.class, "tileFuelCell");
 		GameRegistry.registerTileEntity(TileLuxRouter.class, "tileLuxRouter");
 		GameRegistry.registerTileEntity(TileEnergyTransciever.class, "tileEnergyTransciever");

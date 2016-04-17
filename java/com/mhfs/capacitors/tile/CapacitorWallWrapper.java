@@ -52,6 +52,17 @@ public class CapacitorWallWrapper {
 	private CapacitorWallWrapper() {
 	}
 
+	/**
+	 * Searches capacitors which are connected to the capacitor at {@link pos}.
+	 * To be connected, the following requirements must be met:
+	 * First, the capacitor must face in the same direction as the capacitor at {@link pos}.
+	 * Secondly, there must be a way to get to it via connected capacitor. A capacitor adjacent to the one at {@link pos}
+	 * which is facing the same way, is connected.
+	 * @param res the set of coordinates to add to. Must be a {@link HashSet} so that all elements are unique
+	 * @param pos the position to search from.
+	 * @param world the world this is set in.
+	 * @return the fille set.
+	 */
 	private HashSet<BlockPos> searchWallFrom(HashSet<BlockPos> res, BlockPos pos, IBlockAccess world) {
 		res.add(pos);
 		BlockCapacitor block = Blocks.capacitorIron;
@@ -64,10 +75,19 @@ public class CapacitorWallWrapper {
 		return res;
 	}
 
+	/**
+	 * @return How many blocks this wrapper wraps.
+	 */
 	public int getSize() {
 		return containedBlocks.size();
 	}
 
+	/**
+	 * Convenience method to check whether the side ({@link direction}) is the opposite of the
+	 * side the wrapper is facing. Also the wrapper must not be grounded. 
+	 * @param direction the direction from which energy shall be extracted.
+	 * @return whethet energy may be exctracted.
+	 */
 	public boolean canExtractEnergy(EnumFacing direction) {
 		if (direction.getOpposite() == orientation && !grounded) {
 			return true;
@@ -75,6 +95,11 @@ public class CapacitorWallWrapper {
 		return false;
 	}
 
+	/**
+	 * Searches connected capacitor blocks for other CWWs. In that case they'll merge.
+	 * @param world the world
+	 * @param isFirstTick whether this is the first tick, aka. whether the world has just been loaded.
+	 */
 	public void checkJoin(World world, boolean isFirstTick) {
 		this.charge = Math.min(this.charge, this.maxCharge);
 
@@ -93,6 +118,9 @@ public class CapacitorWallWrapper {
 					}else{
 						combinedCharge += tile.getEntityCapacitor().charge;
 					}
+					if(tile.getEntityCapacitor().isGrounded()){
+						this.grounded = true;
+					}
 					controled.add(tile.getEntityCapacitor());
 				}
 			}
@@ -103,7 +131,13 @@ public class CapacitorWallWrapper {
 		this.charge = combinedCharge;
 		updateEnergy(world);
 	}
-
+	
+	/**
+	 * If a block which is member of this wrapper is destroyed, this method is called to handle the consequences.
+	 * @param destroied the destroyed block
+	 * @param world the world this is set in
+	 * @param player the player who destroyed the block. May be null, if this block was destroyed by an explosion or similar.
+	 */
 	public void leave(BlockPos destroied, World world, EntityPlayer player) {
 		for(BlockPos pos:containedBlocks){
 			TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
@@ -118,6 +152,13 @@ public class CapacitorWallWrapper {
 		}
 	}
 
+	/**
+	 * This methods determines the capacity this capacitor has.
+	 * If the new capacity is lower than the charge, the charge will be set to the capacity.
+	 * This will cause synchronization.
+	 * @param world the world this is set in.
+	 * @return whether the capaciy has changed.
+	 */
 	public boolean setupCapacity(World world) {
 		if (this.grounded) {
 			this.maxCharge = 0;
@@ -129,7 +170,7 @@ public class CapacitorWallWrapper {
 		Set<BlockPos> otherWall = new HashSet<BlockPos>();
 
 		int distance = Integer.MAX_VALUE;
-
+		//Determines the distance between the walls. If there are more than one, the closest one is chosen.
 		for (BlockPos pos : oneWall) {
 			for (int i = 1; i < MAX_DISTANCE; i++) {
 				BlockPos res = pos.offset(orientation, i);
@@ -144,6 +185,7 @@ public class CapacitorWallWrapper {
 			}
 		}
 		
+		//Creates a set of BlockPos, which contains all relevant Positions of the opposite wall.
 		for(BlockPos orig : oneWall){
 			BlockPos dest = orig.offset(orientation, distance + 1);
 			TileEntity ent = world.getTileEntity(dest);
@@ -162,7 +204,7 @@ public class CapacitorWallWrapper {
 		double maxVoltage = Double.MAX_VALUE;
 		Map<String, Double> dielectricities = BigCapacitorsMod.instance.dielectricities;
 		Map<String, Double> voltages = BigCapacitorsMod.instance.voltages;
-
+		//Determines the quality of the insulation and its dielectricity. Based on this the capacity will be calculated.
 		for (BlockPos chk : oneWall) {
 			double tmpVoltage = 0;
 			BlockPos work = chk.offset(orientation, distance + 1);
@@ -191,7 +233,7 @@ public class CapacitorWallWrapper {
 				}
 			}
 		}
-
+		// Averages the dielectricity (Might not be physically accurate. TODO: Research)
 		dielectricity /= (surface * (distance));
 		// Because its MV
 		maxVoltage *= 1000000;
@@ -208,6 +250,10 @@ public class CapacitorWallWrapper {
 		return capacity != oldCapacity;
 	}
 
+	/**
+	 * Creates a NBT Representation for this wrapper. This is used to save and synchronize this Wrapper.
+	 * @return the representing NBTTagCompound
+	 */
 	public NBTTagCompound getNBTRepresentation() {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setLong("charge", charge);
@@ -219,6 +265,11 @@ public class CapacitorWallWrapper {
 		return tag;
 	}
 
+	/**
+	 * Creates a wrapper based on the values saved in the NBTTag
+	 * @param tag the tag the data is loaded from.
+	 * @return the created wrapper.
+	 */
 	public static CapacitorWallWrapper fromNBT(NBTTagCompound tag) {
 		CapacitorWallWrapper cap = new CapacitorWallWrapper();
 		cap.charge = tag.getLong("charge");

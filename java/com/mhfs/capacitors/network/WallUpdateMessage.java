@@ -16,8 +16,8 @@ public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMe
 
 	private CapacitorWallWrapper wrapper;
 	
-	public WallUpdateMessage(CapacitorWallWrapper wrapper){
-		this.wrapper = wrapper;
+	public WallUpdateMessage(CapacitorWallWrapper capacitorWallWrapper){
+		this.wrapper = capacitorWallWrapper;
 	}
 	
 	/**

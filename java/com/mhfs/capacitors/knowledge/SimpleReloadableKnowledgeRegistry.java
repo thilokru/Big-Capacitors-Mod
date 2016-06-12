@@ -23,7 +23,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IResourceManagerReloadListener{
 	
@@ -67,7 +67,7 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 		index = null;
 		Lo.g.info("Reloading user manual...");
 		try {
-			ResourceLocation loc = new ResourceLocation(StatCollector.translateToLocal(name));
+			ResourceLocation loc = new ResourceLocation(I18n.translateToLocal(name));
 			this.loadManual(loc);
 		} catch (Exception e) {
 			System.err.println("An error occured while reloading the Manual of Big Capacitors!");

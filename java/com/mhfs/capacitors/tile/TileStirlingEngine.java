@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
@@ -69,14 +69,14 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		tag.setLong("energy", energy);
 	}
 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		this.readFromNBT(pkt.getNbtCompound());
 	}
 
 	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
+		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 	
 	private EnumFacing getFacing(){
@@ -88,11 +88,11 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 	}
 	
 	private boolean isActive(){
-		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.lit_furnace){
+		if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.LIT_FURNACE){
 			TileEntityFurnace furnace = (TileEntityFurnace)worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
 			ItemStack todo = furnace.getStackInSlot(0);
 			return todo == null || todo.stackSize == 0;
-		}else if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.furnace){
+		}else if(worldObj.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() == Blocks.FURNACE){
 			TileEntityFurnace furnace = (TileEntityFurnace)worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
 			int burnTime = TileEntityFurnace.getItemBurnTime(furnace.getStackInSlot(1));
 			if(burnTime <= 0)return false;

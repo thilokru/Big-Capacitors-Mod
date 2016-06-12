@@ -14,9 +14,9 @@ import com.mhfs.capacitors.misc.HashSetHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ITickable;
 
 public abstract class AbstractRoutingTile extends TileEntity implements IRouting, ITickable{
@@ -70,14 +70,14 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		tag.setString("route", json);
 	}
 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		this.readFromNBT(pkt.getNbtCompound());
 	}
 
 	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
+		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	@Override

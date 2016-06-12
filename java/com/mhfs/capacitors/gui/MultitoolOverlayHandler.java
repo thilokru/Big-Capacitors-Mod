@@ -22,12 +22,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -63,15 +63,15 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 	
 	private void renderEnergyContainerOverlay(RenderGameOverlayEvent event, IEnergyHandler handler){
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 		float filled = (float)handler.getEnergyStored(null)/handler.getMaxEnergyStored(null);
 		renderEnergy(xPos + 5, yPos + 5, filled);
 	}
 
 	private void renderEnergyTransferOverlay(RenderGameOverlayEvent event, TileEnergyTransciever entity) {
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		String text = entity.getMode().toString();
@@ -79,8 +79,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 
 	private void renderFuelCellOverlay(RenderGameOverlayEvent event, TileFuelCell entity) {
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 
 		renderFluidStack(entity.getInputTank(), xPos - 20, yPos + 5);
 
@@ -89,8 +89,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 
 	private void renderFusionOverlay(RenderGameOverlayEvent event, TileTokamak entity) {
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
 
 		float filled = (float) ((double) entity.getEnergyStored() / (double) entity.getMaxEnergyStored());
@@ -107,16 +107,16 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	private void renderBarrelOverlay(RenderGameOverlayEvent event, TileEntity entity) {
 		TileBarrel barrel = (TileBarrel) entity;
 
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 
 		this.renderItemStack(barrel.getStackInSlot(0), xPos - 18, yPos + 2);
 		this.renderFluidStack(barrel.getWineTank(), xPos + 2, yPos + 5);
 	}
 
 	private void renderBoilerOverlay(RenderGameOverlayEvent event, TileBoiler entity) {
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 
 		renderFluidStack(entity.getInputTank(), xPos + 10, yPos + 5);
 
@@ -126,8 +126,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 	private void renderTowerOverlay(RenderGameOverlayEvent event, TileTower entity) {
 		if (entity.isTopMost()) {
-			int xPos = event.resolution.getScaledWidth() / 2;
-			int yPos = event.resolution.getScaledHeight() / 2;
+			int xPos = event.getResolution().getScaledWidth() / 2;
+			int yPos = event.getResolution().getScaledHeight() / 2;
 			FluidStack stack = entity.getTank().getFluid();
 			boolean gaseous = stack == null?false:stack.getFluid().isGaseous();
 			if(gaseous){
@@ -195,12 +195,12 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 		GL11.glLineWidth(2);
 		GL11.glColor4f(0, 0, 0, 1);
 		Tessellator tes = Tessellator.getInstance();
-		WorldRenderer wr = tes.getWorldRenderer();
-		wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
+		VertexBuffer buf = tes.getBuffer();
+		buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
 		double xEnd = x + 8 - Math.cos(filled * Math.PI) * 6;
 		double yEnd = y + 8 - Math.sin(filled * Math.PI) * 6;
-		wr.pos(xEnd, yEnd, zLevel).color(0, 0, 0, 1).endVertex();
-		wr.pos(x + 8, y + 8, zLevel).color(0, 0, 0, 1).endVertex();
+		buf.pos(xEnd, yEnd, zLevel).color(0, 0, 0, 1).endVertex();
+		buf.pos(x + 8, y + 8, zLevel).color(0, 0, 0, 1).endVertex();
 		tes.draw();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -230,8 +230,8 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	private void renderCapacitorOverlay(RenderGameOverlayEvent event, TileEntity entity) {
 		TileCapacitor tile = (TileCapacitor) entity;
 		Gui gui = Minecraft.getMinecraft().ingameGUI;
-		int xPos = event.resolution.getScaledWidth() / 2;
-		int yPos = event.resolution.getScaledHeight() / 2;
+		int xPos = event.getResolution().getScaledWidth() / 2;
+		int yPos = event.getResolution().getScaledHeight() / 2;
 		if (tile == null || tile.getEntityCapacitor() == null)
 			return;
 		CapacitorWallWrapper storage = tile.getEntityCapacitor();

@@ -80,6 +80,6 @@ public class BigCapacitorsMod {
 	}
 
 	public static Block getInsulator() {
-		return Blocks.obsidian;
+		return Blocks.OBSIDIAN;
 	}
 }

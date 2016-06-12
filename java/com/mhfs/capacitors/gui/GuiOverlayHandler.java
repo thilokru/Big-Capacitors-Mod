@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,13 +23,13 @@ public class GuiOverlayHandler {
 
 	@SubscribeEvent
 	public void handleOverlay(RenderGameOverlayEvent event) {
-		if (event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+		if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-			ItemStack stack = player.getHeldItem();
+			ItemStack stack = player.getHeldItemMainhand();
 			if (stack != null) {
 				IOverlayHandler handler = handlers.get(stack.getItem());
 				if(handler == null)return;
-				MovingObjectPosition thing = Minecraft.getMinecraft().objectMouseOver;
+				RayTraceResult thing = Minecraft.getMinecraft().objectMouseOver;
 				World world = player.worldObj;
 				if(world == null)return;
 				if(thing == null)return;

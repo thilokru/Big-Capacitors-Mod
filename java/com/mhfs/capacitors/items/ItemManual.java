@@ -6,8 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -24,8 +24,8 @@ public class ItemManual extends Item {
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if (world.isRemote) {
 			if (!player.isSneaking()) {
-				MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-				BlockPos pos = mop.getBlockPos();
+				RayTraceResult rtr = Minecraft.getMinecraft().objectMouseOver;
+				BlockPos pos = rtr.getBlockPos();
 				player.openGui(BigCapacitorsMod.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
 				return stack;
 			}else{

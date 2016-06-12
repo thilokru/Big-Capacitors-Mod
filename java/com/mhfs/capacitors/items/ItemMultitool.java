@@ -6,14 +6,14 @@ import com.mhfs.api.lux.ILuxHandler;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -29,7 +29,7 @@ public class ItemMultitool extends Item {
 	}
 	
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, net.minecraft.util.BlockPos pos, EnumFacing side, float aimX, float aimY, float aimZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float aimX, float aimY, float aimZ) {
 		if (world.isRemote)
 			return false;
 		TileEntity entity = world.getTileEntity(pos);
@@ -69,7 +69,7 @@ public class ItemMultitool extends Item {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean par4) {
 		if (hasLocation(stack)) {
-			String text = String.format("%s%s+LOC%s", EnumChatFormatting.ITALIC, EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.RESET);
+			String text = String.format("%s%s+LOC%s", ChatFormatting.ITALIC, ChatFormatting.DARK_PURPLE, ChatFormatting.RESET);
 			info.add(text);
 		}
 	}

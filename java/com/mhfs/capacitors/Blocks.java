@@ -31,39 +31,39 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockStirlingEngine blockStirlingEngine;
 	
 	public static void setup(BigCapacitorsMod mod){
-		Blocks.capacitorIron = new BlockCapacitor(Material.iron, 0);
+		Blocks.capacitorIron = new BlockCapacitor(Material.IRON, 0);
 		Blocks.capacitorIron.setHardness(1.5F);
 		Blocks.capacitorIron.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockBarrel = new BlockBarrel(Material.wood);
+		Blocks.blockBarrel = new BlockBarrel(Material.WOOD);
 		Blocks.blockBarrel.setHardness(1F);
 		Blocks.blockBarrel.setHarvestLevel("axe", 2);
 		
-		Blocks.blockTokamak = new BlockTokamak(Material.rock);
+		Blocks.blockTokamak = new BlockTokamak(Material.ROCK);
 		Blocks.blockTokamak.setHardness(0.5F);
 		Blocks.blockTokamak.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockFuelCell = new BlockFuelCell(Material.rock);
+		Blocks.blockFuelCell = new BlockFuelCell(Material.ROCK);
 		Blocks.blockFuelCell.setHardness(0.25F);
 		Blocks.blockFuelCell.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockLuxRouter = new BlockLuxRouter(Material.rock);
+		Blocks.blockLuxRouter = new BlockLuxRouter(Material.ROCK);
 		Blocks.blockLuxRouter.setHardness(0.25F);
 		Blocks.blockLuxRouter.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockEnergyTransfer = new BlockEnergyTransfer(Material.rock);
+		Blocks.blockEnergyTransfer = new BlockEnergyTransfer(Material.ROCK);
 		Blocks.blockEnergyTransfer.setHardness(0.25F);
 		Blocks.blockEnergyTransfer.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockBoiler = new BlockBoiler(Material.rock);
+		Blocks.blockBoiler = new BlockBoiler(Material.ROCK);
 		Blocks.blockBoiler.setHardness(1.5F);
 		Blocks.blockBoiler.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockTower = new BlockDestillationTower(Material.rock);
+		Blocks.blockTower = new BlockDestillationTower(Material.ROCK);
 		Blocks.blockTower.setHardness(1.5F);
 		Blocks.blockTower.setHarvestLevel("pickaxe", 2);
 		
-		Blocks.blockStirlingEngine = new BlockStirlingEngine(Material.rock);
+		Blocks.blockStirlingEngine = new BlockStirlingEngine(Material.ROCK);
 		Blocks.blockStirlingEngine.setHardness(1.5F);
 		Blocks.blockStirlingEngine.setHarvestLevel("pickaxe", 2);
 		

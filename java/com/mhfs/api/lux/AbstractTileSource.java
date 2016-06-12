@@ -1,6 +1,6 @@
 package com.mhfs.api.lux;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class AbstractTileSource extends AbstractMonoconnectedRoutingTile implements ILuxHandler{
 	

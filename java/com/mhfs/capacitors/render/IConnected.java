@@ -2,7 +2,7 @@ package com.mhfs.capacitors.render;
 
 import java.util.Set;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public interface IConnected {
 	public Set<BlockPos> getConnections();

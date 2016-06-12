@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -93,7 +93,7 @@ public class CraftingPage implements IPage {
 			}
 			return stack;
 		} else {
-			Item item = (Item) Item.itemRegistry.getObject(resourcelocation);
+			Item item = (Item) Item.REGISTRY.getObject(resourcelocation);
 			if(item == null)return null;
 			
 			//Parse meta and count (optional)

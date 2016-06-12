@@ -6,13 +6,13 @@ import java.util.Set;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class RendererLux<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
@@ -81,27 +81,27 @@ public class RendererLux<T extends TileEntity> extends TileEntitySpecialRenderer
 		GL11.glColor4d(1, 1, 1, 0.5);
 
 		Tessellator tes = Tessellator.getInstance();
-		WorldRenderer wr = tes.getWorldRenderer();
-		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		wr.pos(-thickness, 0, 0).endVertex();
-		wr.pos(thickness, 0, 0).endVertex();
-		wr.pos(thickness, length, 0).endVertex();
-		wr.pos(-thickness, length, 0).endVertex();
+		VertexBuffer buf = tes.getBuffer();
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		buf.pos(-thickness, 0, 0).endVertex();
+		buf.pos(thickness, 0, 0).endVertex();
+		buf.pos(thickness, length, 0).endVertex();
+		buf.pos(-thickness, length, 0).endVertex();
 
-		wr.pos(-thickness, 0, 0).endVertex();
-		wr.pos(-thickness, length, 0).endVertex();
-		wr.pos(thickness, length, 0).endVertex();
-		wr.pos(thickness, 0, 0).endVertex();
+		buf.pos(-thickness, 0, 0).endVertex();
+		buf.pos(-thickness, length, 0).endVertex();
+		buf.pos(thickness, length, 0).endVertex();
+		buf.pos(thickness, 0, 0).endVertex();
 
-		wr.pos(0, 0, -thickness).endVertex();
-		wr.pos(0, 0, thickness).endVertex();
-		wr.pos(0, length, thickness).endVertex();
-		wr.pos(0, length, -thickness).endVertex();
+		buf.pos(0, 0, -thickness).endVertex();
+		buf.pos(0, 0, thickness).endVertex();
+		buf.pos(0, length, thickness).endVertex();
+		buf.pos(0, length, -thickness).endVertex();
 
-		wr.pos(0, 0, -thickness).endVertex();
-		wr.pos(0, length, -thickness).endVertex();
-		wr.pos(0, length, thickness).endVertex();
-		wr.pos(0, 0, thickness).endVertex();
+		buf.pos(0, 0, -thickness).endVertex();
+		buf.pos(0, length, -thickness).endVertex();
+		buf.pos(0, length, thickness).endVertex();
+		buf.pos(0, 0, thickness).endVertex();
 		tes.draw();
 
 		GL11.glPopMatrix();

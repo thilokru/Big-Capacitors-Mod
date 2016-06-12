@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 public class CapacitorWallWrapper {
@@ -216,7 +216,7 @@ public class CapacitorWallWrapper {
 					IBlockState state = world.getBlockState(work);
 					Block block = state.getBlock();
 					int metadata = block.getMetaFromState(state);
-					String name = Block.blockRegistry.getNameForObject(block) + " " + metadata;
+					String name = Block.REGISTRY.getNameForObject(block) + " " + metadata;
 					if (dielectricities.containsKey(name)) {
 						dielectricity += dielectricities.get(name);
 					} else {

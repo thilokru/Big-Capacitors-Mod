@@ -33,9 +33,9 @@ public class EventHandler {
 
 	@SubscribeEvent
 	public void handleBlockBreak(BreakEvent event) {
-		if (event.world.isRemote)
+		if (event.getWorld().isRemote)
 			return;
-		TileEntity entity = event.world.getTileEntity(event.pos);
+		TileEntity entity = event.getWorld().getTileEntity(event.getPos());
 		if (entity != null && entity instanceof TileCapacitor) {
 			((TileCapacitor) entity).onBreak(event);
 		}

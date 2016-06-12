@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,13 +33,13 @@ public class ImagePage implements IPage{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor4f(1, 1, 1, 1);
 		Tessellator tes = Tessellator.getInstance();
-		WorldRenderer wr = tes.getWorldRenderer();
-		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		VertexBuffer buf = tes.getBuffer();
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		mc.getTextureManager().bindTexture(loc);
-		wr.pos(xPos + width / 2 + disWidth / 2, yPos, screen.getZpos()).tex( 1, 0).endVertex();//Upper Right
-		wr.pos(xPos + width / 2 - disWidth / 2, yPos, screen.getZpos()).tex( 0, 0).endVertex();//Upper Left
-		wr.pos(xPos + width / 2 - disWidth / 2, yPos + disHeight, screen.getZpos()).tex(0, 1).endVertex();//Lower Right
-		wr.pos(xPos + width / 2 + disWidth / 2, yPos + disHeight, screen.getZpos()).tex(1, 1).endVertex();//Lower Left
+		buf.pos(xPos + width / 2 + disWidth / 2, yPos, screen.getZpos()).tex( 1, 0).endVertex();//Upper Right
+		buf.pos(xPos + width / 2 - disWidth / 2, yPos, screen.getZpos()).tex( 0, 0).endVertex();//Upper Left
+		buf.pos(xPos + width / 2 - disWidth / 2, yPos + disHeight, screen.getZpos()).tex(0, 1).endVertex();//Lower Right
+		buf.pos(xPos + width / 2 + disWidth / 2, yPos + disHeight, screen.getZpos()).tex(1, 1).endVertex();//Lower Left
 		tes.draw();
 	}
 

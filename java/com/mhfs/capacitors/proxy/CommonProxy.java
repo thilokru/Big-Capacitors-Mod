@@ -73,34 +73,34 @@ public class CommonProxy {
 
 	private void setupRecipies() {		
 		ItemStack capacitorStack = new ItemStack(Blocks.capacitorIron, 4);
-		ItemStack obsidianStack = new ItemStack(Blocks.obsidian);
-		ItemStack ironBlockStack = new ItemStack(Blocks.iron_block);
+		ItemStack obsidianStack = new ItemStack(Blocks.OBSIDIAN);
+		ItemStack ironBlockStack = new ItemStack(Blocks.IRON_BLOCK);
 		GameRegistry.addShapedRecipe(capacitorStack, "OI", 'O', obsidianStack, 'I', ironBlockStack);
 		
 		ItemStack manualStack = new ItemStack(Items.itemManual, 1);
-		ItemStack bookStack = new ItemStack(Items.book);
-		ItemStack ironIngotStack = new ItemStack(Items.iron_ingot);
+		ItemStack bookStack = new ItemStack(Items.BOOK);
+		ItemStack ironIngotStack = new ItemStack(Items.IRON_INGOT);
 		GameRegistry.addShapelessRecipe(manualStack, bookStack, ironIngotStack);
 			
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.itemMany, 1, 0), true, " S ", "CSC", " S ", 'S', Items.stick, 'C', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.itemMany, 1, 0), true, " S ", "CSC", " S ", 'S', Items.STICK, 'C', "ingotCopper"));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(Items.itemMany, 1, 1), true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.wool), 'C',  new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(Items.itemMany, 1, 1), true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.WOOL), 'C',  new ItemStack(Items.itemMany, 1, 0)));
 		
 		Item barrelItem = Item.getItemFromBlock(Blocks.blockBarrel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
 		
 		Item fuelCellItem = Item.getItemFromBlock(Blocks.blockFuelCell);
-		GameRegistry.addRecipe(new ShapedOreRecipe(fuelCellItem, true, " I ", "IBI", " I ", 'I', "ingotIron", 'B', Items.bucket));
+		GameRegistry.addRecipe(new ShapedOreRecipe(fuelCellItem, true, " I ", "IBI", " I ", 'I', "ingotIron", 'B', Items.BUCKET));
 
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
-		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.obsidian, 'G', Blocks.gravel));
+		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.OBSIDIAN, 'G', Blocks.GRAVEL));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTokamak, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 4), 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
-		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.obsidian, 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', new ItemStack(Items.itemMany, 1, 0)));
 		
 		//PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);
 		//PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemMany, 2, 4), null, 0);
@@ -155,7 +155,7 @@ public class CommonProxy {
 
 	public void postInit(FMLPostInitializationEvent event,
 			BigCapacitorsMod mod) {
-		Blocks.capacitorIron.setMetal(Blocks.iron_block);
+		Blocks.capacitorIron.setMetal(Blocks.IRON_BLOCK);
 		Lo.g.info("Loading material properties...");
 		loadDielectricities(mod);
 		loadVoltages(mod);

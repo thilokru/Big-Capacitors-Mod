@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 
@@ -17,15 +17,15 @@ public class BucketHandler {
 	
 	@SubscribeEvent
     public void onBucketFill(FillBucketEvent event) {
-		ItemStack result = checkFill(event.world, event.target);
+		ItemStack bucket = checkFill(event.getWorld(), event.getTarget());
 		
-		if(result != null){
-			event.result = result;
+		if(bucket != null){
+			event.setFilledBucket(bucket);
 			event.setResult(Result.ALLOW);
 		}
 	}
 
-	private ItemStack checkFill(World world, MovingObjectPosition target) {
+	private ItemStack checkFill(World world, RayTraceResult target) {
 		Block block = world.getBlockState(target.getBlockPos()).getBlock();
 		
 		Item bucket = FLUID_BLOCK_TO_BUCKET.get(block);

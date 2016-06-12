@@ -38,7 +38,7 @@ public class Fluids {
 	}
 	
 	private static BlockFluidClassic regFluidBlock(CreativeTabs tab, Fluid fluid, String name){
-		BlockFluidClassic block = new BlockFluidClassic(fluid, Material.water);
+		BlockFluidClassic block = new BlockFluidClassic(fluid, Material.WATER);
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
 		GameRegistry.registerBlock(block, name);

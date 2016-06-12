@@ -58,7 +58,7 @@ public class Items extends net.minecraft.init.Items{
 	
 	private static Item createBucket(Fluid fluid, Block fluidBlock, String unloc){
 		Item bucket = new ItemCustomBuckets(fluidBlock, unloc);
-		FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(bucket), new ItemStack(Items.bucket));
+		FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(bucket), new ItemStack(Items.BUCKET));
 		BucketHandler.FLUID_BLOCK_TO_BUCKET.put(fluidBlock, bucket);
 		return bucket;
 	}

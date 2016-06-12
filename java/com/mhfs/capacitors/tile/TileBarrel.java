@@ -9,13 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -34,7 +34,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	
 	public TileBarrel(){
 		wineTank = new FluidTank(Fluids.fluidWine, 0, tankCapacity);
-		potatoStack = new ItemStack(Items.potato, 0);
+		potatoStack = new ItemStack(Items.POTATO, 0);
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 				this.progress = 0;
 				this.processing = false;
 				this.wineTank.fill(new FluidStack(Fluids.fluidWine, 2000), true);
-				this.potatoStack = new ItemStack(Items.potato, 0);
+				this.potatoStack = new ItemStack(Items.POTATO, 0);
 			}
 		}
 		this.markDirty();
@@ -60,12 +60,12 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	public void onRightClick(World world, EntityPlayer player) {
 		if(processing)return;
 		if(world.isRemote)return;
-		ItemStack stack = player.getHeldItem();
+		ItemStack stack = player.getHeldItemMainhand();
 		if(stack == null)return;
-		if(stack.getItem() == Items.potato){
+		if(stack.getItem() == Items.POTATO){
 			if(potatoStack == null){
 				stack.stackSize--;
-				potatoStack = new ItemStack(Items.potato, 1);
+				potatoStack = new ItemStack(Items.POTATO, 1);
 			}else{
 				if(potatoStack.stackSize < this.getInventoryStackLimit()){
 					stack.stackSize--;
@@ -95,7 +95,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if(stack.getItem() == Items.potato && potatoStack == null){
+		if(stack.getItem() == Items.POTATO && potatoStack == null){
 			potatoStack = stack;
 		}
 	}
@@ -112,13 +112,13 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return stack.getItem() == Items.potato;
+		return stack.getItem() == Items.POTATO;
 	}
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing face) {
 		if(face == EnumFacing.UP){
-			if(stack.getItem() == Items.potato){
+			if(stack.getItem() == Items.POTATO){
 				return true;
 			}
 		}
@@ -128,7 +128,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing face) {
 		if(face == EnumFacing.UP){
-			if(stack.getItem() == Items.potato){
+			if(stack.getItem() == Items.POTATO){
 				return true;
 			}
 		}
@@ -205,14 +205,14 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 		tag.setInteger("progress", progress);
 	}
 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		this.readFromNBT(pkt.getNbtCompound());
 	}
 
 	public Packet<?> getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.pos, 1, tag);
+		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	public FluidTank getWineTank() {
@@ -251,7 +251,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 
 	@Override
 	public String getName() {
-		return StatCollector.translateToLocal("tile.barrel.name");
+		return I18n.translateToLocal("tile.barrel.name");
 	}
 
 	@Override
@@ -260,7 +260,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
+	public ITextComponent getDisplayName() {
 		return null;
 	}
 

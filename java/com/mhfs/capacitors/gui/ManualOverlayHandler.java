@@ -10,7 +10,7 @@ import com.mhfs.capacitors.misc.IChapterRelated;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -27,8 +27,8 @@ public class ManualOverlayHandler extends Gui implements IOverlayHandler {
 				return;
 			Gui gui = Minecraft.getMinecraft().ingameGUI;
 
-			int xPos = event.resolution.getScaledWidth() / 2;
-			int yPos = event.resolution.getScaledHeight() / 2;
+			int xPos = event.getResolution().getScaledWidth() / 2;
+			int yPos = event.getResolution().getScaledHeight() / 2;
 			
 			GL11.glPushMatrix();
 			GL11.glEnable(GL11.GL_BLEND);

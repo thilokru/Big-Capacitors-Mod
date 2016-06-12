@@ -6,7 +6,8 @@
         	"metal": "big_capacitors:blocks/metal",
         	"particle": "big_capacitors:blocks/metal"
     	},
-    	"uvlock": true
+    	"uvlock": true,
+    	"transform": "forge:default-block"
 	},
     "variants": {
     	"orientation": {

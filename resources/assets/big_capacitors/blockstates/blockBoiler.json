@@ -1,7 +1,8 @@
 {
 	"forge_marker": 1,
 	"defaults":{
-		 "model": "big_capacitors:blockBoiler"
+		 "model": "big_capacitors:blockBoiler",
+		 "transform": "forge:default-block"
 	},
     "variants": {
         "normal": [{}],

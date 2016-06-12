@@ -1,7 +1,8 @@
 {
 	"forge_marker": 1,
 	"defaults":{
-		 "model": "big_capacitors:blockTokamak"
+		 "model": "big_capacitors:blockTokamak",
+		 "transform": "forge:default-block"
 	},
     "variants": {
         "normal": [{}],

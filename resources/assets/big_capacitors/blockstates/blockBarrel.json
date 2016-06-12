@@ -5,7 +5,8 @@
     	"textures": {
         	"#None": "big_capacitors:models/barrel"
     	},
-    	"uvlock": true
+    	"uvlock": true,
+    	"transform": "forge:default-block"
     },
     "variants": {
     	"normal": [{}],

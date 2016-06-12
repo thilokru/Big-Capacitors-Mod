@@ -1,7 +1,8 @@
 {
 	"forge_marker": 1,
 	"defaults":{
-		 "model": "big_capacitors:blockDestillationTower"
+		 "model": "big_capacitors:blockDestillationTower",
+		 "transform": "forge:default-block"
 	},
     "variants": {
         "normal": [{}],

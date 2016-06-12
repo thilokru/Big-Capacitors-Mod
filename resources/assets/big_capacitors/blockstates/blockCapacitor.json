@@ -1,7 +1,8 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "big_capacitors:blockCapacitor"
+		"model": "big_capacitors:blockCapacitor",
+		"transform": "forge:default-block"
 	},
     "variants": {
     	"orientation": {

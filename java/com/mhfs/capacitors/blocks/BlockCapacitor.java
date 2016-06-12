@@ -14,6 +14,8 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
@@ -33,9 +35,15 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 
 	public BlockCapacitor(Material material, double resistance) {
 		super(material);
-		GameRegistry.registerBlock(this, name);
 		this.setUnlocalizedName(name);
+		this.setRegistryName(BigCapacitorsMod.modid, name);
 		this.setCreativeTab(BigCapacitorsMod.instance.creativeTab);
+		GameRegistry.register(this);
+		
+		Item item = new ItemBlock(this);
+		item.setRegistryName(this.getRegistryName());
+		GameRegistry.register(item);
+		
 		this.resistance = resistance;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(ORIENTATION, EnumFacing.DOWN));
 	}
@@ -57,7 +65,7 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
@@ -117,32 +125,9 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 	public String getChapter(IBlockAccess access, BlockPos pos) {
 		return "Capacitor Walls";
 	}
-
-	@Override
-	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
-		return getAABB(world, pos);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
-		AxisAlignedBB aabb = getAABB(world, pos);
-		float minX = (float) (aabb.minX - pos.getX());
-		float minY = (float) (aabb.minY - pos.getY());
-		float minZ = (float) (aabb.minZ - pos.getZ());
-		float maxX = (float) (aabb.maxX - pos.getX());
-		float maxY = (float) (aabb.maxY - pos.getY());
-		float maxZ = (float) (aabb.maxZ - pos.getZ());
-
-		this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
-		return getAABB(world, pos);
-	}
-
-	private AxisAlignedBB getAABB(IBlockAccess world, BlockPos pos) {
-		EnumFacing dir = this.getOrientation(world, pos);
+	
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		EnumFacing dir = state.getValue(ORIENTATION);
 		float minX, minY, minZ, maxX, maxY, maxZ;
 		minX = minY = minZ = 0;
 		maxX = maxY = maxZ = 1;
@@ -159,7 +144,7 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 		} else if (dir == EnumFacing.UP) {
 			minY = 0.5F;
 		}
-		return AxisAlignedBB.fromBounds(minX + pos.getX(), minY + pos.getY(), minZ + pos.getZ(), maxX + pos.getX(), maxY + pos.getY(), maxZ + pos.getZ());
+		return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	@Override

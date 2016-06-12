@@ -5,6 +5,7 @@ import com.mhfs.capacitors.blocks.BlockStirlingEngine;
 
 import cofh.api.energy.IEnergyProvider;
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -27,9 +28,14 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		if(worldObj.isRemote)return;
 		if(isActive()){
 			energy += 40;
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	@Override

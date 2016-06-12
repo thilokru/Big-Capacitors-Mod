@@ -6,15 +6,14 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.gui.manual.GuiManualChapter;
 import com.mhfs.capacitors.gui.manual.IPage;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
+import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.misc.IChapterRelated;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -44,7 +43,7 @@ public class GuiHandler implements IGuiHandler {
 			int x, int y, int z) {
 		IKnowledgeRegistry reg = BigCapacitorsMod.instance.knowledge;
 		SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
-		soundHandler.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
+		Helper.playPageSound(soundHandler);
 		if(ID == 1){
 			BlockPos pos = new BlockPos(x, y, z);
 			Block block = world.getBlockState(pos).getBlock();

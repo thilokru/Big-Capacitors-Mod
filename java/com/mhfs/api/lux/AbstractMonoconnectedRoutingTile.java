@@ -3,6 +3,7 @@ package com.mhfs.api.lux;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -112,7 +113,8 @@ public abstract class AbstractMonoconnectedRoutingTile extends TileEntity implem
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		worldObj.markBlockForUpdate(this.pos);
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	public void onDestroy() {

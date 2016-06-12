@@ -6,6 +6,7 @@ import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -52,11 +53,16 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 					inputTank.drain(recipe.getInput().amount * times, true);
 					TileTower tank = (TileTower) worldObj.getTileEntity(this.getPos().offset(EnumFacing.UP, 2));
 					tank.condense(recipe.getOutput(), times);
-					this.markDirty();
-					this.worldObj.markBlockForUpdate(pos);
+					markForUpdate();
 				}
 			}
 		}
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	private boolean checkFormed() {
@@ -124,8 +130,7 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		if (!simulate) {
 			energy += receive;
 		}
-		this.markDirty();
-		worldObj.markBlockForUpdate(pos);
+		markForUpdate();
 		return receive;
 	}
 
@@ -165,8 +170,7 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		boolean holdingContainer = Helper.isHoldingContainer(player);
 		if(!holdingContainer)return false;
 		if (Helper.checkBucketFill(player, inputTank)) {
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
 		return true;
 	}

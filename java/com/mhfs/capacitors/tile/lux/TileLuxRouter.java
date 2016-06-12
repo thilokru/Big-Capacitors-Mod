@@ -55,8 +55,7 @@ public class TileLuxRouter extends AbstractRoutingTile implements ILuxHandler, I
 		this.toRender.add(hopPos);
 		ILuxHandler hop = (ILuxHandler) this.worldObj.getTileEntity(hopPos);
 		hop.energyFlow(this.getPosition(), dst, amount);
-		this.markDirty();
-		worldObj.markBlockForUpdate(this.pos);
+		markForUpdate();
 	}
 
 	public int getRouteSucction() {

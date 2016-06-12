@@ -2,6 +2,8 @@ package com.mhfs.capacitors;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
@@ -41,7 +43,12 @@ public class Fluids {
 		BlockFluidClassic block = new BlockFluidClassic(fluid, Material.WATER);
 		block.setCreativeTab(tab);
 		block.setUnlocalizedName(name);
-		GameRegistry.registerBlock(block, name);
+		block.setRegistryName(BigCapacitorsMod.modid, name);
+		GameRegistry.register(block);
+		
+		Item item = new ItemBlock(block);
+		item.setRegistryName(BigCapacitorsMod.modid, name);
+		GameRegistry.register(item);
 		return block;
 	}
 	

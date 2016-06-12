@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mhfs.capacitors.misc.HashSetHelper;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -91,8 +92,7 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		if (available != null && available.lastHop != lastHop && available.sucction >= value)
 			return;
 		routes.put(requester, new SucctionSpec(lastHop, value));
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(this.pos);
+		markForUpdate();
 	}
 
 	@Override
@@ -119,8 +119,7 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 			if (level > 1)
 				foreign.handleDisconnect(handler, level - 1);
 		}
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(this.pos);
+		markForUpdate();
 	}
 
 	public void connect(BlockPos pos) {
@@ -131,8 +130,13 @@ public abstract class AbstractRoutingTile extends TileEntity implements IRouting
 		this.connections.add(pos);
 		router.handlerSetupRequest(this.getPosition());
 		router.connect(this.getPosition());
+		markForUpdate();
+	}
+	
+	protected void markForUpdate(){
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(this.pos);
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	/**

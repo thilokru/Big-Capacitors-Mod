@@ -1,9 +1,7 @@
 package com.mhfs.capacitors.blocks;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -14,19 +12,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class BlockStirlingEngine extends BlockContainer {
+public class BlockStirlingEngine extends BlockAdvContainer {
 	
 	public final static String name = "blockStirlingEngine";
 	
 	public static final PropertyDirection ORIENTATION = PropertyDirection.create("orientation", EnumFacing.Plane.HORIZONTAL);
 
 	public BlockStirlingEngine(Material mat) {
-		super(mat);
-		GameRegistry.registerBlock(this, name);
-		this.setUnlocalizedName(name);
-		this.setCreativeTab(BigCapacitorsMod.instance.creativeTab);
+		super(mat, name);
+		
 		this.setDefaultState(this.blockState.getBaseState().withProperty(ORIENTATION, EnumFacing.NORTH));
 	}
 
@@ -53,10 +48,6 @@ public class BlockStirlingEngine extends BlockContainer {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { ORIENTATION });
-	}
-	
-	public int getRenderType() {
-		return 3;
 	}
 
 }

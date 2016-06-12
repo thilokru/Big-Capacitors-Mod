@@ -3,6 +3,7 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.misc.Helper;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -35,12 +36,17 @@ public class TileTower extends TileEntity implements IFluidHandler{
 			if(accepted != condense.amount){
 				releasingSteam = true;
 			}
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}else{
 			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
 			tower.condense(output, times);
 		}
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	@Override
@@ -56,8 +62,7 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		FluidStack ret = tank.drain(maxDrain, doDrain);
-		this.markDirty();
-		worldObj.markBlockForUpdate(getPos());
+		markForUpdate();
 		return ret;
 	}
 
@@ -104,8 +109,7 @@ public class TileTower extends TileEntity implements IFluidHandler{
 	
 	public void resetSteamState(){
 		this.releasingSteam = false;
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(pos);
+		markForUpdate();
 	}
 
 	public boolean isTopMost() {
@@ -121,8 +125,7 @@ public class TileTower extends TileEntity implements IFluidHandler{
 		if(!holdingContainer)return false;
 		if(Helper.checkBucketDrain(player, tank)){
 			this.releasingSteam = false;
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
 		return true;
 	}

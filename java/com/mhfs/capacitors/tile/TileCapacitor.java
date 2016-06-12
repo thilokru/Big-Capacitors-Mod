@@ -5,6 +5,7 @@ import com.mhfs.capacitors.misc.IRotatable;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -35,8 +36,7 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 	private void createEntity() {
 		wrapper = new CapacitorWallWrapper(worldObj, this.pos);
 		wrapper.checkJoin(worldObj, this.isFirstTick);
-		this.markDirty();
-		worldObj.markBlockForUpdate(this.pos);
+		markForUpdate();
 	}
 
 	public EnumFacing getRotation() {
@@ -55,8 +55,13 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 
 	public void onEntityChange(CapacitorWallWrapper cap) {
 		this.wrapper = cap;
+		markForUpdate();
+	}
+	
+	protected void markForUpdate(){
 		this.markDirty();
-		worldObj.markBlockForUpdate(this.pos);
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	public CapacitorWallWrapper getEntityCapacitor() {

@@ -288,7 +288,8 @@ public class CapacitorWallWrapper {
 			if (entity != null) {
 				entity.markDirty();
 			}
-			world.markBlockForUpdate(pos);
+			IBlockState state = entity.getBlockType().getStateFromMeta(entity.getBlockMetadata());
+			world.notifyBlockUpdate(pos, state, state, 3);
 		}
 	}
 

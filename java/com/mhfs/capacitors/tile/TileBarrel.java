@@ -2,6 +2,7 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Fluids;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -53,14 +55,13 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 				this.potatoStack = new ItemStack(Items.POTATO, 0);
 			}
 		}
-		this.markDirty();
-		this.worldObj.markBlockForUpdate(this.pos);
+		markForUpdate();
 	}
 	
-	public void onRightClick(World world, EntityPlayer player) {
+	public void onRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if(processing)return;
 		if(world.isRemote)return;
-		ItemStack stack = player.getHeldItemMainhand();
+		ItemStack stack = player.getHeldItem(hand);
 		if(stack == null)return;
 		if(stack.getItem() == Items.POTATO){
 			if(potatoStack == null){
@@ -72,9 +73,14 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 					potatoStack.stackSize++;
 				}
 			}
-			this.markDirty();
-			this.worldObj.markBlockForUpdate(this.pos);
+			markForUpdate();
 		}
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	@Override

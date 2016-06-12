@@ -2,11 +2,11 @@ package com.mhfs.capacitors.gui.manual;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mhfs.capacitors.misc.Helper;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 import static com.mhfs.capacitors.gui.manual.GuiManualButton.Mode.*;
 
 public class GuiManualButton extends GuiButton {
@@ -35,7 +35,7 @@ public class GuiManualButton extends GuiButton {
 
 	@Override
 	public void playPressSound(SoundHandler sh) {
-		sh.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
+		Helper.playPageSound(sh);
 	}
 
 	private boolean isMouseHovering(int mouseX, int mouseY) {

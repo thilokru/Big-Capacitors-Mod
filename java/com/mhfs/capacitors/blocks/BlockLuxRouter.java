@@ -2,26 +2,20 @@ package com.mhfs.capacitors.blocks;
 
 import java.util.Random;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.render.RendererLux;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class BlockLuxRouter extends BlockContainer {
+public class BlockLuxRouter extends BlockAdvContainer {
 
 	public final static String name = "blockLuxRouter";
 	public BlockLuxRouter(Material mat) {
-		super(mat);
-		GameRegistry.registerBlock(this, name);
-		this.setUnlocalizedName(name);
-		this.setCreativeTab(BigCapacitorsMod.instance.creativeTab);
+		super(mat, name);
 	}
 
 	@Override
@@ -39,15 +33,6 @@ public class BlockLuxRouter extends BlockContainer {
 
 	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
 		RendererLux.createParticles(world, pos);
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-
-	public int getRenderType() {
-		return 3;
 	}
 
 }

@@ -8,6 +8,7 @@ import com.mhfs.capacitors.misc.IRotatable;
 import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -48,8 +49,13 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(tankSide));
 			tower.condense(hydrogen, 1);
 		}
+		markForUpdate();
+	}
+	
+	protected void markForUpdate(){
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(this.pos);
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	private boolean isFormed() {
@@ -164,8 +170,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		int amount = Math.min(MAX_TRANSFER, Math.min(MAX_ENERGY - energy, maxReceive));
 		if(!simulate){
 			energy += amount;
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
 		return amount;
 	}
@@ -174,8 +179,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		boolean holdingContainer = Helper.isHoldingContainer(player);
 		if(!holdingContainer)return false;
 		if (Helper.checkBucketFill(player, water)) {
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
 		return true;
 	}

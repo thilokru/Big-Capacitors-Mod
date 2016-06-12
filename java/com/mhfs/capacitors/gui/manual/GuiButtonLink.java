@@ -2,11 +2,11 @@ package com.mhfs.capacitors.gui.manual;
 
 import java.awt.Color;
 
+import com.mhfs.capacitors.misc.Helper;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiButtonLink extends GuiButton {
 
@@ -49,6 +49,6 @@ public class GuiButtonLink extends GuiButton {
 
 	@Override
 	public void playPressSound(SoundHandler sh) {
-		sh.playSound(PositionedSoundRecord.create(new ResourceLocation("big_capacitors:pageTurn"), 1.0F));
+		Helper.playPageSound(sh);
 	}
 }

@@ -6,6 +6,7 @@ import com.mhfs.capacitors.misc.Helper;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -64,20 +65,21 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 				temperature += extract * KELVIN_PER_RF;
 				temperature -= (temperature - ROOM_TEMP)*LOSS_FACTOR;
 			}
-			this.markDirty();
-			worldObj.markBlockForUpdate(this.pos);
 		}else{
 			if(temperature > ROOM_TEMP){
 				this.temperature = ROOM_TEMP;
-				this.markDirty();
-				worldObj.markBlockForUpdate(this.pos);
 			}
 			if(energy > 0){
 				energy = 0;
-				this.markDirty();
-				worldObj.markBlockForUpdate(this.pos);
 			}
 		}
+		markForUpdate();
+	}
+	
+	protected void markForUpdate(){
+		this.markDirty();
+		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	private boolean checkFormed() {
@@ -205,8 +207,7 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 		boolean holdingContainer = Helper.isHoldingContainer(player);
 		if(!holdingContainer)return false;
 		if (Helper.checkBucketFill(player, hydrogenTank)) {
-			this.markDirty();
-			worldObj.markBlockForUpdate(pos);
+			markForUpdate();
 		}
 		return true;
 	}

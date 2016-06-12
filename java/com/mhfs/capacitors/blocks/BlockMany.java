@@ -31,10 +31,17 @@ public class BlockMany extends Block implements IChapterRelated{
 	private BlockData[] subBlocks;
 
 	public BlockMany(BlockData[] subBlocks) {
-		super(Material.rock);
+		super(Material.ROCK);
 		this.setCreativeTab(BigCapacitorsMod.instance.creativeTab);
 		this.setUnlocalizedName(name);
-		GameRegistry.registerBlock(this, ItemBlockMany.class, name);
+		
+		this.setRegistryName(BigCapacitorsMod.modid, name);
+		GameRegistry.register(this);
+		
+		Item item = new ItemBlockMany(this);
+		item.setRegistryName(this.getRegistryName());
+		GameRegistry.register(item);
+		
 		this.subBlocks = subBlocks;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, 0));
 	}

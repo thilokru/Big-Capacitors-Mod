@@ -14,7 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -23,23 +25,24 @@ public class ItemMultitool extends Item {
 	public final static String name = "itemMultitool";
 	
 	public ItemMultitool(){
-		GameRegistry.registerItem(this, name);
+		setRegistryName(BigCapacitorsMod.modid, name);
 		setUnlocalizedName(name);
 		setCreativeTab(BigCapacitorsMod.instance.creativeTab);
+		GameRegistry.register(this);
 	}
 	
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float aimX, float aimY, float aimZ) {
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (world.isRemote)
-			return false;
+			return EnumActionResult.PASS;
 		TileEntity entity = world.getTileEntity(pos);
 		if (!player.isSneaking()) {
 			if (entity instanceof TileCapacitor) {
 				TileCapacitor cap = (TileCapacitor) entity;
 				if (cap.getEntityCapacitor() == null)
-					return false;
+					return EnumActionResult.FAIL;
 				cap.getEntityCapacitor().onGroundSwitch(world);
-				return true;
+				return EnumActionResult.SUCCESS;
 			} else if (entity instanceof ILuxHandler) {
 				ILuxHandler router = (ILuxHandler) entity;
 				if (stack.getTagCompound() == null) {
@@ -52,14 +55,14 @@ public class ItemMultitool extends Item {
 				} else {
 					saveLocation(stack, new BlockPos(pos));
 				}
-				return true;
+				return EnumActionResult.SUCCESS;
 			}
 		} else {
 			if(entity instanceof TileEnergyTransciever){
 				((TileEnergyTransciever)entity).switchMode();
 			}
 		}
-		return false;
+		return EnumActionResult.FAIL;
 	}
 
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {

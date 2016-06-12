@@ -1,3 +1,3 @@
 {
-  "pageTurn": {"category": "player","sounds": [{name: "page0", stream: false}, {name: "page1", stream: false}, {name: "page2", stream: false}]}
+  "pageTurn": {"category": "player","sounds": [{name: "big_capacitors:page0", stream: false}, {name: "big_capacitors:page1", stream: false}, {name: "big_capacitors:page2", stream: false}]}
 }

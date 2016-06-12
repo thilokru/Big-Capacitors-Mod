@@ -12,7 +12,8 @@ public class ItemCustomBuckets extends ItemBucket {
 	public ItemCustomBuckets(Block fluidBlock, String unloc) {
 		super(fluidBlock);
 		this.setUnlocalizedName(unloc).setContainerItem(Items.BUCKET);
-		GameRegistry.registerItem(this, unloc);
+		this.setRegistryName(BigCapacitorsMod.modid, unloc);
+		GameRegistry.register(this);
 		this.setCreativeTab(BigCapacitorsMod.instance.creativeTab);
 	}
 

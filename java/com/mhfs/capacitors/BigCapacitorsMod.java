@@ -7,6 +7,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
+
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.misc.Multiblock;
@@ -24,6 +26,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = BigCapacitorsMod.modid, useMetadata = true, guiFactory = BigCapacitorsMod.guiFactory, version = BigCapacitorsMod.version)
 public class BigCapacitorsMod {
+	
+	static{
+		FluidRegistry.enableUniversalBucket();
+	}
 	
 	public final static String modid = "big_capacitors";
 	public final static String guiFactory = "com.mhfs.capacitors.gui.GuiFactory";

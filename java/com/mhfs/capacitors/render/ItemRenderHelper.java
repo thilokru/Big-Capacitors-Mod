@@ -45,17 +45,8 @@ public class ItemRenderHelper {
 		registerMesher(Items.itemManual);
 		registerMesher(Items.itemMultitool);
 		
-		registerBuckets();
 		registerSubItems();
 		registerSubBlocks();
-	}
-	
-	private static void registerBuckets(){
-		ModelLoader.setBucketModelDefinition(Items.itemBucketDestilledWater);
-		ModelLoader.setBucketModelDefinition(Items.itemBucketDestilledWater);
-		ModelLoader.setBucketModelDefinition(Items.itemBucketEthanol);
-		ModelLoader.setBucketModelDefinition(Items.itemBucketHydrogen);
-		ModelLoader.setBucketModelDefinition(Items.itemBucketWine);
 	}
 	
 	private static void registerSubBlocks(){

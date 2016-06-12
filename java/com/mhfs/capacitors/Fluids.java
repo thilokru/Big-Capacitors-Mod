@@ -64,6 +64,8 @@ public class Fluids {
 		fluid.setViscosity(viscosity);
 		fluid.setGaseous(gaseous);
 		FluidRegistry.registerFluid(fluid);
+		
+		FluidRegistry.addBucketForFluid(fluid);
 		return fluid;
 	}
 }

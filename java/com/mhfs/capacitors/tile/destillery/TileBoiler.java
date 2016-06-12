@@ -1,25 +1,26 @@
 package com.mhfs.capacitors.tile.destillery;
 
 import com.mhfs.capacitors.Blocks;
-import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -95,7 +96,7 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 
 	@Override
 	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return inputTank.getFluid().getFluid() == null ? true : inputTank.getFluid().getFluid().equals(fluid);
+		return inputTank.getFluid() == null ? true : inputTank.getFluid().getFluid().equals(fluid);
 	}
 
 	@Override
@@ -166,13 +167,7 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		return inputTank;
 	}
 
-	public boolean onBlockActivated(EntityPlayer player) {
-		boolean holdingContainer = Helper.isHoldingContainer(player);
-		if(!holdingContainer)return false;
-		if (Helper.checkBucketFill(player, inputTank)) {
-			markForUpdate();
-		}
-		return true;
+	public boolean onBlockActivated(EntityPlayer player, ItemStack stack, EnumFacing side) {
+		return FluidUtil.interactWithTank(stack, player, this, side);
 	}
-
 }

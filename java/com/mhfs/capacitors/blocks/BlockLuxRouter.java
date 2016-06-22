@@ -31,7 +31,8 @@ public class BlockLuxRouter extends BlockAdvContainer {
 		super.breakBlock(world, pos, state);
 	}
 
-	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
+	@Override
+	public void randomDisplayTick(IBlockState stae, World world, BlockPos pos, Random rand) {
 		RendererLux.createParticles(world, pos);
 	}
 

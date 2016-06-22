@@ -3,74 +3,97 @@ package com.mhfs.capacitors.tile.lux;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.mhfs.api.lux.AbstractRoutingTile;
-import com.mhfs.api.lux.IRouting;
-import com.mhfs.api.lux.ILuxHandler;
-import com.mhfs.capacitors.misc.HashSetHelper;
+import com.mhfs.api.lux.LuxAPI;
+import com.mhfs.api.lux.LuxHandlerImpl;
+import com.mhfs.api.lux.RoutingImpl;
+import static com.mhfs.capacitors.misc.Helper.markForUpdate;
 import com.mhfs.capacitors.render.IConnected;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-public class TileLuxRouter extends AbstractRoutingTile implements ILuxHandler, IConnected {
+public class TileLuxRouter extends TileEntity implements IConnected {
 
-	private Set<BlockPos> toRender;
+	private RoutingImpl routingHandler;
+	private LuxHandlerImpl luxHandler;
 
 	public TileLuxRouter() {
 		super();
-		toRender = new HashSet<BlockPos>();
+		this.routingHandler = new RoutingImpl(this);
+		this.luxHandler = new LuxHandlerImpl(this);
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-
-		this.toRender = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("render"));
+		LuxAPI.ROUTING_CAPABILITY.readNBT(routingHandler, null, tag.getTag("routing"));
+		LuxAPI.LUX_FLOW_CAPABILITY.readNBT(luxHandler, null, tag.getTag("lux"));
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setTag("routing", LuxAPI.ROUTING_CAPABILITY.writeNBT(routingHandler, null));
+		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side){
+		if(cap == LuxAPI.LUX_FLOW_CAPABILITY){
+			return LuxAPI.LUX_FLOW_CAPABILITY.cast(this.luxHandler);
+		}else if(cap == LuxAPI.ROUTING_CAPABILITY){
+			return LuxAPI.ROUTING_CAPABILITY.cast(this.routingHandler);
+		}
+		return super.getCapability(cap, side);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side){
+		if(cap == LuxAPI.LUX_FLOW_CAPABILITY || cap == LuxAPI.ROUTING_CAPABILITY)
+			return true;
+		return super.hasCapability(cap, side);
+	}
+	
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.getNbtCompound());
+	}
 
-		tag.setTag("render", HashSetHelper.blockPosSetToNBT(toRender));
-		toRender.clear();
+	public Packet<?> getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	public Set<BlockPos> getActiveConnections() {
-		return this.toRender;
+		return luxHandler.getActive();
 	}
 
 	public Set<BlockPos> getConnections() {
-		return this.connections;
+		Set<BlockPos> set = new HashSet<BlockPos>();
+		for(BlockPos pos : routingHandler.getConnections()){
+			set.add(pos);
+		}
+		return set;
 	}
 
 	public void resetConnectionState() {
-		this.toRender.clear();
-	}
-
-	@Override
-	public void energyFlow(BlockPos lastHop, BlockPos dst, long amount) {
-		BlockPos hopPos = routes.get(dst).lastHop;
-		this.toRender.add(hopPos);
-		ILuxHandler hop = (ILuxHandler) this.worldObj.getTileEntity(hopPos);
-		hop.energyFlow(this.getPosition(), dst, amount);
-		markForUpdate();
-	}
-
-	public int getRouteSucction() {
-		if (routes.keySet().size() == 0)
-			return 0;
-		return routes.get(routes.keySet().iterator().next()).sucction;
-	}
-
-	@Override
-	public boolean isValidConnection(IRouting foreign) {
-		return foreign instanceof ILuxHandler;
+		luxHandler.resetActive();
+		markForUpdate(this);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
+	}
+
+	public void onDestroy() {
+		routingHandler.goOffline();
 	}
 }

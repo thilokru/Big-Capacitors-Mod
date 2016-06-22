@@ -2,7 +2,8 @@ package com.mhfs.capacitors.items;
 
 import java.util.List;
 
-import com.mhfs.api.lux.ILuxHandler;
+import com.mhfs.api.lux.IRouting;
+import com.mhfs.api.lux.LuxAPI;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
@@ -43,14 +44,19 @@ public class ItemMultitool extends Item {
 					return EnumActionResult.FAIL;
 				cap.getEntityCapacitor().onGroundSwitch(world);
 				return EnumActionResult.SUCCESS;
-			} else if (entity instanceof ILuxHandler) {
-				ILuxHandler router = (ILuxHandler) entity;
+			} else if (entity.hasCapability(LuxAPI.ROUTING_CAPABILITY, null)) {
+				IRouting router1 = entity.getCapability(LuxAPI.ROUTING_CAPABILITY, null);
 				if (stack.getTagCompound() == null) {
 					stack.setTagCompound(new NBTTagCompound());
 				}
 				if (hasLocation(stack)) {
 					BlockPos loc = getSavedLocation(stack);
-					router.connect(loc);
+					TileEntity tile2 = world.getTileEntity(loc);
+					if(tile2.hasCapability(LuxAPI.ROUTING_CAPABILITY, null)){
+						IRouting router2 = tile2.getCapability(LuxAPI.ROUTING_CAPABILITY, null);
+						router1.onConnect(router2);
+						router2.onConnect(router1);
+					}
 					removeLocation(stack);
 				} else {
 					saveLocation(stack, new BlockPos(pos));

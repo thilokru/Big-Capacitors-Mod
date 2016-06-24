@@ -37,6 +37,7 @@ public class ItemMultitool extends Item {
 		if (world.isRemote)
 			return EnumActionResult.PASS;
 		TileEntity entity = world.getTileEntity(pos);
+		if(entity == null)return EnumActionResult.FAIL;
 		if (!player.isSneaking()) {
 			if (entity instanceof TileCapacitor) {
 				TileCapacitor cap = (TileCapacitor) entity;

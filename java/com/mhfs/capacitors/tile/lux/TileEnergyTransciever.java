@@ -15,6 +15,9 @@ import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -115,6 +118,16 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
 	}
 	
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.getNbtCompound());
+	}
+
+	public Packet<?> getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new SPacketUpdateTileEntity(this.pos, 1, tag);
+	}
+	
 	private long getEnergyForTarget(long need, int drainCount) {
 		IEnergyHandler handler = getConnectedTile();
 		if(handler == null)return 0;
@@ -132,9 +145,9 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	
 	public void switchMode(){
 		mode = mode.getNext();
-		this.routingHandler.goOffline();
+		this.routingHandler.disadvertise();
 		if(mode.isReceiver())this.routingHandler.advertise();
-		this.markDirty();
+		markForUpdate(this);
 	}
 	
 	public IEnergyHandler getConnectedTile(){

@@ -22,7 +22,15 @@ public interface IRouting {
 	 * @param nextHop the position of the last hop (routing happens in reverse)
 	 * @return 
 	 */
-	public <T> void drainSetup(BlockPos requester, BlockPos nextHop, int distance);
+	public void drainSetup(BlockPos requester, BlockPos nextHop, int distance);
+	
+	/**
+	 * When a drain wishes to no longer be routed to, e.g it changed from receiving to transmitting,
+	 * it shall call this method. It will propagate through the network and if a route to this node
+	 * is present, the route must be removed. Also, this method must be called on all connected nodes.
+	 * @param requester the node which wishes to be forgotten
+	 */
+	public void drainDisconnect(BlockPos requester);
 	
 	/**
 	 * If a node (a router, e.g) joins the network, it needs to retrieve its configuration.

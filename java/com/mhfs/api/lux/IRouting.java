@@ -102,4 +102,11 @@ public interface IRouting {
 	 */
 	@Deprecated
 	public BlockPos[] getConnections();
+	
+	/**
+	 * @deprecated should only be used for serialization
+	 * resets all entries: connections and routes
+	 */
+	@Deprecated
+	public void resetEntries();
 }

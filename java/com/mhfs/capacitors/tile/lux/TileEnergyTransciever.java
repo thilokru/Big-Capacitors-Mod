@@ -36,7 +36,6 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	public void update() {
 		if (worldObj.isRemote)
 			return;
-
 		
 		if(mode.isReceiver()){
 			handleReceive();

@@ -40,6 +40,9 @@ public class RoutingStorage implements IStorage<IRouting> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void readNBT(Capability<IRouting> capability, IRouting instance, EnumFacing side, NBTBase nbt) {
+		
+		instance.resetEntries();
+		
 		NBTTagCompound compound = (NBTTagCompound)nbt;
 		int routeCount = compound.getInteger("routeCount");
 		

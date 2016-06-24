@@ -73,7 +73,8 @@ public class RoutingImpl implements IRouting {
 	@Override
 	public void invalidateRoute(BlockPos destination, BlockPos lastHop) {
 		DistanceSpec spec = routes.get(destination);
-		if(spec == null || !spec.nextHop.equals(lastHop)){
+		if(spec == null)return;
+		if(!spec.nextHop.equals(lastHop)){
 			TileEntity remoteTile = this.local.getWorld().getTileEntity(lastHop);
 			IRouting remoteCap = remoteTile.getCapability(ROUTING_CAPABILITY, null);
 			remoteCap.drainSetup(destination, this.getPosition(), this.routes.get(destination).distance);
@@ -88,6 +89,21 @@ public class RoutingImpl implements IRouting {
 			remoteCap.invalidateRoute(destination, this.getPosition());
 		}
 		Helper.markForUpdate(local);
+	}
+	
+	/**
+	 * May be used in the future. Is left here to be remembered.
+	 */
+	@SuppressWarnings("unused")
+	private void requestUpdates(){
+		List<BlockPos> clone = new ArrayList<BlockPos>();
+		clone.addAll(connections);
+		for (BlockPos hop : clone) {
+			TileEntity remoteTile = local.getWorld().getTileEntity(hop);
+			if(remoteTile == null)continue;
+			IRouting remoteCap = remoteTile.getCapability(ROUTING_CAPABILITY, null);
+			remoteCap.handlerSetupRequest(this);
+		}
 	}
 
 	@Override
@@ -137,6 +153,12 @@ public class RoutingImpl implements IRouting {
 		return connections.toArray(new BlockPos[0]);
 	}
 	
+	@Override
+	public void resetEntries() {
+		this.connections.clear();
+		this.routes.clear();
+	}
+	
 	public void advertise(){
 		for (BlockPos hop : connections) {
 			TileEntity remoteTile = local.getWorld().getTileEntity(hop);
@@ -149,7 +171,9 @@ public class RoutingImpl implements IRouting {
 	}
 
 	public void goOffline() {
-		for (BlockPos hop : connections) {
+		List<BlockPos> clone = new ArrayList<BlockPos>();
+		clone.addAll(connections);
+		for (BlockPos hop : clone) {
 			TileEntity remoteTile = local.getWorld().getTileEntity(hop);
 			if(remoteTile == null)continue;
 			IRouting remoteCap = remoteTile.getCapability(ROUTING_CAPABILITY, null);

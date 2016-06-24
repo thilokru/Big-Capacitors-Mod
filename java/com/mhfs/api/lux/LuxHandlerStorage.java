@@ -27,6 +27,8 @@ public class LuxHandlerStorage implements IStorage<ILuxHandler>{
 	@SuppressWarnings("deprecation")
 	@Override
 	public void readNBT(Capability<ILuxHandler> capability, ILuxHandler instance, EnumFacing side, NBTBase nbt) {
+		instance.resetActive();
+		
 		NBTTagCompound tag = (NBTTagCompound)nbt;
 		
 		int activeCount = tag.getInteger("activeCount");

@@ -9,12 +9,9 @@ import com.mhfs.capacitors.items.ItemData;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -69,14 +66,7 @@ public class ItemRenderHelper {
 	}
 
 	private static void registerFluidBlock(BlockFluidClassic block, String identifier) {
-		Item item = Item.getItemFromBlock(block);
 		final ModelResourceLocation mrl = new ModelResourceLocation(new ResourceLocation(BigCapacitorsMod.modid, fluidStateModel), identifier);
-		ModelBakery.registerItemVariants(item);
-		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-				return mrl;
-			}
-		});
 		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
 			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
 				return mrl;

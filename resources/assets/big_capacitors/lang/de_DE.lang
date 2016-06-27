@@ -1,6 +1,5 @@
 tile.blockCapacitor.name=Eisen Kondensator
 tile.blockBarrel.name=Fass
-tile.blockDestillery.name=Destillerie
 tile.blockDestilledWater.name=destilliertes Wasser
 tile.blockEthanol.name=Alkohol
 tile.blockWine.name=Wein
@@ -13,6 +12,9 @@ tile.blockReactorShield.name=Reaktorenabschirmung
 tile.blockCoil.name=Supraleitende Spule
 tile.blockCoilEmpty.name=Leere Spule
 tile.blockTokamak.name=Fusionsreaktorsteuerung
+tile.blockBoiler.name=Boiler
+tile.blockDestillationTower.name=Kolonne
+tile.blockStirlingEngine.name=Stirlinggenerator
 
 tile.blockLuxRouter.name=Lux Router
 tile.blockEnergyTransfer.name=Energietransciever

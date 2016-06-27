@@ -1,6 +1,5 @@
 tile.blockCapacitor.name=Iron Capacitor
 tile.blockBarrel.name=Barrel
-tile.blockDestillery.name=Distillery
 tile.blockDestilledWater.name=Distilled Water
 tile.blockEthanol.name=Alkohol
 tile.blockWine.name=Wine
@@ -13,6 +12,10 @@ tile.blockReactorShield.name=Reactor Shielding
 tile.blockCoil.name=Superconducting Coil
 tile.blockCoilEmpty.name=Empty Coil
 tile.blockTokamak.name=Fusion Reactor Controller
+tile.blockBoiler.name=Boiler
+tile.blockDestillationTower.name=Destillation Tower
+tile.blockStirlingEngine.name=Stirling Engine
+
 
 tile.blockLuxRouter.name=Lux Router
 tile.blockEnergyTransfer.name=Energy Transciever

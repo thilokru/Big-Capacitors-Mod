@@ -65,7 +65,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	}
 	
 	private void handleReceive(){
-		routingHandler.advertise();
+		routingHandler.advertiseSink();
 		IEnergyHandler handler = getConnectedTile();
 		if(handler == null)return;
 		if(handler instanceof IEnergyReceiver){
@@ -116,6 +116,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		tag.setString("mode", mode.toString());
 		tag.setTag("routing", LuxAPI.ROUTING_CAPABILITY.writeNBT(routingHandler, null));
 		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
+		this.resetConnectionState();
 	}
 	
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -145,8 +146,8 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	
 	public void switchMode(){
 		mode = mode.getNext();
-		this.routingHandler.disadvertise();
-		if(mode.isReceiver())this.routingHandler.advertise();
+		this.routingHandler.disadvertiseSink();
+		if(mode.isReceiver())this.routingHandler.advertiseSink();
 		markForUpdate(this);
 	}
 	
@@ -226,7 +227,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	}
 
 	public void onDestroy() {
-		this.routingHandler.goOffline();
+		this.routingHandler.disonnectSink();
 	}
 
 }

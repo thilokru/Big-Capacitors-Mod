@@ -185,7 +185,7 @@ public class RoutingImpl implements IRouting {
 		this.routes.clear();
 	}
 
-	public void advertise() {
+	public void advertiseSink() {
 		for (BlockPos hop : connections) {
 			TileEntity remoteTile = local.getWorld().getTileEntity(hop);
 			if (remoteTile == null)
@@ -197,7 +197,7 @@ public class RoutingImpl implements IRouting {
 		}
 	}
 
-	public void goOffline() {
+	public void disonnectSink() {
 		List<BlockPos> clone = new ArrayList<BlockPos>();
 		clone.addAll(connections);
 		for (BlockPos hop : clone) {
@@ -211,7 +211,7 @@ public class RoutingImpl implements IRouting {
 		}
 	}
 
-	public void disadvertise() {
+	public void disadvertiseSink() {
 		for (BlockPos pos : connections) {
 			TileEntity tile = this.local.getWorld().getTileEntity(pos);
 			if (tile == null)

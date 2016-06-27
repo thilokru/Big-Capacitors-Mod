@@ -42,6 +42,7 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 		super.writeToNBT(tag);
 		tag.setTag("routing", LuxAPI.ROUTING_CAPABILITY.writeNBT(routingHandler, null));
 		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
+		this.resetConnectionState();
 	}
 	
 	@Override
@@ -94,6 +95,6 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 	}
 
 	public void onDestroy() {
-		routingHandler.goOffline();
+		routingHandler.disonnectSink();
 	}
 }

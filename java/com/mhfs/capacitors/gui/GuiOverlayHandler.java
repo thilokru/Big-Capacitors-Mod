@@ -23,7 +23,7 @@ public class GuiOverlayHandler {
 
 	@SubscribeEvent
 	public void handleOverlay(RenderGameOverlayEvent event) {
-		if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+		if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS && event instanceof RenderGameOverlayEvent.Pre) {
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			ItemStack stack = player.getHeldItemMainhand();
 			if (stack != null) {

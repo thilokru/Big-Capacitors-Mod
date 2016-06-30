@@ -30,9 +30,11 @@ public class GuiOverlayHandler {
 				IOverlayHandler handler = handlers.get(stack.getItem());
 				if(handler == null)return;
 				RayTraceResult thing = Minecraft.getMinecraft().objectMouseOver;
+				if(thing == null)return;
+				if(thing.typeOfHit != RayTraceResult.Type.BLOCK)return;
 				World world = player.worldObj;
 				if(world == null)return;
-				if(thing == null)return;
+				if(thing.getBlockPos() == null)return;
 				Block block = world.getBlockState(thing.getBlockPos()).getBlock();
 				handler.drawOverlay(event, block, world, thing.getBlockPos());
 			}

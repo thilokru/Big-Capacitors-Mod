@@ -1,5 +1,6 @@
 package com.mhfs.capacitors.proxy;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.EntityVillager.PriceInfo;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,7 +49,10 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerCareer;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
@@ -128,9 +134,23 @@ public class CommonProxy {
 			BigCapacitorsMod mod) {
 		MinecraftForge.EVENT_BUS.register(mod.bucketHandler = new BucketHandler());
 		
-		//VillagerRegistry.instance().registerVillageTradeHandler(2, new TradeHandler());
-		
-		System.out.println(FluidRegistry.getRegisteredFluids());
+		VillagerProfession librarian = ForgeRegistries.VILLAGER_PROFESSIONS.getValue(new ResourceLocation("minecraft:librarian"));
+		VillagerCareer informatician = new VillagerCareer(librarian, "informatician");
+		try{
+			Method[] methods = VillagerCareer.class.getDeclaredMethods();
+			Method init = null;
+			for (Method method : methods){
+				if(method.getName() == "init"){
+					init = method;
+					break;
+				}
+			}
+			init.setAccessible(true);
+			EntityVillager.ITradeList[][] arg = new EntityVillager.ITradeList[][]{{new EntityVillager.ListItemForEmeralds(Items.itemStackFusionProcessor, new PriceInfo(32, 48))}};
+			init.invoke(informatician, new Object[]{arg});
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		
 		mod.damageElectric = new DamageSource("electric").setDamageBypassesArmor();
 		

@@ -30,23 +30,22 @@ public class CapacitorWallWrapper {
 	private long charge;
 	private long maxCharge;
 
-	public CapacitorWallWrapper(World world, BlockPos init) {
-		this.orientation = EnumFacing.getFront(world.getTileEntity(init).getBlockMetadata());
-		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
+	public CapacitorWallWrapper(TileCapacitor cap) {
+		this.orientation = EnumFacing.getFront(cap.getBlockMetadata());
+		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), cap.getPos(), cap.getWorld());
 		for (BlockPos pos : containedBlocks) {
-			if (pos.equals(init))
+			if (pos.equals(cap.getPos()))
 				continue;
-			TileCapacitor cap = (TileCapacitor) world.getTileEntity(pos);
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
 			if (ent == null) {
 				cap.onEntityChange(this);
 			}else if(ent != this){
-				ent.checkJoin(world, false);
+				ent.checkJoin(cap.getWorld(), false);
 				return;
 			}
 		}
-		setupCapacity(world);
-		updateBlocks(world);
+		setupCapacity(cap.getWorld());
+		updateBlocks(cap.getWorld());
 	}
 
 	private CapacitorWallWrapper() {
@@ -288,7 +287,7 @@ public class CapacitorWallWrapper {
 			if (entity != null) {
 				entity.markDirty();
 			}
-			IBlockState state = entity.getBlockType().getStateFromMeta(entity.getBlockMetadata());
+			IBlockState state = world.getBlockState(pos);
 			world.notifyBlockUpdate(pos, state, state, 3);
 		}
 	}

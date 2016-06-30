@@ -34,7 +34,7 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 	}
 
 	private void createEntity() {
-		wrapper = new CapacitorWallWrapper(worldObj, this.pos);
+		wrapper = new CapacitorWallWrapper(this);
 		wrapper.checkJoin(worldObj, this.isFirstTick);
 		markForUpdate();
 	}

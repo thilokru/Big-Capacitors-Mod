@@ -19,6 +19,13 @@ public class Items extends net.minecraft.init.Items{
 	public static Item itemManual;
 	public static ItemMany itemMany;
 	
+	public static ItemStack itemStackWire;
+	public static ItemStack itemStackHeater;
+	public static ItemStack itemStackDustRutil;
+	public static ItemStack itemStackDustWitherite;
+	public static ItemStack itemStackFusionProcessor;
+	public static ItemStack itemStackCopper;
+	
 	public static void setup(BigCapacitorsMod mod){
 		Items.itemMultitool = new ItemMultitool().setMaxStackSize(1);
 		
@@ -37,6 +44,13 @@ public class Items extends net.minecraft.init.Items{
 		Items.itemMany.setCreativeTab(mod.creativeTab);
 		Items.itemMany.setRegistryName(BigCapacitorsMod.modid, "itemMany");
 		GameRegistry.register(Items.itemMany);
+		
+		itemStackWire = new ItemStack(itemMany, 1, 0);
+		itemStackHeater = new ItemStack(itemMany, 1, 1);
+		itemStackDustRutil = new ItemStack(itemMany, 1, 2);
+		itemStackDustWitherite = new ItemStack(itemMany, 1, 3);
+		itemStackFusionProcessor = new ItemStack(itemMany, 1, 4);
+		itemStackCopper = new ItemStack(itemMany, 1, 5);
 		
 		OreDictionary.registerOre("dustTitandioxid", new ItemStack(Items.itemMany, 1, 2));
 		OreDictionary.registerOre("dustBariumCarbonate",  new ItemStack(Items.itemMany, 1, 3));

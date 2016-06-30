@@ -82,11 +82,11 @@ public class CommonProxy {
 		ItemStack ironIngotStack = new ItemStack(Items.IRON_INGOT);
 		GameRegistry.addShapelessRecipe(manualStack, bookStack, ironIngotStack);
 			
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.itemMany, 1, 0), true, " S ", "CSC", " S ", 'S', Items.STICK, 'C', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemStackWire, true, " S ", "CSC", " S ", 'S', Items.STICK, 'C', "ingotCopper"));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemMultitool, true, "ICC", "RCC", "IW ", 'I', "ingotIron", 'C', "ingotCopper", 'R', "blockRedstone", 'W', Items.itemStackWire));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(Items.itemMany, 1, 1), true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.WOOL), 'C',  new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemStackHeater, true, "CWC", "CCC", 'W', Item.getItemFromBlock(Blocks.WOOL), 'C',  Items.itemStackWire));
 		
 		Item barrelItem = Item.getItemFromBlock(Blocks.blockBarrel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(barrelItem, true, "WSW", "W W", "WSW", 'S', "slabWood", 'W', "plankWood"));
@@ -97,10 +97,10 @@ public class CommonProxy {
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
 		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.OBSIDIAN, 'G', Blocks.GRAVEL));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTokamak, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', new ItemStack(Items.itemMany, 1, 4), 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTokamak, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', Items.itemStackFusionProcessor, 'W', Items.itemStackWire));
 		
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
-		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', new ItemStack(Items.itemMany, 1, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', Items.itemStackWire));
 		
 		//PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);
 		//PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemMany, 2, 4), null, 0);

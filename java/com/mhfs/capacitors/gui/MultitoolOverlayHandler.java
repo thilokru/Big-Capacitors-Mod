@@ -193,16 +193,17 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glLineWidth(2);
-		GL11.glColor4f(0, 0, 0, 1);
 		Tessellator tes = Tessellator.getInstance();
 		VertexBuffer buf = tes.getBuffer();
+		GL11.glColor3f(0, 0, 0);
 		buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX);
 		double xEnd = x + 8 - Math.cos(filled * Math.PI) * 6;
 		double yEnd = y + 8 - Math.sin(filled * Math.PI) * 6;
 		buf.pos(xEnd, yEnd, zLevel).color(0, 0, 0, 1).endVertex();
 		buf.pos(x + 8, y + 8, zLevel).color(0, 0, 0, 1).endVertex();
 		tes.draw();
-
+		
+		GL11.glColor3f(1, 1, 1);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}

@@ -163,7 +163,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
-		return from == EnumFacing.DOWN;
+		return true;
 	}
 
 	@Override

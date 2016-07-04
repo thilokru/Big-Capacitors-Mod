@@ -215,7 +215,8 @@ public class CapacitorWallWrapper {
 					IBlockState state = world.getBlockState(work);
 					Block block = state.getBlock();
 					int metadata = block.getMetaFromState(state);
-					String name = Block.REGISTRY.getNameForObject(block) + " " + metadata;
+					String blockName = Block.REGISTRY.getNameForObject(block).toString();
+					String name =  metadata == 0 ? blockName : blockName + " " + metadata;
 					if (dielectricities.containsKey(name)) {
 						dielectricity += dielectricities.get(name);
 					} else {

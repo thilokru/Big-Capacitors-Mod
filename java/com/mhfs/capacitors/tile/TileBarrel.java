@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHandler, ITickable{
@@ -74,6 +75,8 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 				}
 			}
 			markForUpdate();
+		} else {
+			FluidUtil.interactWithTank(stack, player, this, EnumFacing.DOWN);
 		}
 	}
 	

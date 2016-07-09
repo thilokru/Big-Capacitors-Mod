@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 
 public class BlockMany extends Block implements IChapterRelated{
 
-	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 5);
+	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 6);
 	
 	public final static String name = "blockMany";
 	

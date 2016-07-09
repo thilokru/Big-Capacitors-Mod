@@ -23,6 +23,9 @@
             },
             5: {
                 "model": "big_capacitors:blockCoilEmpty"
+            },
+            6: {
+				"model": "big_capacitors:blockMachineChasis"            
             }
         },
         "inventory": [{}]

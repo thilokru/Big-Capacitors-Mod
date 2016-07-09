@@ -80,6 +80,8 @@ public class Blocks extends net.minecraft.init.Blocks{
 		
 		blockData.add(new BlockData("blockCoilEmpty", "pickaxe", 2, 3.0F));//5
 		
+		blockData.add(new BlockData("blockMachineChasis", "pickaxe", 2, 2.0F));//6
+		
 		Blocks.blockMany = new BlockMany(blockData.toArray(new BlockData[0]));
 		
 		OreDictionary.registerOre("oreTitandioxid", new ItemStack(Blocks.blockMany, 1, 3));

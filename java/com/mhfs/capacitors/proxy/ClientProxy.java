@@ -3,6 +3,7 @@ package com.mhfs.capacitors.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraftforge.client.model.animation.AnimationTESR;
 import net.minecraftforge.common.MinecraftForge;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Items;
@@ -13,6 +14,7 @@ import com.mhfs.capacitors.handlers.GuiHandler;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.ItemRenderHelper;
 import com.mhfs.capacitors.render.RendererLux;
+import com.mhfs.capacitors.tile.TileCrusher;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
@@ -40,6 +42,8 @@ public class ClientProxy extends CommonProxy {
 		
 		RendererLux<TileEnergyTransciever> rendererTransciever = new RendererLux<TileEnergyTransciever>();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyTransciever.class, rendererTransciever);
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrusher.class, new AnimationTESR<TileCrusher>());
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());

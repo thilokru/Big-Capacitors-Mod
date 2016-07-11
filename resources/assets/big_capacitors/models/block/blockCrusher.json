@@ -1,0 +1,6 @@
+{
+	"parent": "big_capacitors:block/crusher",
+	"textures": {
+		"metal": "big_capacitors:models/metal"
+	}
+}

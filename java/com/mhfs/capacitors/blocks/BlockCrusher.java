@@ -31,7 +31,10 @@ public class BlockCrusher extends BlockAdvContainer implements IOrientedBlock{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileCrusher(worldIn);
+		TileCrusher crusher = new TileCrusher();
+		crusher.setWorldObj(worldIn);
+		crusher.setActive(true);
+		return crusher;
 	}
 	
 	@Override

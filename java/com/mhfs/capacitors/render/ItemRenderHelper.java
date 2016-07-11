@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fluids.BlockFluidClassic;
 
 public class ItemRenderHelper {
@@ -22,8 +21,6 @@ public class ItemRenderHelper {
 	private final static String fluidStateModel = "fluidState";
 
 	public static void setupItemModels(BigCapacitorsMod mod) {
-		OBJLoader.INSTANCE.addDomain(BigCapacitorsMod.modid);
-		
 		registerFluidBlock(Fluids.blockDestilledWater, "destilledWater");
 		registerFluidBlock(Fluids.blockEthanol, "ethanol");
 		registerFluidBlock(Fluids.blockHydrogen, "hydrogen");

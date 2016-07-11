@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.client.model.animation.AnimationTESR;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Items;
@@ -29,7 +30,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent event, BigCapacitorsMod mod) {
 		super.preInit(event, mod);
-
+		OBJLoader.INSTANCE.addDomain(BigCapacitorsMod.modid);
 		ItemRenderHelper.setupItemModels(mod);
 	}
 

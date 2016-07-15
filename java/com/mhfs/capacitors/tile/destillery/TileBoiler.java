@@ -16,15 +16,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, IEnergyReceiver {
+public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
@@ -78,36 +77,24 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		}
 		return false;
 	}
-
+	
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		return inputTank.fill(resource, doFill);
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(inputTank);
+		}
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return inputTank.getFluid() == null ? true : inputTank.getFluid().getFluid().equals(fluid);
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		return new FluidTankInfo[] { inputTank.getInfo() };
-	}
+	
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
@@ -138,19 +125,19 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 
-		inputTank.readFromNBT(tag.getCompoundTag("input"));
+		CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(inputTank, null, tag.getTag("tank"));
 
 		this.energy = tag.getInteger("energy");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 
-		NBTTagCompound inputTag = new NBTTagCompound();
-		inputTank.writeToNBT(inputTag);
-		tag.setTag("input", inputTag);
+		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(inputTank, null));
 
 		tag.setInteger("energy", energy);
+		
+		return tag;
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -167,7 +154,7 @@ public class TileBoiler extends TileEntity implements ITickable, IFluidHandler, 
 		return inputTank;
 	}
 
-	public boolean onBlockActivated(EntityPlayer player, ItemStack stack, EnumFacing side) {
-		return FluidUtil.interactWithTank(stack, player, this, side);
+	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
+		return FluidUtil.interactWithFluidHandler(stack, inputTank, player);
 	}
 }

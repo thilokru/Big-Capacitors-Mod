@@ -83,11 +83,12 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if (wrapper != null) {
 			tag.setTag("multi", wrapper.getNBTRepresentation());
 		}
+		return tag;
 	}
 
 	@Override

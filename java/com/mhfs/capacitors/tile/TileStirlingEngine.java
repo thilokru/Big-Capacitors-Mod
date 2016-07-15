@@ -70,9 +70,10 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		this.energy = tag.getInteger("energy");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setLong("energy", energy);
+		return tag;
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

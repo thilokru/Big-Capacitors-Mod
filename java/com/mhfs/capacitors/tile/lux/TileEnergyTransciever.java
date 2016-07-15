@@ -111,12 +111,13 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		LuxAPI.LUX_FLOW_CAPABILITY.readNBT(luxHandler, null, tag.getTag("lux"));
 	}
 	
-	public void writeToNBT(NBTTagCompound tag){
+	public NBTTagCompound writeToNBT(NBTTagCompound tag){
 		super.writeToNBT(tag);
 		tag.setString("mode", mode.toString());
 		tag.setTag("routing", LuxAPI.ROUTING_CAPABILITY.writeNBT(routingHandler, null));
 		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
 		this.resetConnectionState();
+		return tag;
 	}
 	
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

@@ -18,14 +18,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyReceiver, IRotatable, ITickable{
+public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotatable, ITickable{
 	
 	private int energy;
 	private FluidTank water;
@@ -78,22 +77,36 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		formed = formed && !(worldObj.getBlockState(pos).getBlock().equals(Blocks.blockTower));
 		return formed;
 	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(water);
+		}
+		return super.getCapability(capability, facing);
+	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-
-		this.water.readFromNBT(tag.getCompoundTag("water"));
+		CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(water, null, tag.getTag("tank"));
 		this.energy = tag.getInteger("energy");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 
-		NBTTagCompound waterNBT = new NBTTagCompound();
-		water.writeToNBT(waterNBT);
-		tag.setTag("water", waterNBT);
+		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(water, null));
 		
 		tag.setLong("energy", energy);
+		return tag;
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -114,42 +127,10 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 			return null;
 		}
 	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		if(!canFill(from, resource.getFluid()))return 0;
-		return water.fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return fluid.equals(Fluids.fluidDestilledWater);
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		return new FluidTankInfo[]{water.getInfo()};
-	}
-
+	
 	public FluidTank getInputTank() {
 		return water;
 	}
-
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
@@ -176,7 +157,7 @@ public class TileFuelCell extends TileEntity implements IFluidHandler, IEnergyRe
 		return amount;
 	}
 
-	public boolean onBlockActivated(EntityPlayer player, ItemStack stack, EnumFacing side) {
-		return FluidUtil.interactWithTank(stack, player, this, side);
+	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
+		return FluidUtil.interactWithFluidHandler(stack, water, player);
 	}
 }

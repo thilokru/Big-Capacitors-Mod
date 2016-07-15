@@ -37,7 +37,7 @@ public class Items extends net.minecraft.init.Items{
 		data.add(new ItemData("itemHeater", false));//1
 		data.add(new ItemData("itemDustRutil", false));//2, TiO2
 		data.add(new ItemData("itemDustWitherite", false));//3, BaCO3
-		data.add(new ItemData("itemFusionProcessor", true));//4
+		data.add(new ItemData("itemFPGA", true));//4
 		data.add(new ItemData("ingotCopper", false));//5
 		
 		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));

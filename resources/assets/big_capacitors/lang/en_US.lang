@@ -31,7 +31,7 @@ item.bucketDestilledWater.name=Distilled Water Bucket
 item.bucketEthanol.name=Alcohol Bucket
 item.bucketWine.name=Wine Bucket
 item.bucketHydrogen.name=Hydrogen Bucket
-item.itemFusionProcessor.name=Fusion Controlling Processor
+item.itemFPGA.name=Machine Controlling FPGA
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Distilled Water

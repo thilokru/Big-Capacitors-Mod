@@ -30,7 +30,7 @@ item.bucketDestilledWater.name=destillierter Wassereimer
 item.bucketEthanol.name=Alkoholeimer
 item.bucketWine.name=Weineimer
 item.bucketHydrogen.name=Wasserstoffeimer
-item.itemFusionProcessor.name=Fusionskontrollierender Prozessor
+item.itemFPGA.name=FPGA-Machinensteuerung
 itemGroup.BigCapacitors=Big Capacitors
 
 fluid.destilledWater=Destilliertes Wasser

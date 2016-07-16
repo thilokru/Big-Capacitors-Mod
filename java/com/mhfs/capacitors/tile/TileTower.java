@@ -45,7 +45,7 @@ public class TileTower extends TileEntity {
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
@@ -76,6 +76,10 @@ public class TileTower extends TileEntity {
 		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(tank, null));
 		tag.setBoolean("steam", releasingSteam);
 		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

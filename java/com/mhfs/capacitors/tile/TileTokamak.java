@@ -42,6 +42,7 @@ public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyP
 	public TileTokamak() {
 		hydrogenTank = new FluidTank(MAX_GAS_VOLUME);
 		temperature = ROOM_TEMP;
+		this.markDirty();
 	}
 
 	public void update() {
@@ -76,7 +77,7 @@ public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyP
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
@@ -123,6 +124,10 @@ public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyP
 		tag.setLong("energy", this.energy);
 		tag.setDouble("temperature", this.temperature);
 		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 	
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

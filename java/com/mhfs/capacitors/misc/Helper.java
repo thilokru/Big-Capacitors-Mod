@@ -20,7 +20,7 @@ public class Helper {
 
 	public static void markForUpdate(TileEntity entity) {
 		entity.markDirty();
-		IBlockState state = entity.getBlockType().getStateFromMeta(entity.getBlockMetadata());
+		IBlockState state = entity.getWorld().getBlockState(entity.getPos());
 		entity.getWorld().notifyBlockUpdate(entity.getPos(), state, state, 3);
 	}
 }

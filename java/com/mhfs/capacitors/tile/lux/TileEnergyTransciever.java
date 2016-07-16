@@ -120,6 +120,10 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		return tag;
 	}
 	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
+	}
+	
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		this.readFromNBT(pkt.getNbtCompound());
 	}

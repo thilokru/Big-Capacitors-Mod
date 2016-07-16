@@ -54,7 +54,7 @@ public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotata
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
@@ -107,6 +107,10 @@ public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotata
 		
 		tag.setLong("energy", energy);
 		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

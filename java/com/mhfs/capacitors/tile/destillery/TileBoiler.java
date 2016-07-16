@@ -61,7 +61,7 @@ public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
@@ -92,9 +92,7 @@ public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(inputTank);
 		}
 		return super.getCapability(capability, facing);
-	}
-
-	
+	}	
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
@@ -138,6 +136,10 @@ public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver
 		tag.setInteger("energy", energy);
 		
 		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

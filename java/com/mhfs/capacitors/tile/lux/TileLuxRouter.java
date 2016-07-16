@@ -46,6 +46,10 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 		return tag;
 	}
 	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
+	}
+	
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == LuxAPI.LUX_FLOW_CAPABILITY){

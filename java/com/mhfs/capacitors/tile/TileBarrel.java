@@ -81,7 +81,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, ITickable
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(getPos());
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	

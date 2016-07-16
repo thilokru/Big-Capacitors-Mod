@@ -34,7 +34,7 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
@@ -70,9 +70,14 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		this.energy = tag.getInteger("energy");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setLong("energy", energy);
+		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {

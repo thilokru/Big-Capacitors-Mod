@@ -38,11 +38,16 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 		LuxAPI.LUX_FLOW_CAPABILITY.readNBT(luxHandler, null, tag.getTag("lux"));
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setTag("routing", LuxAPI.ROUTING_CAPABILITY.writeNBT(routingHandler, null));
 		tag.setTag("lux", LuxAPI.LUX_FLOW_CAPABILITY.writeNBT(luxHandler, null));
 		this.resetConnectionState();
+		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 	
 	@Override

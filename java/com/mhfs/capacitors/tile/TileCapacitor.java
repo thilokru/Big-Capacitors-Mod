@@ -60,7 +60,7 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
@@ -83,11 +83,16 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if (wrapper != null) {
 			tag.setTag("multi", wrapper.getNBTRepresentation());
 		}
+		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.Fluids;
-
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;
@@ -15,14 +13,13 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyReceiver, IEnergyProvider, ITickable {
+public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyProvider, ITickable {
 
 	private int energy;
 	private FluidTank hydrogenTank;
@@ -45,6 +42,7 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 	public TileTokamak() {
 		hydrogenTank = new FluidTank(MAX_GAS_VOLUME);
 		temperature = ROOM_TEMP;
+		this.markDirty();
 	}
 
 	public void update() {
@@ -79,12 +77,28 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(this.getPos());;
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	private boolean checkFormed() {
 		return BigCapacitorsMod.instance.fusionReactorMulti.complete(this.pos, worldObj);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(hydrogenTank);
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	public boolean isFormed(){
@@ -95,58 +109,25 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 		return hydrogenTank;
 	}
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		if (resource.getFluid() == Fluids.gasHydrogen) {
-			return hydrogenTank.fill(resource, doFill);
-		}
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		if (resource.getFluid() == Fluids.gasHydrogen) {
-			return hydrogenTank.drain(resource.amount, doDrain);
-		}
-		return null;
-	}
 	
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return hydrogenTank.drain(maxDrain, doDrain);
-	}
-	
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return fluid == Fluids.gasHydrogen;
-	}
-	
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		return fluid == Fluids.gasHydrogen;
-	}
-	
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		return new FluidTankInfo[] { hydrogenTank.getInfo()};
-	}
 	
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.hydrogenTank.readFromNBT(tag);
+		CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(hydrogenTank, null, tag.getTag("tank"));
 		this.energy = tag.getInteger("energy");
 		this.temperature = tag.getDouble("temperature");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		this.hydrogenTank.writeToNBT(tag);
+		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(hydrogenTank, null));
 		tag.setLong("energy", this.energy);
 		tag.setDouble("temperature", this.temperature);
+		return tag;
+	}
+	
+	public NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(super.getUpdateTag());
 	}
 	
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -204,7 +185,7 @@ public class TileTokamak extends TileEntity implements IFluidHandler, IEnergyRec
 		return amount;
 	}
 
-	public boolean onBlockActivated(EntityPlayer player, ItemStack stack, EnumFacing side) {
-		return FluidUtil.interactWithTank(stack, player, this, side);
+	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
+		return FluidUtil.interactWithFluidHandler(stack, hydrogenTank, player);
 	}
 }

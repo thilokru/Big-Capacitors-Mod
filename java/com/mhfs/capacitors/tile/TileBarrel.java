@@ -3,6 +3,7 @@ package com.mhfs.capacitors.tile;
 import com.mhfs.capacitors.Fluids;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
@@ -14,18 +15,16 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHandler, ITickable{
+public class TileBarrel extends TileEntity implements ISidedInventory, ITickable{
 	
 	private final static int maxProgress = 1000;
 	private final static int tankCapacity = 5000;
@@ -76,14 +75,30 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 			}
 			markForUpdate();
 		} else {
-			FluidUtil.interactWithTank(stack, player, this, EnumFacing.DOWN);
+			FluidUtil.interactWithFluidHandler(stack, wineTank, player);
 		}
 	}
 	
 	protected void markForUpdate(){
 		this.markDirty();
-		IBlockState state = this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+		IBlockState state = this.worldObj.getBlockState(getPos());
 		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing == EnumFacing.DOWN){
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(wineTank);
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	@Override
@@ -143,55 +158,11 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 		}
 		return false;
 	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		if(from == EnumFacing.DOWN && resource.getFluid() == wineTank.getFluid().getFluid()){
-			return wineTank.drain(resource.amount, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		if(from == EnumFacing.DOWN){
-			return wineTank.drain(maxDrain, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		if(from == EnumFacing.DOWN){
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		if(from == EnumFacing.DOWN){
-			return new FluidTankInfo[]{wineTank.getInfo()};
-		}
-		return new FluidTankInfo[]{};
-	}
 	
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 
-		FluidTank wineTank = new FluidTank(tankCapacity);
-		wineTank.readFromNBT(tag.getCompoundTag("wineTank"));
-		this.wineTank = wineTank;
+		CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(wineTank, null, tag.getTag("tank"));
 
 		this.potatoStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
 		
@@ -199,12 +170,11 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 		this.progress =  tag.getInteger("progress");
 	}
 
-	public void writeToNBT(NBTTagCompound tag) {
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 
-		NBTTagCompound wineTankTag = new NBTTagCompound();
-		wineTank.writeToNBT(wineTankTag);
-		tag.setTag("wineTank", wineTankTag);
+		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(wineTank, null));
 
 		NBTTagCompound stackTag = new NBTTagCompound();
 		potatoStack.writeToNBT(stackTag);
@@ -212,6 +182,8 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 		
 		tag.setBoolean("processing", processing);
 		tag.setInteger("progress", progress);
+		
+		return tag;
 	}
 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -260,7 +232,7 @@ public class TileBarrel extends TileEntity implements ISidedInventory, IFluidHan
 
 	@Override
 	public String getName() {
-		return I18n.translateToLocal("tile.barrel.name");
+		return I18n.format("tile.barrel.name");
 	}
 
 	@Override

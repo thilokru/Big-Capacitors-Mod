@@ -28,7 +28,7 @@ public class BlockBoiler extends BlockAdvContainer {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote)
-			return ((TileBoiler) world.getTileEntity(pos)).onBlockActivated(player, heldItem, side);
+			return ((TileBoiler) world.getTileEntity(pos)).onBlockActivated(player, heldItem);
 		return true;
 	}
 }

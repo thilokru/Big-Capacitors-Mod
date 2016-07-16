@@ -93,12 +93,6 @@ public class BlockCapacitor extends Block implements ITileEntityProvider, IChapt
 		return te;
 	}
 
-	public boolean onBlockEventReceived(World world, BlockPos pos, IBlockState state, int eventID, int eventParam) {
-		super.onBlockEventReceived(world, pos, state, eventID, eventParam);
-		TileEntity tileentity = world.getTileEntity(pos);
-		return tileentity != null ? tileentity.receiveClientEvent(eventID, eventParam) : false;
-	}
-
 	public EnumFacing getOrientation(IBlockAccess world, BlockPos pos) {
 		if(world.getBlockState(pos).getProperties().containsKey(ORIENTATION)){
 			return world.getBlockState(pos).getValue(ORIENTATION);

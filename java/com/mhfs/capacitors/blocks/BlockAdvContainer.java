@@ -2,16 +2,19 @@ package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public abstract class BlockAdvContainer extends BlockContainer {
+public abstract class BlockAdvContainer extends Block implements ITileEntityProvider {
 
 	private boolean opaque;
 
@@ -32,6 +35,11 @@ public abstract class BlockAdvContainer extends BlockContainer {
 
 	protected BlockAdvContainer(Material material, String name) {
 		this(material, name, false);
+	}
+
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		super.breakBlock(worldIn, pos, state);
+		worldIn.removeTileEntity(pos);
 	}
 
 	@Override

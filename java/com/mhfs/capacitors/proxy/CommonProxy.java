@@ -36,6 +36,7 @@ import com.mhfs.capacitors.oregen.OreGen;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileCrusher;
+import com.mhfs.capacitors.tile.TileCrusherController;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTokamak;
 import com.mhfs.capacitors.tile.TileTower;
@@ -104,7 +105,7 @@ public class CommonProxy {
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
 		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.OBSIDIAN, 'G', Blocks.GRAVEL));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockTokamak, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', Items.itemStackFusionProcessor, 'W', Items.itemStackWire));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockMachineController, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', Items.itemStackFusionProcessor, 'W', Items.itemStackWire));
 		
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
 		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', Items.itemStackWire));
@@ -155,10 +156,13 @@ public class CommonProxy {
 		
 		mod.damageElectric = new DamageSource("electric").setDamageBypassesArmor();
 		
-		Lo.g.info("Loading Tomahawk Multiblock...");
+		Lo.g.info("Loading Multiblocks...");
 		ResourceLocation rl = new ResourceLocation("big_capacitors:multiblock/fusion.txt");
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		mod.fusionReactorMulti = new Multiblock(rl, manager);
+		
+		rl = new ResourceLocation("big_capacitors:multiblock/crusher.txt");
+		mod.crusherMulti = new Multiblock(rl, manager);
 		
 		GameRegistry.registerTileEntity(TileCapacitor.class, "tileCapacitor");
 		GameRegistry.registerTileEntity(TileBarrel.class, "tileBarrel");
@@ -170,6 +174,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileTower.class, "tileDestillationTower");
 		GameRegistry.registerTileEntity(TileStirlingEngine.class, "tileStirlingEngine");
 		GameRegistry.registerTileEntity(TileCrusher.class, "tileCrusher");
+		GameRegistry.registerTileEntity(TileCrusherController.class, "tileCrusherController");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

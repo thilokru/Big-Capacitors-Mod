@@ -51,6 +51,7 @@ public class BigCapacitorsMod {
 	public IKnowledgeRegistry knowledge;
 	
 	public Multiblock fusionReactorMulti;
+	public Multiblock crusherMulti;
 
 	public SimpleNetworkWrapper network;
 	

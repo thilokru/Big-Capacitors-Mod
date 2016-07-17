@@ -11,48 +11,87 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class Multiblock {
 
-	private List<DefinedBlock> blocks;
-	
-	public Multiblock(ResourceLocation location, IResourceManager manager){
+	protected List<DefinedBlock> blocks;
+
+	public Multiblock(ResourceLocation location, IResourceManager manager) {
 		try {
 			blocks = new ArrayList<DefinedBlock>();
-			
+
 			BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream(location, manager)));
 			String line;
-			while((line = br.readLine()) != null){
-				if(line.startsWith("#") || line.trim().equals(""))continue;
+			while ((line = br.readLine()) != null) {
+				if (line.startsWith("#") || line.trim().equals(""))
+					continue;
 				String[] split = line.split(";");
 				String[] coordSplit = split[0].split(" ");
 				int x = Integer.parseInt(coordSplit[0]);
 				int y = Integer.parseInt(coordSplit[1]);
 				int z = Integer.parseInt(coordSplit[2]);
-				
+
 				String[] blockSplit = split[1].split(" ");
 				Block block = Block.getBlockFromName(blockSplit[0]);
-				int meta = blockSplit.length == 2?Integer.parseInt(blockSplit[1]):0;
-				
+				int meta = blockSplit.length == 2 ? Integer.parseInt(blockSplit[1]) : -1;
+
 				blocks.add(new DefinedBlock(x, y, z, block, meta));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private InputStream getInputStream(ResourceLocation loc, IResourceManager resourceManager) throws IOException{
+
+	private InputStream getInputStream(ResourceLocation loc, IResourceManager resourceManager) throws IOException {
 		IResource resource = resourceManager.getResource(loc);
 		return resource.getInputStream();
 	}
-	
-	public boolean complete(BlockPos init, World world){
+
+	public boolean complete(BlockPos init, World world) {
 		boolean complete = true;
-		for(DefinedBlock block:blocks){
+		for (DefinedBlock block : blocks) {
 			complete = complete && block.check(init, world);
 		}
 		return complete;
+	}
+
+	public EnumFacing getCompletedRotation(BlockPos init, World world){
+		for(EnumFacing facing:EnumFacing.Plane.HORIZONTAL){
+			if(complete(init, world, facing)) return facing;
+		}
+		return null;
+	}
+
+	/**
+	 * Assuming default facing is north, allows only horizontal rotation.
+	 */
+	public boolean complete(BlockPos init, World world, EnumFacing facing) {
+		boolean complete = true;
+		for (DefinedBlock block : blocks) {
+			Vec3i offset = rotateOffset(block, facing);
+			DefinedBlock actualBlock = new DefinedBlock(offset, block.getBlockType(), block.getMetadata());
+			complete = complete && actualBlock.check(init, world);
+		}
+		return complete;
+	}
+
+	private Vec3i rotateOffset(Vec3i offset, EnumFacing facing) {
+		switch (facing) {
+		case NORTH:
+			return offset;
+		case SOUTH:
+			return new Vec3i(-offset.getX(), offset.getY(), -offset.getZ());
+		case WEST:
+			return new Vec3i(offset.getZ(), offset.getY(), -offset.getX());
+		case EAST:
+			return new Vec3i(-offset.getZ(), offset.getY(), offset.getX());
+		default:
+			Lo.g.error("RotatableMultiblock shall be rotated towards UP or DOWN, which should not be done! This is SEVERE!");
+			return offset;
+		}
 	}
 }

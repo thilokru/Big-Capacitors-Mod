@@ -13,7 +13,7 @@ import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.blocks.BlockLuxRouter;
 import com.mhfs.capacitors.blocks.BlockMany;
 import com.mhfs.capacitors.blocks.BlockStirlingEngine;
-import com.mhfs.capacitors.blocks.BlockTokamak;
+import com.mhfs.capacitors.blocks.BlockMachineController;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -23,7 +23,7 @@ public class Blocks extends net.minecraft.init.Blocks{
 	public static BlockCapacitor capacitorIron;
 	public static BlockBarrel blockBarrel;
 	public static BlockMany blockMany;
-	public static BlockTokamak blockTokamak;
+	public static BlockMachineController blockMachineController;
 	public static BlockFuelCell blockFuelCell;
 	public static BlockLuxRouter blockLuxRouter;
 	public static BlockEnergyTransfer blockEnergyTransfer;
@@ -41,9 +41,9 @@ public class Blocks extends net.minecraft.init.Blocks{
 		Blocks.blockBarrel.setHardness(1F);
 		Blocks.blockBarrel.setHarvestLevel("axe", 2);
 		
-		Blocks.blockTokamak = new BlockTokamak(Material.ROCK);
-		Blocks.blockTokamak.setHardness(0.5F);
-		Blocks.blockTokamak.setHarvestLevel("pickaxe", 2);
+		Blocks.blockMachineController = new BlockMachineController(Material.ROCK);
+		Blocks.blockMachineController.setHardness(0.5F);
+		Blocks.blockMachineController.setHarvestLevel("pickaxe", 2);
 		
 		Blocks.blockFuelCell = new BlockFuelCell(Material.ROCK);
 		Blocks.blockFuelCell.setHardness(0.25F);

@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyProvider, ITickable {
+public class TileTokamak extends TileEntity implements IEnergyReceiver, IEnergyProvider, ITickable, IActivatable {
 
 	private int energy;
 	private FluidTank hydrogenTank;

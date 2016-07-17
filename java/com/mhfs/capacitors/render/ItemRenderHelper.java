@@ -35,6 +35,7 @@ public class ItemRenderHelper {
 		registerMesher(Blocks.blockBoiler);
 		registerMesher(Blocks.blockTower);
 		registerMesher(Blocks.blockStirlingEngine);
+		registerMesher(Blocks.blockCrusher);
 
 		registerMesher(Items.itemManual);
 		registerMesher(Items.itemMultitool);

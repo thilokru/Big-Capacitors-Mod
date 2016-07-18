@@ -1,21 +1,32 @@
 package com.mhfs.capacitors.tile;
 
-import com.mhfs.capacitors.misc.Lo;
+import com.mhfs.capacitors.BigCapacitorsMod;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 
-public class TileCrusherController extends TileEntity implements IEnergyReceiver{
+public class TileCrusherController extends TileEntity implements IEnergyReceiver, ITickable {
 
 	private EnumFacing facing;
+
+	public TileCrusherController() {
+	}
+
+	public void update() {
+		if (!BigCapacitorsMod.instance.crusherMulti.complete(getPos(), getWorld(), facing)) {
+			getWorld().removeTileEntity(getPos());
+			return;
+		}
+	}
 	
-	public TileCrusherController(){}
 	
+
 	public void setMultiblockRotation(EnumFacing facing) {
 		this.facing = facing;
 	}
-	
+
 	@Override
 	public int getEnergyStored(EnumFacing from) {
 		// TODO Auto-generated method stub

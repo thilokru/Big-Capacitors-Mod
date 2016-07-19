@@ -5,14 +5,12 @@ import com.mhfs.capacitors.misc.IRotatable;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
-public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
+public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
 
 	private CapacitorWallWrapper wrapper;
 	private boolean isFirstTick = true;
@@ -57,12 +55,6 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 		this.wrapper = cap;
 		markForUpdate();
 	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(this.getPos());;
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
-	}
 
 	public CapacitorWallWrapper getEntityCapacitor() {
 		return wrapper;
@@ -89,10 +81,6 @@ public class TileCapacitor extends TileEntity implements IEnergyProvider, IEnerg
 			tag.setTag("multi", wrapper.getNBTRepresentation());
 		}
 		return tag;
-	}
-	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
 	}
 
 	@Override

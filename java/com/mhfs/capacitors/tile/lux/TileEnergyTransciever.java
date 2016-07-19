@@ -8,23 +8,20 @@ import com.mhfs.api.lux.ILuxHandler;
 import com.mhfs.api.lux.LuxAPI;
 import com.mhfs.api.lux.LuxHandlerImpl;
 import com.mhfs.capacitors.blocks.IOrientedBlock;
-import static com.mhfs.capacitors.misc.Helper.markForUpdate;
 import com.mhfs.capacitors.render.IConnected;
+import com.mhfs.capacitors.tile.AdvTileEntity;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
-public class TileEnergyTransciever extends TileEntity implements ITickable, IConnected{
+public class TileEnergyTransciever extends AdvTileEntity implements ITickable, IConnected{
 	
 	private Mode mode = Mode.TRANSCEIVER;
 	
@@ -58,7 +55,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 				long energy = getEnergyForTarget(handler.getNeed(), sinks.size());
 				if(energy != 0){
 					luxHandler.energyFlow(null, pos, energy);
-					markForUpdate(this);
+					markForUpdate();
 				}
 			}
 		}
@@ -120,20 +117,6 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		return tag;
 	}
 	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-	
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(this.pos, 1, tag);
-	}
-	
 	private long getEnergyForTarget(long need, int drainCount) {
 		IEnergyHandler handler = getConnectedTile();
 		if(handler == null)return 0;
@@ -153,7 +136,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 		mode = mode.getNext();
 		this.routingHandler.disadvertiseSink();
 		if(mode.isReceiver())this.routingHandler.advertiseSink();
-		markForUpdate(this);
+		markForUpdate();
 	}
 	
 	public IEnergyHandler getConnectedTile(){
@@ -192,7 +175,7 @@ public class TileEnergyTransciever extends TileEntity implements ITickable, ICon
 	@Override
 	public void resetConnectionState() {
 		this.luxHandler.resetActive();
-		markForUpdate(this);
+		markForUpdate();
 	}
 	
 	public static enum Mode{

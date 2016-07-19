@@ -4,17 +4,13 @@ import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.blocks.BlockFuelCell;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.tile.AdvTileEntity;
 import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +20,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotatable, ITickable{
+public class TileFuelCell extends AdvTileEntity implements IEnergyReceiver, IRotatable, ITickable{
 	
 	private int energy;
 	private FluidTank water;
@@ -50,12 +46,6 @@ public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotata
 			tower.condense(hydrogen, 1);
 		}
 		markForUpdate();
-	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(this.getPos());;
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	private boolean isFormed() {
@@ -107,20 +97,6 @@ public class TileFuelCell extends TileEntity implements IEnergyReceiver, IRotata
 		
 		tag.setLong("energy", energy);
 		return tag;
-	}
-	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	@Override

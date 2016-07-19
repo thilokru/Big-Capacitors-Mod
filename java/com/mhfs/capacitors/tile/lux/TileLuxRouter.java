@@ -6,22 +6,18 @@ import java.util.Set;
 import com.mhfs.api.lux.LuxAPI;
 import com.mhfs.api.lux.LuxHandlerImpl;
 import com.mhfs.api.lux.RoutingImpl;
-import static com.mhfs.capacitors.misc.Helper.markForUpdate;
 import com.mhfs.capacitors.render.IConnected;
+import com.mhfs.capacitors.tile.AdvTileEntity;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-public class TileLuxRouter extends TileEntity implements IConnected {
+public class TileLuxRouter extends AdvTileEntity implements IConnected {
 
 	private RoutingImpl routingHandler;
 	private LuxHandlerImpl luxHandler;
@@ -46,10 +42,6 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 		return tag;
 	}
 	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-	
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side){
 		if(cap == LuxAPI.LUX_FLOW_CAPABILITY){
@@ -66,16 +58,6 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 			return true;
 		return super.hasCapability(cap, side);
 	}
-	
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(this.pos, 1, tag);
-	}
 
 	public Set<BlockPos> getActiveConnections() {
 		return luxHandler.getActive();
@@ -91,7 +73,7 @@ public class TileLuxRouter extends TileEntity implements IConnected {
 
 	public void resetConnectionState() {
 		luxHandler.resetActive();
-		markForUpdate(this);
+		markForUpdate();
 	}
 
 	@SideOnly(Side.CLIENT)

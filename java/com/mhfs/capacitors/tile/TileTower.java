@@ -2,14 +2,9 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Blocks;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,7 +13,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileTower extends TileEntity {
+public class TileTower extends AdvTileEntity {
 	
 	private FluidTank tank;
 	private boolean releasingSteam;
@@ -41,12 +36,6 @@ public class TileTower extends TileEntity {
 			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
 			tower.condense(output, times);
 		}
-	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(this.getPos());;
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	@Override
@@ -76,20 +65,6 @@ public class TileTower extends TileEntity {
 		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(tank, null));
 		tag.setBoolean("steam", releasingSteam);
 		return tag;
-	}
-	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(pos, 1, tag);
 	}
 	
 	public boolean isReleasingSteam(){

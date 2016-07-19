@@ -6,6 +6,11 @@
 	},
     "variants": {
         "normal": [{}],
-        "inventory": [{}]
+        "inventory": [{}],
+        "used_te": {
+        	0: {},
+        	1: {},
+        	2: {}
+        }
     }
 }

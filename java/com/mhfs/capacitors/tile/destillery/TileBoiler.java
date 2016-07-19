@@ -1,18 +1,14 @@
 package com.mhfs.capacitors.tile.destillery;
 
 import com.mhfs.capacitors.Blocks;
+import com.mhfs.capacitors.tile.AdvTileEntity;
 import com.mhfs.capacitors.tile.TileTower;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +19,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver {
+public class TileBoiler extends AdvTileEntity implements ITickable, IEnergyReceiver {
 
 	public final static int MAX_RF_PER_TICK = 80;
 	public final static int RF_CAPACITY = 15000;
@@ -57,12 +53,6 @@ public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver
 				}
 			}
 		}
-	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(this.getPos());
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	private boolean checkFormed() {
@@ -136,20 +126,6 @@ public class TileBoiler extends TileEntity implements ITickable, IEnergyReceiver
 		tag.setInteger("energy", energy);
 		
 		return tag;
-	}
-	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(pos, 1, tag);
 	}
 
 	public IFluidTank getInputTank() {

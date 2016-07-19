@@ -5,18 +5,13 @@ import com.mhfs.capacitors.blocks.BlockStirlingEngine;
 
 import cofh.api.energy.IEnergyProvider;
 import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
-public class TileStirlingEngine extends TileEntity implements IEnergyProvider, ITickable{
+public class TileStirlingEngine extends AdvTileEntity implements IEnergyProvider, ITickable{
 	
 	public final static int MAX_ENERGY = 80000;
 	public final static int MAX_TRANSFER = 80;
@@ -30,12 +25,6 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 			energy += 40;
 			markForUpdate();
 		}
-	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(this.getPos());;
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 
 	@Override
@@ -74,20 +63,6 @@ public class TileStirlingEngine extends TileEntity implements IEnergyProvider, I
 		super.writeToNBT(tag);
 		tag.setLong("energy", energy);
 		return tag;
-	}
-	
-	public NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(super.getUpdateTag());
-	}
-
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 	
 	private EnumFacing getFacing(){

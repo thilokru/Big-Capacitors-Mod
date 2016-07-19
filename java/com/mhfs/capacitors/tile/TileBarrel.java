@@ -2,17 +2,12 @@ package com.mhfs.capacitors.tile;
 
 import com.mhfs.capacitors.Fluids;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -24,7 +19,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileBarrel extends TileEntity implements ISidedInventory, ITickable{
+public class TileBarrel extends AdvTileEntity implements ISidedInventory, ITickable{
 	
 	private final static int maxProgress = 1000;
 	private final static int tankCapacity = 5000;
@@ -77,12 +72,6 @@ public class TileBarrel extends TileEntity implements ISidedInventory, ITickable
 		} else {
 			FluidUtil.interactWithFluidHandler(stack, wineTank, player);
 		}
-	}
-	
-	protected void markForUpdate(){
-		this.markDirty();
-		IBlockState state = this.worldObj.getBlockState(getPos());
-		worldObj.notifyBlockUpdate(this.pos, state, state, 3);
 	}
 	
 	@Override
@@ -184,16 +173,6 @@ public class TileBarrel extends TileEntity implements ISidedInventory, ITickable
 		tag.setInteger("progress", progress);
 		
 		return tag;
-	}
-
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	public Packet<?> getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(this.pos, 1, tag);
 	}
 
 	public FluidTank getWineTank() {

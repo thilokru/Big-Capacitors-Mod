@@ -72,26 +72,10 @@ public class Multiblock {
 	public boolean complete(BlockPos init, World world, EnumFacing facing) {
 		boolean complete = true;
 		for (DefinedBlock block : blocks) {
-			Vec3i offset = rotateOffset(block, facing);
+			Vec3i offset = Helper.rotateVector(block, facing);
 			DefinedBlock actualBlock = new DefinedBlock(offset, block.getBlockType(), block.getMetadata());
 			complete = complete && actualBlock.check(init, world);
 		}
 		return complete;
-	}
-
-	private Vec3i rotateOffset(Vec3i offset, EnumFacing facing) {
-		switch (facing) {
-		case NORTH:
-			return offset;
-		case SOUTH:
-			return new Vec3i(-offset.getX(), offset.getY(), -offset.getZ());
-		case WEST:
-			return new Vec3i(offset.getZ(), offset.getY(), -offset.getX());
-		case EAST:
-			return new Vec3i(-offset.getZ(), offset.getY(), offset.getX());
-		default:
-			Lo.g.error("RotatableMultiblock shall be rotated towards UP or DOWN, which should not be done! This is SEVERE!");
-			return offset;
-		}
 	}
 }

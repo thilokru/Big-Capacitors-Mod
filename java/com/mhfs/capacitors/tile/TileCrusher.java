@@ -24,6 +24,7 @@ public class TileCrusher extends TileEntity {
 		ResourceLocation asmLocation = new ResourceLocation(BigCapacitorsMod.modid, "asms/block/blockCrusher.json");
 		ImmutableMap<String, ITimeValue> asmParams = ImmutableMap.of("cycle_length", (ITimeValue) cycleLength, "click_time", (ITimeValue) clickTime);
 		asm = ModelLoaderRegistry.loadASM(asmLocation, asmParams);
+		this.setActive(true);
 	}
 
 	public void setActive(boolean active) {

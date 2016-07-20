@@ -49,7 +49,7 @@ public class TileEnergyTransciever extends AdvTileEntity implements ITickable, I
 		Set<BlockPos> sinks = routingHandler.getDestinations();
 		for(BlockPos pos : sinks){
 			TileEntity tile = this.worldObj.getTileEntity(pos);
-			
+			if(tile == null)continue;
 			if(tile.hasCapability(LuxAPI.LUX_FLOW_CAPABILITY, null)){
 				ILuxHandler handler = tile.getCapability(LuxAPI.LUX_FLOW_CAPABILITY, null);
 				long energy = getEnergyForTarget(handler.getNeed(), sinks.size());

@@ -6,6 +6,7 @@ import com.mhfs.capacitors.Fluids;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.blocks.BlockData;
 import com.mhfs.capacitors.items.ItemData;
+import com.mhfs.capacitors.items.ItemMany;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -40,7 +41,8 @@ public class ItemRenderHelper {
 		registerMesher(Items.itemManual);
 		registerMesher(Items.itemMultitool);
 		
-		registerSubItems();
+		registerSubItems(Items.itemMany);
+		registerSubItems(Items.itemDust);
 		registerSubBlocks();
 	}
 	
@@ -54,12 +56,12 @@ public class ItemRenderHelper {
 		}
 	}
 	
-	private static void registerSubItems(){
-		ItemData[] itemData = Items.itemMany.getData();
+	private static void registerSubItems(ItemMany item){
+		ItemData[] itemData = item.getData();
 		ResourceLocation loc;
 		for(int i = 0; i < itemData.length; i++){
 			loc = new ResourceLocation(BigCapacitorsMod.modid, itemData[i].getName());
-			ModelLoader.setCustomModelResourceLocation(Items.itemMany, i, new ModelResourceLocation(loc, "inventory"));
+			ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(loc, "inventory"));
 		}
 	}
 

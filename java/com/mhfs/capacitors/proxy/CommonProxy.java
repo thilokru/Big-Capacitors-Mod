@@ -105,7 +105,7 @@ public class CommonProxy {
 		ItemStack reactorShieldItem = new ItemStack(Blocks.blockMany, 1, 0);
 		GameRegistry.addRecipe(new ShapedOreRecipe(reactorShieldItem, true, "IOI", "OGO", "IOI", 'I', "ingotIron", 'O', Blocks.OBSIDIAN, 'G', Blocks.GRAVEL));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockMachineController, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', Items.itemStackFusionProcessor, 'W', Items.itemStackWire));
+		GameRegistry.addRecipe(new ShapedOreRecipe(Blocks.blockMachineController, true, "SWS", "WPW", "SWS", 'S', reactorShieldItem, 'P', Items.itemStackFPGA, 'W', Items.itemStackWire));
 		
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
 		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', Items.itemStackWire));
@@ -148,7 +148,7 @@ public class CommonProxy {
 				}
 			}
 			init.setAccessible(true);
-			EntityVillager.ITradeList[][] arg = new EntityVillager.ITradeList[][]{{new EntityVillager.ListItemForEmeralds(Items.itemStackFusionProcessor, new PriceInfo(32, 48))}};
+			EntityVillager.ITradeList[][] arg = new EntityVillager.ITradeList[][]{{new EntityVillager.ListItemForEmeralds(Items.itemStackFPGA, new PriceInfo(32, 48))}};
 			init.invoke(informatician, new Object[]{arg});
 		}catch (Exception e){
 			e.printStackTrace();

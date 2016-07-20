@@ -89,6 +89,10 @@ public class CommonProxy {
 		ItemStack bookStack = new ItemStack(Items.BOOK);
 		ItemStack ironIngotStack = new ItemStack(Items.IRON_INGOT);
 		GameRegistry.addShapelessRecipe(manualStack, bookStack, ironIngotStack);
+		
+		ItemStack composit = Items.itemStackDustWitheriteRutilComposit.copy();
+		composit.stackSize = 4;
+		GameRegistry.addShapelessRecipe(composit, Items.itemStackDustRutil, Items.itemStackDustRutil, Items.itemStackDustWitherite, Items.itemStackDustWitherite);
 			
 		GameRegistry.addRecipe(new ShapedOreRecipe(Items.itemStackWire, true, " S ", "CSC", " S ", 'S', Items.STICK, 'C', "ingotCopper"));
 		
@@ -110,15 +114,14 @@ public class CommonProxy {
 		ItemStack coilEmptyItem = new ItemStack(Blocks.blockMany, 1, 5);
 		GameRegistry.addRecipe(new ShapedOreRecipe(coilEmptyItem, true, "OWO", "OWO", "OWO", 'O', Blocks.OBSIDIAN, 'W', Items.itemStackWire));
 		
-		//PulverizerManager.addOreNameToDustRecipe(80, "oreTitandioxid", new ItemStack(Items.itemMany, 2, 3), null, 0);
-		//PulverizerManager.addOreNameToDustRecipe(80, "oreBariumCarbonate", new ItemStack(Items.itemMany, 2, 4), null, 0);
-		
-		//SmelterManager.addAlloyRecipe(80, "dustTitandioxid", 1, "dustBariumCarbonate", 1, new ItemStack(Blocks.blockMany, 1, 1));
-		
 		DestilleryRecipeRegistry.registerRecipe(new FluidStack(FluidRegistry.WATER, 1), new FluidStack(Fluids.fluidDestilledWater, 1), 10);
 		DestilleryRecipeRegistry.registerRecipe(new FluidStack(Fluids.fluidWine, 10), new FluidStack(Fluids.fluidEthanol, 1), 8);
 		
 		//ThermalExpansionHelper.addTransposerFill(80, coilEmptyItem, new ItemStack(Blocks.blockMany, 1, 2), new FluidStack(FluidRegistry.getFluid("cryotheum"), 100), false);
+	
+		GameRegistry.addSmelting(Items.itemStackDustIron, new ItemStack(Items.IRON_INGOT), 0.7F);
+		GameRegistry.addSmelting(Items.itemStackDustGold, new ItemStack(Items.GOLD_INGOT), 1F);
+		GameRegistry.addSmelting(composit, new ItemStack(Blocks.blockMany, 1, 1), 1F);
 	}
 
 	private void setupConfig(FMLPreInitializationEvent event, BigCapacitorsMod mod) {

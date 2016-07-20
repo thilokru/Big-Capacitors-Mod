@@ -29,6 +29,7 @@ public class Items extends net.minecraft.init.Items{
 	public static ItemStack itemStackDustWitherite;
 	public static ItemStack itemStackDustIron;
 	public static ItemStack itemStackDustGold;
+	public static ItemStack itemStackDustWitheriteRutilComposit;
 	
 	public static void setup(BigCapacitorsMod mod){
 		Items.itemMultitool = new ItemMultitool().setMaxStackSize(1);
@@ -42,6 +43,7 @@ public class Items extends net.minecraft.init.Items{
 		data.add(new ItemData("itemHeater", false));//1
 		data.add(new ItemData("itemFPGA", true));//2
 		data.add(new ItemData("ingotCopper", false));//3
+		data.add(new ItemData("itemDustWitheriteRutilComposit", false));//4
 		
 		Items.itemMany = new ItemMany(data.toArray(new ItemData[0]));
 		Items.itemMany.setCreativeTab(mod.creativeTab);
@@ -66,6 +68,7 @@ public class Items extends net.minecraft.init.Items{
 		itemStackHeater = new ItemStack(itemMany, 1, 1);
 		itemStackFPGA = new ItemStack(itemMany, 1, 2);
 		itemStackCopper = new ItemStack(itemMany, 1, 3);
+		itemStackDustWitheriteRutilComposit = new ItemStack(itemMany, 1, 4);
 		
 		itemStackDustRutil = new ItemStack(itemDust, 1, 0);
 		itemStackDustWitherite = new ItemStack(itemDust, 1, 1);

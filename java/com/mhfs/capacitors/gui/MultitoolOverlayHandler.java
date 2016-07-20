@@ -9,6 +9,7 @@ import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.tile.TileCrusherController;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTokamak;
 import com.mhfs.capacitors.tile.TileTower;
@@ -58,8 +59,9 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			renderEnergyTransferOverlay(event, (TileEnergyTransciever) entity);
 		} else if (entity instanceof TileStirlingEngine){
 			renderEnergyContainerOverlay(event, (IEnergyHandler) entity);
+		} else if (entity instanceof TileCrusherController){
+			renderEnergyContainerOverlay(event, (IEnergyHandler) entity);
 		}
-
 	}
 	
 	private void renderEnergyContainerOverlay(RenderGameOverlayEvent event, IEnergyHandler handler){

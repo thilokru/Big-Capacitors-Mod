@@ -16,9 +16,9 @@ import com.mhfs.capacitors.gui.manual.IPage;
 import com.mhfs.capacitors.gui.manual.ImagePage;
 import com.mhfs.capacitors.gui.manual.IndexPage;
 import com.mhfs.capacitors.gui.manual.LogoPage;
+import com.mhfs.capacitors.gui.manual.MultiblockPage;
 import com.mhfs.capacitors.gui.manual.TextPage;
 import com.mhfs.capacitors.misc.Lo;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -110,6 +110,8 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 			return loadCraftingPage(loc);
 		}else if(type.equals("img")){
 			return loadImagePage(loc);
+		}else if(type.equals("mb")){
+			return loadMultiblockPage(loc);
 		}
 		
 		return null;
@@ -144,6 +146,13 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 		disWidth = Integer.parseInt(br.readLine());
 		disHeight = Integer.parseInt(br.readLine());
 		return new ImagePage(new ResourceLocation(loc), disHeight, disWidth);
+	}
+	
+	private IPage loadMultiblockPage(ResourceLocation location) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream(location)));
+		String mbLoc = br.readLine();
+		String orientatedActions = br.readLine();
+		return new MultiblockPage(mbLoc, orientatedActions, resourceManager);
 	}
 	
 	private InputStream getInputStream(ResourceLocation loc) throws IOException{

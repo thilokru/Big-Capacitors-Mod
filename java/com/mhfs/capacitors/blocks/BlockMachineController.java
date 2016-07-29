@@ -1,9 +1,12 @@
 package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.tile.IActivatable;
 import com.mhfs.capacitors.tile.TileCrusherController;
+import com.mhfs.capacitors.tile.TileMultiblockRender;
 import com.mhfs.capacitors.tile.TileTokamak;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -31,7 +34,7 @@ public class BlockMachineController extends BlockAdvContainer {
 		IBlockState state = this.getStateFromMeta(meta);
 		switch (state.getValue(USED_TE)) {
 		case 0:
-			return null;
+			return new TileMultiblockRender();
 		case 1:
 			return new TileTokamak();
 		case 2:
@@ -42,18 +45,22 @@ public class BlockMachineController extends BlockAdvContainer {
 	}
 
 	public boolean hasTileEntity(IBlockState state) {
-		return state.getValue(USED_TE) != 0;
+		return true;
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (heldItem.getItem() == Items.itemManual && state.getValue(USED_TE) == 0) {//TE Type 0
+			TileMultiblockRender render = (TileMultiblockRender) world.getTileEntity(pos);
+			render.onRightClick(world, player, hand);
+		}
 		if (world.getTileEntity(pos) == null) {
 			if (BigCapacitorsMod.instance.fusionReactorMulti.complete(pos, world)) { // TE type 1
 				createFusionReactor(world, pos, state);
 			} else if (BigCapacitorsMod.instance.crusherMulti.getCompletedRotation(pos, world) != null) { // TE type 2
 				createCrusher(world, pos, state);
 			}
-			return false;
+			return true;
 		}
 		if (!world.isRemote && world.getTileEntity(pos) instanceof IActivatable)
 			return ((IActivatable) world.getTileEntity(pos)).onBlockActivated(player, heldItem);
@@ -61,18 +68,20 @@ public class BlockMachineController extends BlockAdvContainer {
 	}
 
 	private void createFusionReactor(World world, BlockPos pos, IBlockState state) {
+		world.removeTileEntity(pos);
 		TileEntity te = new TileTokamak();
 		te.setWorldObj(world);
 		world.setTileEntity(pos, te);
-		world.setBlockState(pos, state.withProperty(USED_TE, 1));
+		world.setBlockState(pos, state.withProperty(USED_TE, 2));
 	}
 
 	private void createCrusher(World world, BlockPos pos, IBlockState state) {
+		world.removeTileEntity(pos);
 		TileCrusherController te = new TileCrusherController();
 		te.setWorldObj(world);
 		te.setMultiblockRotation(BigCapacitorsMod.instance.crusherMulti.getCompletedRotation(pos, world));
 		world.setTileEntity(pos, te);
-		world.setBlockState(pos, state.withProperty(USED_TE, 2));
+		world.setBlockState(pos, state.withProperty(USED_TE, 3));
 	}
 
 	@Override

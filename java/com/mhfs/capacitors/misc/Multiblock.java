@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.mhfs.capacitors.misc.DefinedBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.IResource;
@@ -18,9 +23,32 @@ import net.minecraft.world.World;
 
 public class Multiblock {
 
-	protected List<DefinedBlock> blocks;
+	private final static BiMap<ResourceLocation, Multiblock> INSTANCES;
 
-	public Multiblock(ResourceLocation location, IResourceManager manager) {
+	static {
+		INSTANCES = HashBiMap.<ResourceLocation, Multiblock>create();
+	}
+	
+	public static Multiblock getMultiblock(ResourceLocation rl, IResourceManager manager) {
+		if(INSTANCES.get(rl) == null) {
+			INSTANCES.put(rl, new Multiblock(rl, manager));
+		}
+		return INSTANCES.get(rl);
+	}
+	
+	public static ResourceLocation getRegistryName(Multiblock mb) {
+		return INSTANCES.inverse().get(mb);
+	}
+
+	protected List<DefinedBlock> blocks;
+	private ResourceLocation location;
+
+	private Multiblock(ResourceLocation location, IResourceManager manager) {
+		this.location = location;
+		load(manager);
+	}
+
+	protected void load(IResourceManager manager) {
 		try {
 			blocks = new ArrayList<DefinedBlock>();
 
@@ -59,9 +87,10 @@ public class Multiblock {
 		return complete;
 	}
 
-	public EnumFacing getCompletedRotation(BlockPos init, World world){
-		for(EnumFacing facing:EnumFacing.Plane.HORIZONTAL){
-			if(complete(init, world, facing)) return facing;
+	public EnumFacing getCompletedRotation(BlockPos init, World world) {
+		for (EnumFacing facing : EnumFacing.Plane.HORIZONTAL) {
+			if (complete(init, world, facing))
+				return facing;
 		}
 		return null;
 	}
@@ -77,5 +106,16 @@ public class Multiblock {
 			complete = complete && actualBlock.check(init, world);
 		}
 		return complete;
+	}
+
+	public Set<DefinedBlock> getBlocks(BlockPos pos, EnumFacing facing) {
+		Set<DefinedBlock> retValue = new HashSet<DefinedBlock>();
+		for (DefinedBlock block : blocks) {
+			Vec3i offset = Helper.rotateVector(block, facing);
+			DefinedBlock actualBlock = new DefinedBlock(offset, block.getBlockType(), block.getMetadata());
+			actualBlock.add(pos);
+			retValue.add(actualBlock);
+		}
+		return retValue;
 	}
 }

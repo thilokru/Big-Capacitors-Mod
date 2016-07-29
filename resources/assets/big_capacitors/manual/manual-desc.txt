@@ -6,3 +6,4 @@ Items#big_capacitors:manual/items/chapter-desc.txt
 Ores#big_capacitors:manual/ores/chapter-desc.txt
 Distillery#big_capacitors:manual/distillery/chapter-desc.txt
 Fusion#big_capacitors:manual/fusion/chapter-desc.txt
+Multiblock Machines#big_capacitors:manual/multiblock/chapter-desc.txt

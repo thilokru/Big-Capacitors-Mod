@@ -6,6 +6,7 @@ import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.client.model.animation.AnimationTESR;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
+
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
@@ -15,7 +16,9 @@ import com.mhfs.capacitors.handlers.GuiHandler;
 import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.render.ItemRenderHelper;
 import com.mhfs.capacitors.render.RendererLux;
+import com.mhfs.capacitors.render.RendererTileMultiblockModel;
 import com.mhfs.capacitors.tile.TileCrusher;
+import com.mhfs.capacitors.tile.TileMultiblockRender;
 import com.mhfs.capacitors.tile.lux.TileEnergyTransciever;
 import com.mhfs.capacitors.tile.lux.TileLuxRouter;
 
@@ -45,6 +48,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyTransciever.class, rendererTransciever);
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrusher.class, new AnimationTESR<TileCrusher>());
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMultiblockRender.class, new RendererTileMultiblockModel());
 
 		GuiOverlayHandler handler = new GuiOverlayHandler();
 		handler.registerHandler(Items.itemMultitool, new MultitoolOverlayHandler());

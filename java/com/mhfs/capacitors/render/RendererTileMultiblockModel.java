@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.animation.FastTESR;
 
 public class RendererTileMultiblockModel extends FastTESR<TileMultiblockRender> {
@@ -32,9 +31,9 @@ public class RendererTileMultiblockModel extends FastTESR<TileMultiblockRender> 
 		
 		if(blockRenderer == null) blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		if(Math.random() > 0.95){
-			x += boundedRand(0.05);
-			y += boundedRand(0.05);
-			z += boundedRand(0.05);
+			x += boundedRand(0.01);
+			y += boundedRand(0.01);
+			z += boundedRand(0.01);
 		}
 		if(mb == null) return;
 		Set<DefinedBlock> blocks = mb.getBlocks(te.getPos(), facing);

@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
@@ -37,8 +36,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
 public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
-
-	private final static ResourceLocation overlayTexture = new ResourceLocation(BigCapacitorsMod.modid, "textures/other/overlay.png");
 
 	private void drawOverlay(RenderGameOverlayEvent event, TileEntity entity) {
 		if (entity == null)
@@ -141,28 +138,13 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 	}
 
 	private void renderEnergy(int x, int y, float filled) {
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor4f(1, 1, 1, 1);
-
-		bindTexture(overlayTexture);
-		this.drawTexturedModalRect(x, y, 55, 0, 7, 16);
-		int v = (int) (16 * (1F - filled));
-		y += (16 * (1F - filled));
-		int height = (int) (16 * filled);
-		this.drawTexturedModalRect(x, y, 48, v, 7, height);
-		GL11.glPopMatrix();
+		GuiOverlayHandler.OVERLAY.drawTextureAt("battery_empty", x, y);
+		GuiOverlayHandler.OVERLAY.drawTextureAt(Minecraft.getMinecraft(), "battery_full", x, y, 0, 1 - filled, 1f, filled);
 	}
 
 	private void renderFluidStack(IFluidTank tank, int x, int y) {
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor4f(1, 1, 1, 1);
 
-		bindTexture(overlayTexture);
-		this.drawTexturedModalRect(x, y, 32, 0, 16, 16);
+		GuiOverlayHandler.OVERLAY.drawTextureAt("tank_background", x, y);
 
 		FluidStack stack = tank.getFluid();
 
@@ -170,26 +152,20 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			Fluid fluid = stack.getFluid();
 			ResourceLocation loc = Helper.getTextureFromFluid(fluid);
 			if (loc != null) {
-				bindTexture(loc);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(loc);
 				Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);
 			}
 		}
 
-		bindTexture(overlayTexture);
 		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
-		this.drawTexturedModalRect(x, y, 32, 0, 16, (int)(16 * (1 - filled)));
-		this.drawTexturedModalRect(x, y, 16, 0, 16, 16);
-		GL11.glPopMatrix();
+		GuiOverlayHandler.OVERLAY.drawTextureAt(Minecraft.getMinecraft(), "tank_background", x, y, 0f, 0f, 1f, 1 - filled);
+		GuiOverlayHandler.OVERLAY.drawTextureAt("tank_foreground", x, y);
 	}
 
 	private void renderGas(IFluidTank tank, int x, int y) {
 		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(1, 1, 1, 1);
-
-		bindTexture(overlayTexture);
-		this.drawTexturedModalRect(x, y, 78, 0, 16, 16);
+		
+		GuiOverlayHandler.OVERLAY.drawTextureAt("barometer", x, y);
 
 		float filled = tank.getFluidAmount() / (float) tank.getCapacity();
 
@@ -239,9 +215,7 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			return;
 		CapacitorWallWrapper storage = tile.getEntityCapacitor();
 		if (storage.isGrounded()) {
-			GL11.glEnable(GL11.GL_BLEND);
-			bindTexture(overlayTexture);
-			this.drawTexturedModalRect(xPos + 5, yPos, 0, 0, 16, 16);
+			GuiOverlayHandler.OVERLAY.drawTextureAt("grounded", xPos + 5, yPos);
 		} else {
 			String text = "Energy: " + storage.getEnergyStored() + "/" + storage.getMaxEnergyStored();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 5, Color.WHITE.getRGB());
@@ -257,10 +231,6 @@ public class MultitoolOverlayHandler extends Gui implements IOverlayHandler {
 			text = "Grounded: " + storage.isGrounded();
 			gui.drawString(Minecraft.getMinecraft().fontRendererObj, text, xPos + 5, yPos + 35, Color.WHITE.getRGB());
 		}
-	}
-
-	protected void bindTexture(ResourceLocation loc) {
-		Minecraft.getMinecraft().renderEngine.bindTexture(loc);
 	}
 
 	@Override

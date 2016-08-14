@@ -1,19 +1,38 @@
 package com.mhfs.capacitors.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.mhfs.capacitors.BigCapacitorsMod;
+import com.mhfs.capacitors.misc.Lo;
+import com.mhfs.capacitors.misc.TextureHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GuiOverlayHandler {
+	
+	public final static TextureHelper OVERLAY;
+	private final static ResourceLocation TEX_LOC = new ResourceLocation(BigCapacitorsMod.modid, "textures/other/overlay.cfg");
+	
+	static {
+		TextureHelper helper = null;
+		try {
+			helper = TextureHelper.loadFromJSON(Minecraft.getMinecraft().getResourceManager(), TEX_LOC);
+		} catch (IOException e) {
+			Lo.g.error("Failed to load overlay texture map!", e);
+		}
+		OVERLAY = helper;
+	}
 
 	private Map<Item, IOverlayHandler> handlers;
 

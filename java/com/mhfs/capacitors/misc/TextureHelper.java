@@ -15,6 +15,7 @@ import com.google.gson.stream.JsonWriter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -66,12 +67,27 @@ public class TextureHelper implements IResourceManagerReloadListener {
 		return subTextures.get(name);
 	}
 	
+	public void drawTextureAt(String textureName, int x, int y) {
+		drawTextureAt(Minecraft.getMinecraft(), textureName, x, y);
+	}
+	
 	public void drawTextureAt(Minecraft mc, String textureName, int x, int y) {
+		drawTextureAt(mc, textureName, x, y, 0f, 0f, 1f, 1f);
+	}
+	
+	public void drawTextureAt(Minecraft mc, String textureName, int x, int y, float uOffset, float vOffset, float uPart, float vPart){
 		SubTexture sub = subTextures.get(textureName);
 		if(sub == null) return;
 		mc.getTextureManager().bindTexture(textureFile);
+		GlStateManager.enableBlend();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GuiScreen.drawModalRectWithCustomSizedTexture(x, y, sub.x, sub.y, sub.width, sub.height, textureSizeX, textureSizeY);
+		x += sub.width * uOffset;
+		y += sub.height * vOffset;
+		int u = (int) (sub.x + sub.width * uOffset);
+		int v = (int) (sub.y + sub.height * vOffset);
+		int drawWidth = (int) (sub.width * uPart);
+		int drawHeight = (int) (sub.height * vPart);
+		GuiScreen.drawModalRectWithCustomSizedTexture(x, y, u, v, drawWidth, drawHeight, textureSizeX, textureSizeY);
 	}
 	
 	public static TextureHelper loadFromJSON(IResourceManager manager, ResourceLocation location) throws IOException{

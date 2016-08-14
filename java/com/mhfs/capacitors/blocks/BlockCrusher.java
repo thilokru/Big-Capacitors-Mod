@@ -4,6 +4,7 @@ import com.mhfs.capacitors.tile.TileCrusher;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -21,12 +22,13 @@ import net.minecraftforge.common.property.Properties;
 public class BlockCrusher extends BlockAdvContainer implements IOrientedBlock{
 
 	public final static PropertyDirection ROTATION = PropertyDirection.create("rotation", EnumFacing.Plane.HORIZONTAL);
+	public final static PropertyBool PLACED = PropertyBool.create("placed");
 	public final static String name = "blockCrusher";
 	
 	public BlockCrusher(Material material) {
 		super(material, name);
 		
-		this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, EnumFacing.NORTH));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, EnumFacing.NORTH).withProperty(PLACED, false));
 	}
 
 	@Override
@@ -38,7 +40,7 @@ public class BlockCrusher extends BlockAdvContainer implements IOrientedBlock{
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(ROTATION, placer.getHorizontalFacing());
+		return this.getDefaultState().withProperty(ROTATION, placer.getHorizontalFacing()).withProperty(PLACED, true);
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class BlockCrusher extends BlockAdvContainer implements IOrientedBlock{
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(ROTATION, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(ROTATION, EnumFacing.getFront(meta)).withProperty(PLACED, true);
 	}
 
 	@Override
@@ -58,10 +60,14 @@ public class BlockCrusher extends BlockAdvContainer implements IOrientedBlock{
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new ExtendedBlockState(this, new IProperty[] { ROTATION }, new IUnlistedProperty[]{Properties.AnimationProperty});
+		return new ExtendedBlockState(this, new IProperty[] { ROTATION, PLACED }, new IUnlistedProperty[]{Properties.AnimationProperty});
 	}
 	
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		if(state.getValue(PLACED)){
+			return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		} else {
+			return EnumBlockRenderType.MODEL;
+		}
 	}
 }

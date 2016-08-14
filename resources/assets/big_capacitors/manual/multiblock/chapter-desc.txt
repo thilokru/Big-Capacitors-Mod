@@ -1,3 +1,4 @@
 text#big_capacitors:manual/multiblock/desc.txt
 craft#big_capacitors:manual/multiblock/FPGA.txt
 mb#big_capacitors:manual/multiblock/fusion.txt
+mb#big_capacitors:manual/multiblock/crusher.txt

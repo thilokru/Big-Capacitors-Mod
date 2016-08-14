@@ -3,6 +3,7 @@ package com.mhfs.capacitors.gui.manual;
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 
 public class TextPage implements IPage {
@@ -16,12 +17,34 @@ public class TextPage implements IPage {
 	}
 
 	@Override
-	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos, int yPos, int height, int width, int mouseX, int mouseY) {
+	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos, int yPos, int width, int height, int mouseX, int mouseY) {
 		String[] lines = text.split(newLine);
 		for(String line:lines){
-			mc.fontRendererObj.drawString(line, xPos, yPos, Color.BLACK.getRGB(), false);
-			yPos += mc.fontRendererObj.FONT_HEIGHT;
+			int drawnLines = drawLineWrappedText(mc.fontRendererObj, line, xPos, yPos, width, Color.BLACK.getRGB());
+			yPos += mc.fontRendererObj.FONT_HEIGHT * drawnLines;
 		}
+	}
+	
+	private int drawLineWrappedText(FontRenderer fr, String text, int xPos, int yPos, int lineWidth, int color) {
+		int drawnLines = 1;
+		int cursorX = xPos;
+		int cursorY = yPos + fr.FONT_HEIGHT;
+		String[] words = text.split(" ");
+		for(String word : words) {
+			word += " ";
+			int wordWidth = fr.getStringWidth(word);
+			if((wordWidth + cursorX) < (xPos + lineWidth)) {
+				fr.drawString(word, cursorX, cursorY, color, false);
+				cursorX += wordWidth;
+			} else {
+				cursorX = xPos;
+				cursorY += fr.FONT_HEIGHT;
+				fr.drawString(word, cursorX, cursorY, color, false);
+				cursorX += wordWidth;
+				drawnLines++;
+			}
+		}
+		return drawnLines;
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package com.mhfs.capacitors.gui.manual;
 import java.io.IOException;
 import java.util.List;
 
+import com.mhfs.capacitors.misc.TextureHelper.SubTexture;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -12,30 +14,30 @@ public class GuiManualChapter extends GuiManual {
 	private List<IPage> chapter;
 	private int page;
 	protected GuiButton forward, backward, exit;
+	protected SubTexture background;
 
 	public GuiManualChapter(GuiScreen parent, List<IPage> chapter){
 		this.parent = parent;
 		this.chapter = chapter;
+		this.background = GuiManual.TEXTURES.getTextureInfo("background");
 		page = 0;
 	}
 	
 	@Override
 	public void initGui() {
 		super.initGui();
-		int buttonY = yOffset + bookImageHeight - GuiManual.MARGIN * 3;
-		int buttonX = (this.width + this.bookImageWidth / 2 - GuiManualButton.SIZE) / 2;
-		forward = new GuiManualButton(-3, buttonX, buttonY,
-		GuiManualButton.Mode.FORWARD);
+		int buttonY = 2 + this.background.getHeight() - GuiManual.MARGIN * 2;
+		int buttonX = this.width / 2 + this.background.getWidth() / 2 - 16 - GuiManual.MARGIN + 4;
+		forward = new GuiManualButton(-3, buttonX, buttonY, GuiManualButton.Mode.FORWARD);
 		this.buttonList.add(forward);
 
-		buttonX = (this.width - this.bookImageWidth / 2 - GuiManualButton.SIZE) / 2;
-		backward = new GuiManualButton(-2, buttonX, buttonY,
-				GuiManualButton.Mode.BACKWARD);
+		buttonX = this.width / 2 - (this.background.getWidth() / 2) + 16 - GuiManual.MARGIN;
+		backward = new GuiManualButton(-2, buttonX, buttonY, GuiManualButton.Mode.BACKWARD);
 		this.buttonList.add(backward);
 		
-		buttonX = (this.width - GuiManualButton.SIZE) / 2;
-		exit = new GuiManualButton(-1, buttonX, buttonY,
-				GuiManualButton.Mode.UP);
+		buttonX = (this.width - GuiManual.TEXTURES.getTextureInfo("button_up_inactive").getWidth()) / 2;
+		buttonY = 2 + this.background.getHeight() - 6;
+		exit = new GuiManualButton(-1, buttonX, buttonY, GuiManualButton.Mode.UP);
 		exit.visible = true;
 		exit.enabled = true;
 		this.buttonList.add(exit);
@@ -47,10 +49,10 @@ public class GuiManualChapter extends GuiManual {
 		this.drawBackground();
 		this.preTextRender();
 		super.drawScreen(mouseX, mouseY, partialTickTime);
-		int xPos = (int) (((this.width - this.bookImageWidth)/2) + GuiManual.BOOK_BORDER + GuiManual.MARGIN);
-		int yPos = this.yOffset + GuiManual.BOOK_BORDER + GuiManual.MARGIN;
-		int height = this.bookImageHeight - GuiManual.BOOK_BORDER * 2 - GuiManual.MARGIN * 2;
-		int width = this.bookImageWidth / 2 - GuiManual.BOOK_BORDER - GuiManual.MARGIN * 2;
+		int xPos = (int) (((this.width - this.background.getWidth())/2) + GuiManual.BOOK_BORDER + GuiManual.MARGIN);
+		int yPos = 2 + GuiManual.BOOK_BORDER + GuiManual.MARGIN;
+		int height = this.background.getHeight() - GuiManual.BOOK_BORDER * 2 - GuiManual.MARGIN * 2;
+		int width = (this.background.getWidth() / 2) - GuiManual.BOOK_BORDER - (GuiManual.MARGIN * 2);
 		chapter.get(page).drawPage(this.mc, this, xPos, yPos, width, height, mouseX, mouseY);
 		if(page + 1 < chapter.size()){
 			xPos = this.width / 2 + GuiManual.MARGIN;
@@ -87,10 +89,10 @@ public class GuiManualChapter extends GuiManual {
 	}
 	
 	private void onLoadPage(){
-		int xPos = (int) (((this.width - this.bookImageWidth)/2) + GuiManual.BOOK_BORDER);
-		int yPos = (int) (this.yOffset + GuiManual.BOOK_BORDER);
-		int height = this.bookImageHeight - GuiManual.BOOK_BORDER * 2;
-		int width = this.bookImageWidth / 2 - GuiManual.BOOK_BORDER - GuiManual.MARGIN;
+		int xPos = (int) (((this.width - this.background.getWidth())/2) + GuiManual.BOOK_BORDER);
+		int yPos = (int) (2 + GuiManual.BOOK_BORDER);
+		int height = this.background.getHeight() - GuiManual.BOOK_BORDER * 2;
+		int width = this.background.getWidth() / 2 - GuiManual.BOOK_BORDER - GuiManual.MARGIN;
 		chapter.get(page).onInit(mc, this, xPos, yPos, width, height);
 		if(page + 1 < chapter.size()){
 			xPos = this.width / 2 + GuiManual.MARGIN;
@@ -99,10 +101,10 @@ public class GuiManualChapter extends GuiManual {
 	}
 	
 	private void onUnloadPage(){
-		int xPos = (int) (((this.width - this.bookImageWidth)/2) + GuiManual.BOOK_BORDER);
-		int yPos = (int) (this.yOffset + GuiManual.BOOK_BORDER);
-		int height = this.bookImageHeight - GuiManual.BOOK_BORDER * 2;
-		int width = this.bookImageWidth / 2 - GuiManual.BOOK_BORDER - GuiManual.MARGIN;
+		int xPos = (int) (((this.width - this.background.getWidth())/2) + GuiManual.BOOK_BORDER);
+		int yPos = (int) (2 + GuiManual.BOOK_BORDER);
+		int height = this.background.getHeight() - GuiManual.BOOK_BORDER * 2;
+		int width = this.background.getWidth() / 2 - GuiManual.BOOK_BORDER - GuiManual.MARGIN;
 		chapter.get(page).onUnload(mc, this, xPos, yPos, width, height);
 		if(page + 1 < chapter.size()){
 			xPos = this.width / 2 + GuiManual.MARGIN;

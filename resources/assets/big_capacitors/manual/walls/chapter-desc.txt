@@ -1,4 +1,3 @@
 text#big_capacitors:manual/walls/desc.txt
 craft#big_capacitors:manual/walls/craft.txt
-text#big_capacitors:manual/walls/ground.txt
 img#big_capacitors:manual/walls/img.txt

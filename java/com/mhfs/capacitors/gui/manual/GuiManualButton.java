@@ -3,22 +3,24 @@ package com.mhfs.capacitors.gui.manual;
 import org.lwjgl.opengl.GL11;
 
 import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.capacitors.misc.TextureHelper.SubTexture;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
-import static com.mhfs.capacitors.gui.manual.GuiManualButton.Mode.*;
 
 public class GuiManualButton extends GuiButton {
 
 	private Mode mode;
-	public final static int SIZE = 16;
 
 	public GuiManualButton(int id, int x, int y, Mode mode) {
-		super(id, x, y, SIZE, SIZE, "");
+		super(id, x, y, 0, 0, "");
 		if (mode == null)
 			throw new IllegalArgumentException("Null is not a valid mode!");
 		this.mode = mode;
+		SubTexture info = GuiManual.TEXTURES.getTextureInfo(mode.getTextureName(false));
+		this.width = info.getWidth();
+		this.height = info.getHeight();
 	}
 
 	@Override
@@ -27,9 +29,7 @@ public class GuiManualButton extends GuiButton {
 			boolean hover = isMouseHovering(mouseX, mouseY);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
-			mc.getTextureManager().bindTexture(GuiManual.BOOK_TEXTURES);
-			int u = mode == FORWARD ? 0 : mode == BACKWARD ? 16 : 32;
-			this.drawTexturedModalRect(this.xPosition, this.yPosition, u, hover ? 16 : 0, 16, 16);
+			GuiManual.TEXTURES.drawTextureAt(mc, mode.getTextureName(hover), this.xPosition, this.yPosition);
 		}
 	}
 
@@ -39,17 +39,32 @@ public class GuiManualButton extends GuiButton {
 	}
 
 	private boolean isMouseHovering(int mouseX, int mouseY) {
+		SubTexture info = GuiManual.TEXTURES.getTextureInfo(mode.getTextureName(false));
 		int minX = this.xPosition;
 		int minY = this.yPosition;
-		int maxX = this.xPosition + this.width;
-		int maxY = this.yPosition + this.height;
+		int maxX = this.xPosition + info.getWidth();
+		int maxY = this.yPosition + info.getHeight();
 		boolean withinLowerBounds = mouseX >= minX && mouseY >= minY;
 		boolean withinUpperBounds = mouseX <= maxX && mouseY <= maxY;
 		return withinLowerBounds && withinUpperBounds;
 	}
 
 	public static enum Mode {
-		FORWARD, BACKWARD, UP;
+		FORWARD("button_right_active", "button_right_inactive"),
+		BACKWARD("button_left_active", "button_left_inactive"),
+		UP("button_up_active", "button_up_inactive");
+
+		private String activeTexture;
+		private String inactiveTexture;
+
+		private Mode(String active, String inactive) {
+			this.activeTexture = active;
+			this.inactiveTexture = inactive;
+		}
+
+		public String getTextureName(boolean active) {
+			return active ? activeTexture : inactiveTexture;
+		}
 	}
 
 }

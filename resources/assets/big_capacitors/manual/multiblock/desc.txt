@@ -1,14 +1,7 @@
-There are some machines, that
-don't fit into the space within
-a single block. Therefore they
-are made out of multiblock struc-
-tures.
-The core is always the 'Machine
-Controlling FPGA', which can be
-crafted as shown own the next
-page. The multiblock structures
-can be viewed by going to the
-according page, choosing an
-orientation and clicking 'View'.
-Beneath these buttons will be a
-list of required components.
+There are some machines, that don't fit into the space within a single block. Therefore they
+are made out of multiblock structures.
+
+
+The core is always the 'Machine Controlling FPGA', which can be crafted as shown on the next
+page. The multiblock structures can be viewed by going to the according page, choosing an
+orientation and clicking 'View'. Beneath these buttons will be a list of required components.

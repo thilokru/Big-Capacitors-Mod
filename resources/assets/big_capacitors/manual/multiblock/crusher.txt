@@ -1,0 +1,2 @@
+big_capacitors:multiblock/crusher.txt
+0.8

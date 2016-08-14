@@ -12,17 +12,16 @@ public class LogoPage implements IPage {
 	public void drawPage(Minecraft mc, GuiManualChapter screen, int xPos, int yPos, int width, int height, int mouseX, int mouseY) {
 		boolean backup = mc.fontRendererObj.getUnicodeFlag();
 		mc.fontRendererObj.setUnicodeFlag(false);
-		mc.getTextureManager().bindTexture(GuiManual.BOOK_TEXTURES);
+		
 		int logoX = xPos;
 		int logoY = yPos + (height / 2) - 16;
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		screen.drawTexturedModalRect(logoX, logoY, 48, 0, 16, 32);
+		GuiManual.TEXTURES.drawTextureAt(mc, "capacitor_left", logoX, logoY);
 		
 		int textX = logoX + 16 + GuiManual.MARGIN / 2;
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
 		logoX = xPos + width - 16;
-		screen.drawTexturedModalRect(logoX, logoY, 64, 0, 16, 32);
+		GuiManual.TEXTURES.drawTextureAt(mc, "capacitor_right", logoX, logoY);
 		
 		int textY = yPos + (height / 2);
 		int color = 0x333333;

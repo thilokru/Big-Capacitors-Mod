@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.texture.TextureManager;
 
 public class IndexPage implements IPage, IKeyboardHandler {
 
@@ -120,10 +119,7 @@ public class IndexPage implements IPage, IKeyboardHandler {
 			if (!this.getVisible())
 				return;
 			GL11.glColor4f(1, 1, 1, 1);
-			TextureManager tm = Minecraft.getMinecraft().renderEngine;
-			tm.bindTexture(GuiManual.BOOK_TEXTURES);
-			this.drawTexturedModalRect(this.xPosition - 2, this.yPosition - 2,
-					82, 0, this.width + 2, this.height + 2);
+			GuiManual.TEXTURES.drawTextureAt(mc, "search_box", this.xPosition - 2, this.yPosition - 2);
 
 			FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 			fr.setUnicodeFlag(true);

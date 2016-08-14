@@ -50,7 +50,7 @@ public class BlockMachineController extends BlockAdvContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (heldItem.getItem() == Items.itemManual && state.getValue(USED_TE) == 0) {//TE Type 0
+		if (heldItem != null && heldItem.getItem() == Items.itemManual && state.getValue(USED_TE) == 0) {//TE Type 0
 			TileMultiblockRender render = (TileMultiblockRender) world.getTileEntity(pos);
 			render.onRightClick(world, player, hand);
 		}

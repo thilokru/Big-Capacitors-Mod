@@ -1,12 +1,12 @@
-Ein Kondensator besteht
-im Grunde aus zwei Dingen:
-Den Platten und dem Di-
-elektikum (dem Zeug
-zwischen den Platten,
-siehe Dielektrizität).
-Die Wände werden, wie auf
-der nächsten Seite ge-
-zeigt, hergestellt. Sie 
-müssen so platziert werden,
-das sie einander gegenüber
-stehen.
+Ein Kondensator besteht im Grunde aus zwei Dingen:
+Den Platten und dem Dielektikum (dem Zeug zwischen den Platten,
+siehe Dielektrizität). Die Wände werden, wie auf der nächsten Seite ge-
+zeigt, hergestellt. Sie müssen so platziert werden, das sie einander gegenüber
+stehen. (Siehe Screenshot)
+
+
+Das RF-Energiesystem hat zwei Leiter: Das Energyduct und die Erde. Also
+muss auch eine Seite des Kondensators geerdet sein. Das Multifunktionswerkzeug
+zeigt an welche seite geerdet ist. Die geerdete Seite gibt keine Energie
+ab. Man kann die Erdung ändern, allerdings geht dabei die gespeicherte Energie
+verloren.

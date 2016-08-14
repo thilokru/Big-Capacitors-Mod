@@ -122,7 +122,15 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 		BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream(location)));
 		String line;
 		while((line = br.readLine()) != null){
-			text += line + "\n";
+			if(!line.trim().isEmpty()){
+				if(!text.endsWith(" ") && !line.startsWith(" ")) {
+					text += " " + line;
+				} else {
+					text += line;
+				}
+			} else {
+				text += "\n";
+			}
 		}
 		return new TextPage(text, "\n");
 	}
@@ -151,8 +159,8 @@ public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IR
 	private IPage loadMultiblockPage(ResourceLocation location) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream(location)));
 		String mbLoc = br.readLine();
-		String orientatedActions = br.readLine();
-		return new MultiblockPage(mbLoc, orientatedActions, resourceManager);
+		float scale = Float.parseFloat(br.readLine());
+		return new MultiblockPage(mbLoc, scale, resourceManager);
 	}
 	
 	private InputStream getInputStream(ResourceLocation loc) throws IOException{

@@ -45,7 +45,7 @@ public class RoutingImpl implements IRouting {
 				cap.drainSetup(requester, getPosition(), distance + 1);
 			}
 		}
-		Helper.markForUpdate(local);
+		Helper.sendUpdate(local);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class RoutingImpl implements IRouting {
 			this.routes.remove(pos);
 		}
 		this.connections.remove(handler);
-		Helper.markForUpdate(local);
+		Helper.sendUpdate(local);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class RoutingImpl implements IRouting {
 				continue;
 			remoteCap.invalidateRoute(destination, this.getPosition());
 		}
-		Helper.markForUpdate(local);
+		Helper.sendUpdate(local);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class RoutingImpl implements IRouting {
 	public void onConnect(IRouting foreign) {
 		connections.add(foreign.getPosition());
 		foreign.handlerSetupRequest(this);
-		Helper.markForUpdate(local);
+		Helper.sendUpdate(local);
 	}
 
 	@Override

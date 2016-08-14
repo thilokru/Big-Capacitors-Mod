@@ -73,7 +73,6 @@ public class TileLuxRouter extends AdvTileEntity implements IConnected {
 
 	public void resetConnectionState() {
 		luxHandler.resetActive();
-		markForUpdate();
 	}
 
 	@SideOnly(Side.CLIENT)

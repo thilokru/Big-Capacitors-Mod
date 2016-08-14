@@ -34,7 +34,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 	private void createEntity() {
 		wrapper = new CapacitorWallWrapper(this);
 		wrapper.checkJoin(worldObj, this.isFirstTick);
-		markForUpdate();
+		this.sendUpdate();
 	}
 
 	public EnumFacing getRotation() {
@@ -53,7 +53,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	public void onEntityChange(CapacitorWallWrapper cap) {
 		this.wrapper = cap;
-		markForUpdate();
+		this.sendUpdate();
 	}
 
 	public CapacitorWallWrapper getEntityCapacitor() {

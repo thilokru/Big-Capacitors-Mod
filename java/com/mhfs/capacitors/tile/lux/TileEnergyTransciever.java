@@ -55,7 +55,7 @@ public class TileEnergyTransciever extends AdvTileEntity implements ITickable, I
 				long energy = getEnergyForTarget(handler.getNeed(), sinks.size());
 				if(energy != 0){
 					luxHandler.energyFlow(null, pos, energy);
-					markForUpdate();
+					this.sendUpdate();
 				}
 			}
 		}
@@ -136,7 +136,7 @@ public class TileEnergyTransciever extends AdvTileEntity implements ITickable, I
 		mode = mode.getNext();
 		this.routingHandler.disadvertiseSink();
 		if(mode.isReceiver())this.routingHandler.advertiseSink();
-		markForUpdate();
+		this.sendUpdate();
 	}
 	
 	public IEnergyHandler getConnectedTile(){
@@ -175,7 +175,6 @@ public class TileEnergyTransciever extends AdvTileEntity implements ITickable, I
 	@Override
 	public void resetConnectionState() {
 		this.luxHandler.resetActive();
-		markForUpdate();
 	}
 	
 	public static enum Mode{

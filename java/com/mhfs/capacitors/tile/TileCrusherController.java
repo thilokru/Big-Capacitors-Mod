@@ -87,7 +87,7 @@ public class TileCrusherController extends AdvTileEntity implements IEnergyRecei
 						entity.setDead();
 					}
 					energy -= OPERATION_ENERGY_COST;
-					this.markForUpdate();
+					this.sendUpdate();
 					break;
 				}
 			}

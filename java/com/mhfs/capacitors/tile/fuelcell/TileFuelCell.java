@@ -44,8 +44,8 @@ public class TileFuelCell extends AdvTileEntity implements IEnergyReceiver, IRot
 			EnumFacing tankSide = rot.rotateYCCW();
 			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(tankSide));
 			tower.condense(hydrogen, 1);
+			this.sendUpdate();
 		}
-		markForUpdate();
 	}
 	
 	private boolean isFormed() {
@@ -132,12 +132,16 @@ public class TileFuelCell extends AdvTileEntity implements IEnergyReceiver, IRot
 		int amount = Math.min(MAX_TRANSFER, Math.min(MAX_ENERGY - energy, maxReceive));
 		if(!simulate){
 			energy += amount;
-			markForUpdate();
+			this.sendUpdate();
 		}
 		return amount;
 	}
 
 	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
-		return FluidUtil.interactWithFluidHandler(stack, water, player);
+		boolean res = FluidUtil.interactWithFluidHandler(stack, water, player);
+		if(res) {
+			this.sendUpdate();
+		}
+		return res;
 	}
 }

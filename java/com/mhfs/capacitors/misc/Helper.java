@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 
 public class Helper {
@@ -21,10 +22,12 @@ public class Helper {
 		sh.playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("big_capacitors:pageTurn")), 1.0F));
 	}
 
-	public static void markForUpdate(TileEntity entity) {
+	public static void sendUpdate(TileEntity entity) {
 		entity.markDirty();
-		IBlockState state = entity.getWorld().getBlockState(entity.getPos());
-		entity.getWorld().notifyBlockUpdate(entity.getPos(), state, state, 3);
+		if(entity.getWorld().isRemote) return;
+		World world = entity.getWorld();
+		IBlockState state = world.getBlockState(entity.getPos());
+		world.notifyBlockUpdate(entity.getPos(), state, state, 0);
 	}
 	
 	/**

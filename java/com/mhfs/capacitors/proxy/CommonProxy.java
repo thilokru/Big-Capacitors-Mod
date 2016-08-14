@@ -38,7 +38,6 @@ import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;
 import com.mhfs.capacitors.tile.TileCrusher;
 import com.mhfs.capacitors.tile.TileCrusherController;
-import com.mhfs.capacitors.tile.TileMultiblockRender;
 import com.mhfs.capacitors.tile.TileStirlingEngine;
 import com.mhfs.capacitors.tile.TileTokamak;
 import com.mhfs.capacitors.tile.TileTower;
@@ -181,7 +180,6 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileStirlingEngine.class, "tileStirlingEngine");
 		GameRegistry.registerTileEntity(TileCrusher.class, "tileCrusher");
 		GameRegistry.registerTileEntity(TileCrusherController.class, "tileCrusherController");
-		GameRegistry.registerTileEntity(TileMultiblockRender.class, "tileMBRender");
 		setupRecipies();
 		GameRegistry.registerWorldGenerator(new OreGen(), 1000);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());

@@ -1,10 +1,8 @@
 package com.mhfs.capacitors.blocks;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.tile.IActivatable;
 import com.mhfs.capacitors.tile.TileCrusherController;
-import com.mhfs.capacitors.tile.TileMultiblockRender;
 import com.mhfs.capacitors.tile.TileTokamak;
 
 import net.minecraft.block.material.Material;
@@ -34,7 +32,7 @@ public class BlockMachineController extends BlockAdvContainer {
 		IBlockState state = this.getStateFromMeta(meta);
 		switch (state.getValue(USED_TE)) {
 		case 0:
-			return new TileMultiblockRender();
+			return null;
 		case 1:
 			return new TileTokamak();
 		case 2:
@@ -50,10 +48,6 @@ public class BlockMachineController extends BlockAdvContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (heldItem != null && heldItem.getItem() == Items.itemManual && state.getValue(USED_TE) == 0) {//TE Type 0
-			TileMultiblockRender render = (TileMultiblockRender) world.getTileEntity(pos);
-			render.onRightClick(world, player, hand);
-		}
 		if (world.getTileEntity(pos) == null) {
 			if (BigCapacitorsMod.instance.fusionReactorMulti.complete(pos, world)) { // TE type 1
 				createFusionReactor(world, pos, state);

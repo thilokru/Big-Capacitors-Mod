@@ -50,7 +50,7 @@ public class TileBarrel extends AdvTileEntity implements ISidedInventory, ITicka
 				this.potatoStack = new ItemStack(Items.POTATO, 0);
 			}
 		}
-		markForUpdate();
+		this.sendUpdate();
 	}
 	
 	public void onRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -68,7 +68,7 @@ public class TileBarrel extends AdvTileEntity implements ISidedInventory, ITicka
 					potatoStack.stackSize++;
 				}
 			}
-			markForUpdate();
+			this.sendUpdate();
 		} else {
 			FluidUtil.interactWithFluidHandler(stack, wineTank, player);
 		}

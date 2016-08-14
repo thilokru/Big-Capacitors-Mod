@@ -31,7 +31,7 @@ public class TileTower extends AdvTileEntity {
 			if(accepted != condense.amount){
 				releasingSteam = true;
 			}
-			markForUpdate();
+			this.sendUpdate();
 		}else{
 			TileTower tower = (TileTower) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
 			tower.condense(output, times);
@@ -64,16 +64,12 @@ public class TileTower extends AdvTileEntity {
 		super.writeToNBT(tag);
 		tag.setTag("tank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(tank, null));
 		tag.setBoolean("steam", releasingSteam);
+		this.releasingSteam = false;
 		return tag;
 	}
 	
 	public boolean isReleasingSteam(){
 		return releasingSteam;
-	}
-	
-	public void resetSteamState(){
-		this.releasingSteam = false;
-		markForUpdate();
 	}
 
 	public boolean isTopMost() {
@@ -86,5 +82,9 @@ public class TileTower extends AdvTileEntity {
 
 	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
 		return FluidUtil.interactWithFluidHandler(stack, tank, player);
+	}
+
+	public void resetSteamState() {
+		this.releasingSteam = false;
 	}
 }

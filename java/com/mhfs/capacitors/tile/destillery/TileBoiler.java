@@ -49,7 +49,7 @@ public class TileBoiler extends AdvTileEntity implements ITickable, IEnergyRecei
 					inputTank.drain(recipe.getInput().amount * times, true);
 					TileTower tank = (TileTower) worldObj.getTileEntity(this.getPos().offset(EnumFacing.UP, 2));
 					tank.condense(recipe.getOutput(), times);
-					markForUpdate();
+					this.sendUpdate();
 				}
 			}
 		}
@@ -106,7 +106,7 @@ public class TileBoiler extends AdvTileEntity implements ITickable, IEnergyRecei
 		if (!simulate) {
 			energy += receive;
 		}
-		markForUpdate();
+		this.sendUpdate();
 		return receive;
 	}
 

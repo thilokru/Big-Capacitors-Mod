@@ -23,7 +23,7 @@ public class TileStirlingEngine extends AdvTileEntity implements IEnergyProvider
 		if(worldObj.isRemote)return;
 		if(isActive()){
 			energy += 40;
-			markForUpdate();
+			this.sendUpdate();
 		}
 	}
 
@@ -61,7 +61,7 @@ public class TileStirlingEngine extends AdvTileEntity implements IEnergyProvider
 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setLong("energy", energy);
+		tag.setInteger("energy", energy);
 		return tag;
 	}
 	

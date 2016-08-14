@@ -37,7 +37,7 @@ public class TileTokamak extends AdvTileEntity implements IEnergyReceiver, IEner
 	public TileTokamak() {
 		hydrogenTank = new FluidTank(MAX_GAS_VOLUME);
 		temperature = ROOM_TEMP;
-		this.markDirty();
+		this.sendUpdate();
 	}
 
 	public void update() {
@@ -67,7 +67,7 @@ public class TileTokamak extends AdvTileEntity implements IEnergyReceiver, IEner
 				energy = 0;
 			}
 		}
-		markForUpdate();
+		this.sendUpdate();
 	}
 	
 	private boolean checkFormed() {

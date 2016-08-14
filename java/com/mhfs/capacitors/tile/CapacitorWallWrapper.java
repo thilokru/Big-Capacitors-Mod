@@ -9,6 +9,7 @@ import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
 import com.mhfs.capacitors.misc.HashSetHelper;
+import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -286,10 +287,8 @@ public class CapacitorWallWrapper {
 		for (BlockPos pos : containedBlocks) {
 			TileEntity entity = world.getTileEntity(pos);
 			if (entity != null) {
-				entity.markDirty();
+				Helper.sendUpdate(entity);
 			}
-			IBlockState state = world.getBlockState(pos);
-			world.notifyBlockUpdate(pos, state, state, 3);
 		}
 	}
 

@@ -66,7 +66,7 @@ public class BlockMachineController extends BlockAdvContainer {
 		TileEntity te = new TileTokamak();
 		te.setWorldObj(world);
 		world.setTileEntity(pos, te);
-		world.setBlockState(pos, state.withProperty(USED_TE, 2));
+		world.setBlockState(pos, state.withProperty(USED_TE, 1));
 	}
 
 	private void createCrusher(World world, BlockPos pos, IBlockState state) {
@@ -75,7 +75,7 @@ public class BlockMachineController extends BlockAdvContainer {
 		te.setWorldObj(world);
 		te.setMultiblockRotation(BigCapacitorsMod.instance.crusherMulti.getCompletedRotation(pos, world));
 		world.setTileEntity(pos, te);
-		world.setBlockState(pos, state.withProperty(USED_TE, 3));
+		world.setBlockState(pos, state.withProperty(USED_TE, 2));
 	}
 
 	@Override

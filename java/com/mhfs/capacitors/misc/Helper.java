@@ -24,7 +24,7 @@ public class Helper {
 
 	public static void sendUpdate(TileEntity entity) {
 		entity.markDirty();
-		if(entity.getWorld().isRemote) return;
+		if(entity.getWorld() == null || entity.getWorld().isRemote) return;
 		World world = entity.getWorld();
 		IBlockState state = world.getBlockState(entity.getPos());
 		world.notifyBlockUpdate(entity.getPos(), state, state, 0);

@@ -43,6 +43,9 @@ public class CapacitorWorldData extends WorldSavedData {
 		} while(cwwMap.containsKey(id));
 		CapacitorWallWrapper wrapper = new CapacitorWallWrapper(entity, id);
 		cwwMap.put(id, wrapper);
+		for(EntityPlayer player : entity.getWorld().playerEntities) {
+			sendWrapper(wrapper, player);
+		}
 		this.markDirty();
 		return id;
 	}
@@ -80,6 +83,7 @@ public class CapacitorWorldData extends WorldSavedData {
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		int i = 0;
 		for(UUID id:cwwMap.keySet()) {
+			if(!cwwMap.get(id).hasBoundTiles()) continue;
 			NBTTagCompound subTag = new NBTTagCompound();
 			subTag.setUniqueId("uuid", id);
 			subTag.setString("cww", gson.toJson(cwwMap.get(id)));
@@ -98,8 +102,12 @@ public class CapacitorWorldData extends WorldSavedData {
 
 	public void sendToClient(EntityPlayer player) {
 		for(UUID id : cwwMap.keySet()) {
-			BigCapacitorsMod.instance.network.sendTo(new WallUpdateMessage(cwwMap.get(id)), (EntityPlayerMP) player);
+			sendWrapper(cwwMap.get(id), player);
 		}
+	}
+	
+	private void sendWrapper(CapacitorWallWrapper wrapper, EntityPlayer player) {
+		BigCapacitorsMod.instance.network.sendTo(new WallUpdateMessage(wrapper), (EntityPlayerMP) player);
 	}
 
 }

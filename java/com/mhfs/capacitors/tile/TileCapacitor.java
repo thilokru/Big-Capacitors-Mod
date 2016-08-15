@@ -19,12 +19,11 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	@Override
 	public void update() {
+		if (worldObj.isRemote)
+			return;
 		if (wrapperID == null || getEntityCapacitor() == null) {
 			createEntity();
 		}
-		if (worldObj.isRemote)
-			return;
-
 		getEntityCapacitor().setupCapacity(worldObj);
 		getEntityCapacitor().updateEnergy(worldObj);
 	}
@@ -35,6 +34,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	private void createEntity() {
 		wrapperID = getWorldData().newCCW(this);
+		getEntityCapacitor().onTileBind();
 		getEntityCapacitor().checkJoin(worldObj);
 		this.sendUpdate();
 	}
@@ -56,6 +56,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 	}
 
 	public void onEntityChange(UUID id) {
+		if(id != null && id.equals(this.wrapperID)) return;
 		getWorldData().onCWWUnbind(wrapperID);
 		this.wrapperID = id;
 		getWorldData().onCWWBind(id);
@@ -79,7 +80,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setString("cwwID", wrapperID.toString());
+		if(wrapperID != null)tag.setString("cwwID", wrapperID.toString());
 		return tag;
 	}
 

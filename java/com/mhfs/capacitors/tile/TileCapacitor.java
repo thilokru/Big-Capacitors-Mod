@@ -1,7 +1,10 @@
 package com.mhfs.capacitors.tile;
 
+import java.util.UUID;
+
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.misc.IRotatable;
+import com.mhfs.capacitors.world.CapacitorWorldData;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -12,28 +15,32 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
 public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
 
-	private CapacitorWallWrapper wrapper;
+	private UUID wrapperID;
 	private boolean isFirstTick = true;
 
 	@Override
 	public void update() {
-		if (wrapper == null || !wrapper.isMember(this.pos)) {
+		if (wrapperID == null || getEntityCapacitor() == null) {
 			createEntity();
 		}
 		if(isFirstTick){
-			wrapper.checkJoin(worldObj, isFirstTick);
+			getEntityCapacitor().checkJoin(getWorld(), isFirstTick);
 		}
 		if (worldObj.isRemote)
 			return;
 
-		wrapper.setupCapacity(worldObj);
-		wrapper.updateEnergy(worldObj);
+		getEntityCapacitor().setupCapacity(worldObj);
+		getEntityCapacitor().updateEnergy(worldObj);
 		isFirstTick = false;
+	}
+	
+	private CapacitorWorldData getWorldData() {
+		return (CapacitorWorldData) this.worldObj.getPerWorldStorage().getOrLoadData(CapacitorWorldData.class, CapacitorWorldData.NAME);
 	}
 
 	private void createEntity() {
-		wrapper = new CapacitorWallWrapper(this);
-		wrapper.checkJoin(worldObj, this.isFirstTick);
+		wrapperID = getWorldData().newCCW(this);
+		getEntityCapacitor().checkJoin(worldObj, this.isFirstTick);
 		this.sendUpdate();
 	}
 
@@ -42,6 +49,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 	}
 
 	public void onBreak(BreakEvent event) {
+		CapacitorWallWrapper wrapper = getEntityCapacitor();
 		if (wrapper != null) {
 			if (event != null) {
 				wrapper.leave(this.pos, worldObj, event.getPlayer());
@@ -49,37 +57,33 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 				wrapper.leave(this.pos, worldObj, null);
 			}
 		}
+		getWorldData().onCWWUnbind(wrapperID);
 	}
 
-	public void onEntityChange(CapacitorWallWrapper cap) {
-		this.wrapper = cap;
+	public void onEntityChange(UUID id) {
+		this.wrapperID = id;
+		getWorldData().onCWWBind(id);
 		this.sendUpdate();
 	}
 
 	public CapacitorWallWrapper getEntityCapacitor() {
-		return wrapper;
+		return getWorldData().getCWW(wrapperID);
 	}
 
 	public void onRotate() {
 		onBreak(null);
-		wrapper = null;
+		getWorldData().onCWWUnbind(wrapperID);
 		createEntity();
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if (tag.hasKey("multi") && wrapper == null) {
-			wrapper = CapacitorWallWrapper.fromNBT(tag.getCompoundTag("multi"));
-		} else {
-			wrapper = null;
-		}
+		this.wrapperID = tag.hasKey("cwwID") ? UUID.fromString(tag.getString("cwwID")) : null;
 	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if (wrapper != null) {
-			tag.setTag("multi", wrapper.getNBTRepresentation());
-		}
+		tag.setString("cwwID", wrapperID.toString());
 		return tag;
 	}
 
@@ -90,11 +94,11 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		CapacitorWallWrapper wrapper = getEntityCapacitor();
 		if (canConnectEnergy(from) && wrapper != null) {
 			int ret = wrapper.fill(maxReceive, simulate);
 			if(!simulate){
 				wrapper.updateEnergy(worldObj);
-				wrapper.updateBlocks(worldObj);
 			}
 			return ret;
 		}
@@ -103,11 +107,11 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 	
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		if (canConnectEnergy(from) && wrapper != null) {
+		CapacitorWallWrapper wrapper = getEntityCapacitor();
+		if (canConnectEnergy(from)) {
 			int ret = wrapper.drain(maxExtract, simulate);
 			if(!simulate){
 				wrapper.updateEnergy(worldObj);
-				wrapper.updateBlocks(worldObj);
 			}
 			return ret;
 		}
@@ -116,11 +120,13 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
+		CapacitorWallWrapper wrapper = getEntityCapacitor();
 		return (int)wrapper.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
+		CapacitorWallWrapper wrapper = getEntityCapacitor();
 		return (int)wrapper.getMaxEnergyStored();
 	}
 }

@@ -7,6 +7,7 @@ import com.mhfs.capacitors.capabilities.PlayerCapabilityProvider;
 import com.mhfs.capacitors.network.ClientGuiEvent;
 import com.mhfs.capacitors.network.ConfigUpdateMessage;
 import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.world.CapacitorWorldData;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,11 +27,17 @@ public class EventHandler {
 	public void handleWorldLoad(WorldEvent.Load event) {
 		BigCapacitorsMod.instance.dielectricities = BigCapacitorsMod.instance.dielectricitiesFromConfig;
 		BigCapacitorsMod.instance.voltages = BigCapacitorsMod.instance.voltagesFromConfig;
+		CapacitorWorldData data = (CapacitorWorldData) event.getWorld().getPerWorldStorage().getOrLoadData(CapacitorWorldData.class, CapacitorWorldData.NAME);
+		if(data == null) {
+			event.getWorld().getPerWorldStorage().setData(CapacitorWorldData.NAME, new CapacitorWorldData());
+		}
 	}
 
 	@SubscribeEvent
 	public void handleJoin(PlayerEvent.PlayerLoggedInEvent event) {
 		BigCapacitorsMod.instance.network.sendTo(new ConfigUpdateMessage(BigCapacitorsMod.instance.dielectricitiesFromConfig, BigCapacitorsMod.instance.voltagesFromConfig), (EntityPlayerMP) event.player);
+		CapacitorWorldData data = (CapacitorWorldData) event.player.worldObj.getPerWorldStorage().getOrLoadData(CapacitorWorldData.class, CapacitorWorldData.NAME);
+		data.sendToClient(event.player);
 	}
 
 	@SubscribeEvent

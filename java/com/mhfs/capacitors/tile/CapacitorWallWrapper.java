@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
@@ -27,11 +28,14 @@ public class CapacitorWallWrapper {
 	private Set<BlockPos> containedBlocks;
 	private EnumFacing orientation;
 	private boolean grounded;
+	private UUID id;
+	private int boundTiles;
 
 	private long charge;
 	private long maxCharge;
 
-	public CapacitorWallWrapper(TileCapacitor cap) {
+	public CapacitorWallWrapper(TileCapacitor cap, UUID id) {
+		this.id = id;
 		this.orientation = EnumFacing.getFront(cap.getBlockMetadata());
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), cap.getPos(), cap.getWorld());
 		for (BlockPos pos : containedBlocks) {
@@ -39,7 +43,7 @@ public class CapacitorWallWrapper {
 				continue;
 			CapacitorWallWrapper ent = cap.getEntityCapacitor();
 			if (ent == null) {
-				cap.onEntityChange(this);
+				cap.onEntityChange(id);
 			}else if(ent != this){
 				ent.checkJoin(cap.getWorld(), false);
 				return;
@@ -124,7 +128,7 @@ public class CapacitorWallWrapper {
 					controled.add(tile.getEntityCapacitor());
 				}
 			}
-			tile.onEntityChange(this);
+			tile.onEntityChange(id);
 		}
 
 		this.setupCapacity(world);
@@ -323,10 +327,6 @@ public class CapacitorWallWrapper {
 			return;
 		BigCapacitorsMod.instance.network.sendToAll(getMessage());
 	}
-	
-	public BlockPos getRandomBlock(){
-		return containedBlocks.iterator().next();
-	}
 
 	public void sync(CapacitorWallWrapper wrapper) {
 		this.charge = wrapper.charge;
@@ -366,5 +366,21 @@ public class CapacitorWallWrapper {
 			charge += receive;
 		}
 		return receive;
+	}
+	
+	public void onTileBind(){
+		this.boundTiles++;
+	}
+	
+	public void onTileUnbind(){
+		this.boundTiles--;
+	}
+	
+	public boolean hasBoundTiles(){
+		return this.boundTiles > 0;
+	}
+
+	public UUID getID() {
+		return id;
 	}
 }

@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 
 import com.google.gson.Gson;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
-import com.mhfs.capacitors.tile.TileCapacitor;
+import com.mhfs.capacitors.world.CapacitorWorldData;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -51,12 +51,14 @@ public class WallUpdateMessage implements IMessage, IMessageHandler<WallUpdateMe
 	@Override
 	public IMessage onMessage(WallUpdateMessage message, MessageContext ctx) {
 		World world = Minecraft.getMinecraft().theWorld;
-		if(world == null)return null;
-		TileCapacitor cap = (TileCapacitor) world.getTileEntity(message.getWrapper().getRandomBlock());
-		if(cap == null)return null;
-		CapacitorWallWrapper local = cap.getEntityCapacitor();
+		if(world == null || message.wrapper == null)return null;
+		CapacitorWorldData data = (CapacitorWorldData) world.getPerWorldStorage().getOrLoadData(CapacitorWorldData.class, CapacitorWorldData.NAME);
+		if(data == null)return null;
+		CapacitorWallWrapper local = data.getCWW(message.wrapper.getID());
 		if (local != null) {
 				local.sync(message.getWrapper());
+		} else {
+			data.add(message.wrapper);
 		}
 		return null;
 	}

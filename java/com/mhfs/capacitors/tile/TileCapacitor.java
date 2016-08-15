@@ -16,22 +16,17 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEnergyReceiver, IRotatable, ITickable {
 
 	private UUID wrapperID;
-	private boolean isFirstTick = true;
 
 	@Override
 	public void update() {
 		if (wrapperID == null || getEntityCapacitor() == null) {
 			createEntity();
 		}
-		if(isFirstTick){
-			getEntityCapacitor().checkJoin(getWorld(), isFirstTick);
-		}
 		if (worldObj.isRemote)
 			return;
 
 		getEntityCapacitor().setupCapacity(worldObj);
 		getEntityCapacitor().updateEnergy(worldObj);
-		isFirstTick = false;
 	}
 	
 	private CapacitorWorldData getWorldData() {
@@ -40,7 +35,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 
 	private void createEntity() {
 		wrapperID = getWorldData().newCCW(this);
-		getEntityCapacitor().checkJoin(worldObj, this.isFirstTick);
+		getEntityCapacitor().checkJoin(worldObj);
 		this.sendUpdate();
 	}
 
@@ -61,6 +56,7 @@ public class TileCapacitor extends AdvTileEntity implements IEnergyProvider, IEn
 	}
 
 	public void onEntityChange(UUID id) {
+		getWorldData().onCWWUnbind(wrapperID);
 		this.wrapperID = id;
 		getWorldData().onCWWBind(id);
 		this.sendUpdate();

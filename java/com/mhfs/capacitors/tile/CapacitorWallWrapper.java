@@ -45,7 +45,7 @@ public class CapacitorWallWrapper {
 			if (ent == null) {
 				cap.onEntityChange(id);
 			}else if(ent != this){
-				ent.checkJoin(cap.getWorld(), false);
+				ent.checkJoin(cap.getWorld());
 				return;
 			}
 		}
@@ -80,13 +80,6 @@ public class CapacitorWallWrapper {
 	}
 
 	/**
-	 * @return How many blocks this wrapper wraps.
-	 */
-	public int getSize() {
-		return containedBlocks.size();
-	}
-
-	/**
 	 * Convenience method to check whether the side ({@link direction}) is the opposite of the
 	 * side the wrapper is facing. Also the wrapper must not be grounded. 
 	 * @param direction the direction from which energy shall be extracted.
@@ -104,11 +97,11 @@ public class CapacitorWallWrapper {
 	 * @param world the world
 	 * @param isFirstTick whether this is the first tick, aka. whether the world has just been loaded.
 	 */
-	public void checkJoin(World world, boolean isFirstTick) {
+	public void checkJoin(World world) {
 		this.charge = Math.min(this.charge, this.maxCharge);
 
 		Set<CapacitorWallWrapper> controled = new HashSet<CapacitorWallWrapper>();
-		long combinedCharge = isFirstTick ? this.charge : 0;
+		long combinedCharge = 0;
 		BlockPos init = containedBlocks.iterator().next();
 		this.containedBlocks = searchWallFrom(new HashSet<BlockPos>(), init, world);
 
@@ -117,11 +110,7 @@ public class CapacitorWallWrapper {
 			if(tile == null)continue;
 			if (tile.getEntityCapacitor() != null) {
 				if (!controled.contains(tile.getEntityCapacitor())) {
-					if(isFirstTick){
-						combinedCharge = Math.max(combinedCharge, tile.getEntityCapacitor().charge);
-					}else{
-						combinedCharge += tile.getEntityCapacitor().charge;
-					}
+					combinedCharge += tile.getEntityCapacitor().charge;
 					if(tile.getEntityCapacitor().isGrounded()){
 						this.grounded = true;
 					}
@@ -147,7 +136,7 @@ public class CapacitorWallWrapper {
 			TileCapacitor tile = (TileCapacitor) world.getTileEntity(pos);
 			if (tile != null) {
 				tile.onEntityChange(null);
-			}				
+			}
 		}
 		if(player != null){
 			if(!this.isGrounded()){

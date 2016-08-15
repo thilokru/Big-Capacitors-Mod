@@ -81,7 +81,11 @@ public class TileTower extends AdvTileEntity {
 	}
 
 	public boolean onBlockActivated(EntityPlayer player, ItemStack stack) {
-		return FluidUtil.interactWithFluidHandler(stack, tank, player);
+		boolean res = FluidUtil.interactWithFluidHandler(stack, tank, player);
+		if(res) {
+			this.sendUpdate();
+		}
+		return res;
 	}
 
 	public void resetSteamState() {

@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.List;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.mhfs.api.helper.DefinedBlock;
 import com.mhfs.api.helper.Helper;
-import com.mhfs.capacitors.misc.DefinedBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.IResource;

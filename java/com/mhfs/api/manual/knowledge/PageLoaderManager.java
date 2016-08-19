@@ -9,6 +9,12 @@ import com.mhfs.api.manual.util.IPage;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * To use the standard pages, see {@link Loaders}.
+ * You should implement your own indexLoader, to make your manual special.
+ * @author Thilo
+ *
+ */
 public class PageLoaderManager {
 	
 	private Map<String, IPageLoader> loaderMappings;

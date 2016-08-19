@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.misc;
+package com.mhfs.api.helper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

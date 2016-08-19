@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.misc;
+package com.mhfs.api.helper;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -49,7 +49,6 @@ public class Helper {
 		case EAST:
 			return new Vec3i(-vector.getZ(), vector.getY(), vector.getX());
 		default:
-			Lo.g.error("RotatableMultiblock shall be rotated towards UP or DOWN, which should not be done! This is SEVERE!");
 			return vector;
 		}
 	}
@@ -73,7 +72,6 @@ public class Helper {
 		case EAST:
 			return new Vec3d(-vector.zCoord, vector.yCoord, vector.xCoord);
 		default:
-			Lo.g.error("RotatableMultiblock shall be rotated towards UP or DOWN, which should not be done! This is SEVERE!");
 			return vector;
 		}
 	}

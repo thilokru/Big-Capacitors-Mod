@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.capacitors.gui.pages;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -7,6 +7,11 @@ import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mhfs.api.manual.gui.GuiButtonLink;
+import com.mhfs.api.manual.gui.GuiManual;
+import com.mhfs.api.manual.gui.GuiManualChapter;
+import com.mhfs.api.manual.util.IKeyboardHandler;
+import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.BigCapacitorsMod;
 
 import net.minecraft.client.Minecraft;

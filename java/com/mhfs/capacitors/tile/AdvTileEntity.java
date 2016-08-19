@@ -1,6 +1,6 @@
 package com.mhfs.capacitors.tile;
 
-import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.api.helper.Helper;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;

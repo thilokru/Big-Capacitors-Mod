@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui;
 
 import java.io.IOException;
 

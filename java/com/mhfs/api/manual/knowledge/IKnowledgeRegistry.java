@@ -1,9 +1,9 @@
-package com.mhfs.capacitors.knowledge;
+package com.mhfs.api.manual.knowledge;
 
 import java.util.List;
 import java.util.Set;
 
-import com.mhfs.capacitors.gui.manual.IPage;
+import com.mhfs.api.manual.util.IPage;
 
 public interface IKnowledgeRegistry {
 

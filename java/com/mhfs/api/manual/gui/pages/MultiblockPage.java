@@ -1,10 +1,12 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui.pages;
 
 import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.mhfs.api.manual.gui.GuiManualChapter;
+import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.misc.DefinedBlock;
 import com.mhfs.capacitors.misc.Multiblock;
 

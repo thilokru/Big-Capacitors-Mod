@@ -9,8 +9,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import com.mhfs.api.manual.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.handlers.BucketHandler;
-import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
 import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.proxy.CommonProxy;
 

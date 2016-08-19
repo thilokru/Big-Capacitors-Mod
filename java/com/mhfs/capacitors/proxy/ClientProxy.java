@@ -7,13 +7,15 @@ import net.minecraftforge.client.model.animation.AnimationTESR;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.mhfs.api.manual.knowledge.PageLoaderManager;
+import com.mhfs.api.manual.knowledge.SimpleReloadableKnowledgeRegistry;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
 import com.mhfs.capacitors.gui.ManualOverlayHandler;
 import com.mhfs.capacitors.gui.MultitoolOverlayHandler;
 import com.mhfs.capacitors.handlers.GuiHandler;
-import com.mhfs.capacitors.knowledge.SimpleReloadableKnowledgeRegistry;
+import com.mhfs.capacitors.knowledge.Loaders;
 import com.mhfs.capacitors.render.ItemRenderHelper;
 import com.mhfs.capacitors.render.RendererLux;
 import com.mhfs.capacitors.tile.TileCrusher;
@@ -63,7 +65,10 @@ public class ClientProxy extends CommonProxy {
 	private void loadKnowledge(BigCapacitorsMod mod) {
 		try {
 			IResourceManager irm = Minecraft.getMinecraft().getResourceManager();
-			SimpleReloadableKnowledgeRegistry reg = new SimpleReloadableKnowledgeRegistry("manual.loc");
+			PageLoaderManager plm = new PageLoaderManager();
+			Loaders.registerLoadersToManager(plm);
+			Loaders.registerIndexLoaderToManager(plm);
+			SimpleReloadableKnowledgeRegistry reg = new SimpleReloadableKnowledgeRegistry("manual.loc", plm);
 			mod.knowledge = reg;
 			((SimpleReloadableResourceManager) irm).registerReloadListener(reg);
 		} catch (Exception e) {

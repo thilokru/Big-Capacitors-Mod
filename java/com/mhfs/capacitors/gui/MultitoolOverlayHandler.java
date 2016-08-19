@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.api.helper.Helper;
 import com.mhfs.capacitors.tile.CapacitorWallWrapper;
 import com.mhfs.capacitors.tile.TileBarrel;
 import com.mhfs.capacitors.tile.TileCapacitor;

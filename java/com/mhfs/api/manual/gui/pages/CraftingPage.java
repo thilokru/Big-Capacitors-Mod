@@ -1,8 +1,12 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui.pages;
 
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
+
+import com.mhfs.api.manual.gui.GuiManual;
+import com.mhfs.api.manual.gui.GuiManualChapter;
+import com.mhfs.api.manual.util.IPage;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

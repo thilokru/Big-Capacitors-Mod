@@ -1,8 +1,10 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui;
 
 import java.io.IOException;
 import java.util.List;
 
+import com.mhfs.api.manual.util.IKeyboardHandler;
+import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.misc.TextureHelper.SubTexture;
 
 import net.minecraft.client.gui.GuiButton;

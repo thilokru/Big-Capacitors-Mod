@@ -1,8 +1,8 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.api.helper.Helper;
 import com.mhfs.capacitors.misc.TextureHelper.SubTexture;
 
 import net.minecraft.client.Minecraft;

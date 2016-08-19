@@ -3,10 +3,10 @@ package com.mhfs.capacitors.tile;
 import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
+import com.mhfs.api.helper.Helper;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockMachineController;
-import com.mhfs.capacitors.misc.Helper;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.state.IBlockState;

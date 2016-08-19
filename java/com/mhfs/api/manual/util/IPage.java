@@ -1,4 +1,6 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.util;
+
+import com.mhfs.api.manual.gui.GuiManualChapter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

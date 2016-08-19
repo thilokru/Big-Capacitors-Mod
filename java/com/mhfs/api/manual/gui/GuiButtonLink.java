@@ -1,8 +1,8 @@
-package com.mhfs.capacitors.gui.manual;
+package com.mhfs.api.manual.gui;
 
 import java.awt.Color;
 
-import com.mhfs.capacitors.misc.Helper;
+import com.mhfs.api.helper.Helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;

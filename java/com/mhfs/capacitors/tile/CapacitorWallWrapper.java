@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.mhfs.api.helper.BlockPosSetHelper;
+import com.mhfs.api.helper.Helper;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Blocks;
 import com.mhfs.capacitors.blocks.BlockCapacitor;
-import com.mhfs.capacitors.misc.HashSetHelper;
-import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.network.WallUpdateMessage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -254,7 +254,7 @@ public class CapacitorWallWrapper {
 		tag.setBoolean("grounded", grounded);
 		if (orientation != null)
 			tag.setInteger("orientation", orientation.ordinal());
-		tag.setTag("blocks", HashSetHelper.blockPosSetToNBT(containedBlocks));
+		tag.setTag("blocks", BlockPosSetHelper.blockPosSetToNBT(containedBlocks));
 
 		return tag;
 	}
@@ -271,7 +271,7 @@ public class CapacitorWallWrapper {
 		if (tag.hasKey("orientation")) {
 			cap.orientation = EnumFacing.getFront(tag.getInteger("orientation"));
 		}
-		cap.containedBlocks = HashSetHelper.nbtToBlockPosSet(tag.getCompoundTag("blocks"));
+		cap.containedBlocks = BlockPosSetHelper.nbtToBlockPosSet(tag.getCompoundTag("blocks"));
 		
 		return cap;
 	}

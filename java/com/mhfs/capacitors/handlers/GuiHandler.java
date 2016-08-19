@@ -2,11 +2,11 @@ package com.mhfs.capacitors.handlers;
 
 import java.util.List;
 
+import com.mhfs.api.helper.Helper;
+import com.mhfs.api.manual.gui.GuiManualChapter;
+import com.mhfs.api.manual.knowledge.IKnowledgeRegistry;
+import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.BigCapacitorsMod;
-import com.mhfs.capacitors.gui.manual.GuiManualChapter;
-import com.mhfs.capacitors.gui.manual.IPage;
-import com.mhfs.capacitors.knowledge.IKnowledgeRegistry;
-import com.mhfs.capacitors.misc.Helper;
 import com.mhfs.capacitors.misc.IChapterRelated;
 
 import net.minecraft.block.Block;

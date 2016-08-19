@@ -1,4 +1,4 @@
-package com.mhfs.capacitors.misc;
+package com.mhfs.api.helper;
 
 import io.netty.buffer.ByteBuf;
 
@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-public class HashSetHelper {
+public class BlockPosSetHelper {
 
 	public static NBTTagCompound blockPosSetToNBT(Set<BlockPos> containedBlocks){
 		NBTTagCompound tag = new NBTTagCompound();

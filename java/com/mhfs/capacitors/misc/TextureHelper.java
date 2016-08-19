@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.Gson;
@@ -33,6 +35,8 @@ public class TextureHelper implements IResourceManagerReloadListener {
 			return new ResourceLocation(in.nextString());
 		}
 	}).create();
+	private final static Map<ResourceLocation, TextureHelper> cache = new HashMap<ResourceLocation, TextureHelper>();
+	private static Logger log = LogManager.getLogger("TextureHelper");
 	
 	private ResourceLocation textureFile;
 	private int textureSizeX, textureSizeY;
@@ -90,7 +94,24 @@ public class TextureHelper implements IResourceManagerReloadListener {
 		GuiScreen.drawModalRectWithCustomSizedTexture(x, y, u, v, drawWidth, drawHeight, textureSizeX, textureSizeY);
 	}
 	
-	public static TextureHelper loadFromJSON(IResourceManager manager, ResourceLocation location) throws IOException{
+	public static TextureHelper get(ResourceLocation location) {
+		return get(Minecraft.getMinecraft().getResourceManager(), location);
+	}
+	
+	public static TextureHelper get(IResourceManager manager, ResourceLocation location) {
+		TextureHelper helper = cache.get(location);
+		if(helper == null) {
+			try {
+				helper = loadFromJSON(manager, location);
+			} catch (IOException e) {
+				log.error("Manual texture error occured!", e);
+			}
+			cache.put(location, helper);
+		}
+		return helper;
+	}
+	
+	private static TextureHelper loadFromJSON(IResourceManager manager, ResourceLocation location) throws IOException{
 		TextureHelper helper = loadInternal(manager, location);
 		((IReloadableResourceManager) manager).registerReloadListener(helper);
 		return helper;

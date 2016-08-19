@@ -18,17 +18,29 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
-public class SimpleReloadableKnowledgeRegistry implements IKnowledgeRegistry, IResourceManagerReloadListener{
+public class SimpleReloadableManual implements IManual, IResourceManagerReloadListener{
 	
 	private String name;
 	private IResourceManager resourceManager;
 	private Map<String, List<IPage>> chapters;
 	private List<IPage> index;
 	private PageLoaderManager manager;
+	private ResourceLocation texture;
 	
-	public SimpleReloadableKnowledgeRegistry(String languageString, PageLoaderManager manager){
+	/**
+	 * Allows you to create your own Manual.
+	 * @param textureLocation indicates what textures should be used for the manual. (Background, buttons, searchbox etc)
+	 * @param languageString an unlocalized, localizable String which will be localized to the manuals resource location.
+	 * @param manager the PageLoaderManager, prepared with loaders, to load the Manual.
+	 */
+	public SimpleReloadableManual(ResourceLocation textureLocation, String languageString, PageLoaderManager manager){
 		this.name = languageString;
 		this.manager = manager;
+		this.texture = textureLocation;
+	}
+	
+	public ResourceLocation getTextureLocation() {
+		return texture;
 	}
 	
 	public void registerChapter(String name, List<IPage> pages){

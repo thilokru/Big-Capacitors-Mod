@@ -5,7 +5,9 @@ import java.util.Set;
 
 import com.mhfs.api.manual.util.IPage;
 
-public interface IKnowledgeRegistry {
+import net.minecraft.util.ResourceLocation;
+
+public interface IManual {
 
 	public void registerChapter(String name, List<IPage> pages);
 	
@@ -14,4 +16,6 @@ public interface IKnowledgeRegistry {
 	public List<IPage> getChapter(String name);
 	
 	public List<IPage> getIndex();
+	
+	public ResourceLocation getTextureLocation();
 }

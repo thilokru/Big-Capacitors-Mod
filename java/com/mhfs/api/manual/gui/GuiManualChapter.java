@@ -9,6 +9,7 @@ import com.mhfs.capacitors.misc.TextureHelper.SubTexture;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiManualChapter extends GuiManual {
 	
@@ -18,7 +19,8 @@ public class GuiManualChapter extends GuiManual {
 	protected GuiButton forward, backward, exit;
 	protected SubTexture background;
 
-	public GuiManualChapter(GuiScreen parent, List<IPage> chapter){
+	public GuiManualChapter(GuiScreen parent, ResourceLocation textureLocation, List<IPage> chapter){
+		super(textureLocation);
 		this.parent = parent;
 		this.chapter = chapter;
 		this.background = GuiManual.TEXTURES.getTextureInfo("background");

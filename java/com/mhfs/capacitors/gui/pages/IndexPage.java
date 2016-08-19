@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import com.mhfs.api.manual.gui.GuiButtonLink;
 import com.mhfs.api.manual.gui.GuiManual;
 import com.mhfs.api.manual.gui.GuiManualChapter;
+import com.mhfs.api.manual.knowledge.IManual;
 import com.mhfs.api.manual.util.IKeyboardHandler;
 import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.BigCapacitorsMod;
@@ -72,10 +73,11 @@ public class IndexPage implements IPage, IKeyboardHandler {
 	public void actionPerformed(GuiButton button, Minecraft mc,
 			GuiManualChapter screen) {
 		String buttonText = button.displayString;
-		List<IPage> chapter = BigCapacitorsMod.instance.knowledge.getChapter(buttonText);
+		IManual manual = BigCapacitorsMod.instance.knowledge;
+		List<IPage> chapter = manual.getChapter(buttonText);
 		if (chapter == null)
 			return;
-		mc.displayGuiScreen(new GuiManualChapter(screen, chapter));
+		mc.displayGuiScreen(new GuiManualChapter(screen, manual.getTextureLocation(), chapter));
 	}
 
 	@Override

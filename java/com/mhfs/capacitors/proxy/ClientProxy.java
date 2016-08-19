@@ -3,13 +3,14 @@ package com.mhfs.capacitors.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.animation.AnimationTESR;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.mhfs.api.manual.knowledge.Loaders;
 import com.mhfs.api.manual.knowledge.PageLoaderManager;
-import com.mhfs.api.manual.knowledge.SimpleReloadableKnowledgeRegistry;
+import com.mhfs.api.manual.knowledge.SimpleReloadableManual;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.Items;
 import com.mhfs.capacitors.gui.GuiOverlayHandler;
@@ -69,7 +70,8 @@ public class ClientProxy extends CommonProxy {
 			PageLoaderManager plm = new PageLoaderManager();
 			Loaders.registerLoadersToManager(plm);
 			plm.setIndexLoader(new IndexLoader());
-			SimpleReloadableKnowledgeRegistry reg = new SimpleReloadableKnowledgeRegistry("manual.loc", plm);
+			ResourceLocation texture = new ResourceLocation("big_capacitors", "textures/other/manual.cfg");
+			SimpleReloadableManual reg = new SimpleReloadableManual(texture, "manual.loc", plm);
 			mod.knowledge = reg;
 			((SimpleReloadableResourceManager) irm).registerReloadListener(reg);
 		} catch (Exception e) {

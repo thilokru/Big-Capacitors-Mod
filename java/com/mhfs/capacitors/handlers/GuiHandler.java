@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mhfs.api.helper.Helper;
 import com.mhfs.api.manual.gui.GuiManualChapter;
-import com.mhfs.api.manual.knowledge.IKnowledgeRegistry;
+import com.mhfs.api.manual.knowledge.IManual;
 import com.mhfs.api.manual.util.IPage;
 import com.mhfs.capacitors.BigCapacitorsMod;
 import com.mhfs.capacitors.misc.IChapterRelated;
@@ -41,7 +41,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
-		IKnowledgeRegistry reg = BigCapacitorsMod.instance.knowledge;
+		IManual reg = BigCapacitorsMod.instance.knowledge;
 		SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
 		Helper.playPageSound(soundHandler);
 		if(ID == 1){
@@ -59,7 +59,8 @@ public class GuiHandler implements IGuiHandler {
 	}
 	
 	private Object getDisplayChapter(List<IPage> chapter){
-		return new GuiManualChapter(null, chapter);
+		IManual manual = BigCapacitorsMod.instance.knowledge;
+		return new GuiManualChapter(null, manual.getTextureLocation(), chapter);
 	}
 
 }

@@ -9,7 +9,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 
-import com.mhfs.api.manual.knowledge.IKnowledgeRegistry;
+import com.mhfs.api.manual.knowledge.IManual;
 import com.mhfs.capacitors.handlers.BucketHandler;
 import com.mhfs.capacitors.misc.Multiblock;
 import com.mhfs.capacitors.proxy.CommonProxy;
@@ -48,7 +48,7 @@ public class BigCapacitorsMod {
 	public CreativeTabs creativeTab;	
 	
 	public DamageSource damageElectric;
-	public IKnowledgeRegistry knowledge;
+	public IManual knowledge;
 	
 	public Multiblock fusionReactorMulti;
 	public Multiblock crusherMulti;
